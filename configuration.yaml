@@ -1,0 +1,797 @@
+homeassistant:
+  name: Home Assistant
+  unit_system: metric
+  latitude: !secret home_latitude
+  longitude: !secret home_longitude
+  elevation: 102
+  time_zone: Australia/Adelaide
+  customize: !include customize.yaml
+
+zone:
+  name: Home
+  latitude: !secret home_latitude
+  longitude: !secret home_longitude
+  radius: 50
+
+######################################################################################################
+###------------------------------------------ YAML FILES ------------------------------------------###
+######################################################################################################
+automation: !include automations.yaml
+group: !include groups.yaml
+script: !include scripts.yaml
+
+######################################################################################################
+###------------------------------------------ COMPONENTS ------------------------------------------###
+######################################################################################################
+frontend:
+  javascript_version: latest
+  extra_html_url:
+    - /local/custom_ui/state-card-custom_volume.html
+  extra_html_url_es5:
+    - /local/custom_ui/state-card-custom_volume.html
+
+
+updater:
+  include_used_components: true
+discovery:
+conversation:
+history:
+logbook:
+  exclude:
+    entities:
+    - light_controller.last_message
+    domains:
+    - group
+sun:
+config:
+map:
+recorder:
+  purge_interval: 2
+  purge_keep_days: 14
+
+influxdb:
+  host: Server-InfluxDB.home
+
+light:
+  - platform: lifx
+
+  - platform: mqtt
+    name: Carport
+    command_topic: cmnd/sonoff/carport-lights/POWER
+    payload_on: 'ON'
+    payload_off: 'OFF'
+    state_topic: stat/sonoff/carport-lights/POWER
+
+light_controller:
+  topic: node/light_switch/
+  
+climate:
+  - platform: daikin
+    name: ac_bedroom
+    host: 192.168.1.253
+
+emulated_hue:
+    listen_port: 8300
+
+media_player:
+  - platform: plex
+  
+  - platform: cast
+
+  - platform: universal
+    name: Living Room TV
+    children:
+      - media_player.apple_tv
+      - media_player.living_room_chromecast
+    commands:
+      turn_on:
+        service: script.livingroom_tv_on
+      turn_off:
+        service: script.livingroom_tv_off
+      volume_up:
+        service: switch.turn_on
+        data:
+          entity_id: switch.living_room_audio_volume
+      volume_down:
+        service: switch.turn_off
+        data:
+          entity_id: switch.living_room_audio_volume
+      volume_mute:
+        service: switch.turn_on
+        data:
+          entity_id: switch.living_room_audio_mute
+    attributes:
+      # is_volume_muted: ENTITY_ID|ATTRIBUTE
+      state: sensor.livingroom_tv
+
+ifttt:
+  key: !secret ifttt_key
+
+ffmpeg:
+  ffmpeg_bin: /usr/bin/ffmpeg
+
+camera:
+  - platform: ffmpeg
+    input: -rtsp_transport tcp -i rtsp://192.168.1.67/unicast
+    name: Shed
+    extra_arguments: -pred 1 -q:v 2
+
+http:
+  api_password: !secret api_password
+  trusted_networks:
+  ip_ban_enabled: true
+  login_attempts_threshold: 3
+  use_x_forwarded_for: true
+  base_url: !secret dns_name
+#  ssl_certificate: !secret ssl_cert
+#  ssl_key: !secret ssl_key
+
+google_assistant:
+  project_id: home-assistant-144414
+  client_id: !secret google_client_id
+  access_token: !secret google_access_token
+  exposed_domains:
+    - switch
+    - light
+    - group
+
+notify:
+  - platform: telstra
+    name: Telstra_SMS
+    consumer_key: !secret telstra_key
+    consumer_secret: !secret telstra_secret
+    phone_number: !secret mobile_number
+
+  - platform: html5
+    name: HTML5 Notify
+    gcm_api_key: !secret gcm_api_key
+    gcm_sender_key: !secret gcm_sender_key
+
+device_tracker:
+#  - platform: icloud
+#    username: !secret icloud_username
+#    password: !secret icloud_password
+#    track_new_devices: no
+
+#  - platform: bluetooth_tracker
+
+  - platform: asuswrt
+    host: 192.168.1.1
+    username: !secret asus_router_username
+    password: !secret asus_router_password
+    new_device_defaults:
+      track_new_devices: False
+      hide_if_away: False
+    interval_seconds: 5
+
+mqtt:
+  broker: 127.0.0.1
+#  broker: 192.168.1.31
+  port: 1883
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+
+panel_iframe:
+  router:
+    title: Router
+    url: http://192.168.1.1/
+    icon: mdi:access-point-network
+  sonarr:
+    title: Sonarr
+    url: !secret dns_sonarr
+    icon: mdi:television-classic
+  radarr:
+    title: Radarr
+    url: !secret dns_radarr
+    icon: mdi:filmstrip
+  plex:
+    title: Plex
+    url: !secret dns_plex
+    icon: mdi:plex
+
+vacuum:
+  - platform: xiaomi_miio
+    host: 192.168.1.217
+    token: !secret xiaomi_miio_token
+
+xiaomi_aqara:
+  discovery_retry: 5
+  gateways:
+    - mac: !secret xiaomi_aqara_mac
+      key: !secret xiaomi_aqara_key
+      host: 192.168.1.102
+
+apple_tv:
+  - host: 192.168.1.237
+    login_id: !secret apple_tv_id
+
+######################################################################################################
+###----------------------------------------- NOTIFICATIONS ----------------------------------------###
+######################################################################################################
+
+ios:
+  push:
+    categories:
+      - name: Roller Door
+        identifier: 'roller_door_alert'
+        actions:
+          - identifier: 'ROLLER_DOOR_CLOSE'
+            title: 'Close'
+            activationMode: 'background'
+            authenticationRequired: yes
+            destructive: yes
+            behavior: 'default'
+          - identifier: 'IGNORE'
+            title: 'Ignore'
+            activationMode: 'background'
+            authenticationRequired: yes
+            destructive: no
+
+      - name: Roller Door Camera Test
+        identifier: 'camera'
+        actions:
+          - identifier: 'ROLLER_DOOR_CLOSE'
+            title: 'Close'
+            activationMode: 'background'
+            authenticationRequired: yes
+            destructive: yes
+            behavior: 'default'
+          - identifier: 'IGNORE'
+            title: 'Ignore'
+            activationMode: 'background'
+            authenticationRequired: yes
+            destructive: no
+
+      - name: Roller Door
+        identifier: 'roller_door_prompt'
+        actions:
+          - identifier: 'ROLLER_DOOR_OPEN'
+            title: 'Open'
+            activationMode: 'background'
+            authenticationRequired: yes
+            destructive: yes
+          - identifier: 'IGNORE'
+            title: 'Ignore'
+            activationMode: 'background'
+            authenticationRequired: no
+            destructive: no
+
+      - name: Door Bell
+        identifier: 'door_bell_alert'
+        actions:
+          - identifier: 'IGNORE'
+            title: 'Ignore'
+            activationMode: 'background'
+            authenticationRequired: no
+            destructive: no
+            
+      - name: Sprinkler Alert
+        identifier: 'sprinkler_alert'
+        actions:
+          - identifier: 'SPRINKLERS_OFF'
+            title: 'Turn Off'
+            activationMode: 'background'
+            authenticationRequired: no
+            destructive: no
+          - identifier: 'IGNORE'
+            title: 'Ignore'
+            activationMode: 'background'
+            authenticationRequired: no
+            destructive: yes
+
+      - name: Washing Machine Alert
+        identifier: 'washing_machine_alert'
+        actions:
+          - identifier: 'IGNORE'
+            title: 'Ignore'
+            activationMode: 'background'
+            authenticationRequired: no
+            destructive: yes
+
+      - name: Dishwasher Alert
+        identifier: 'dishwasher_alert'
+        actions:
+          - identifier: 'IGNORE'
+            title: 'Ignore'
+            activationMode: 'background'
+            authenticationRequired: no
+            destructive: yes
+
+######################################################################################################
+###------------------------------------------- SWITCHES -------------------------------------------###
+######################################################################################################
+switch:
+  - platform: broadlink
+    host: 192.168.1.101
+    mac: 'B4:43:0D:F9:1F:3A'
+    switches:
+      livingroom_tv_power:
+        friendly_name: "Living Room TV Power"
+        command_on: 'JgAOAYKDEEIPQhBDEEIPIw8hEEIRIQ9DDyIPQw8iDyIPIw4iECIPQhFBECIQQg8iD0MQIg9CDwABKoKDEEIPRA5DD0MPIg8iEEIQIg9DDyIQQhAhDyIQIg4iECIPQw9CESEPQxAhD0MQIQ9DEAABKYGEEEIPQw9DEEIQIQ8iEEIQIRBCECIQQhAhECEPIg8iDyMPQhBCECIPQhAiEEIQIQ9DEAABKYGEEEIPQxBCD0MPIg8iD0MQIQ9DDyIQQhAhECIPIg8iDyIPQw9DECEPQw8iEEIPIhBCEAABKYKEEEIQQg9CEEIQIg8iD0MQIRBCECEQQg8iECEQIREhECEQQhBCECEPQxAhEEIQIRBCEAANBQAAAAAAAAAAAAA='
+        command_off: 'JgAOAYKDEEIPQhBDEEIPIw8hEEIRIQ9DDyIPQw8iDyIPIw4iECIPQhFBECIQQg8iD0MQIg9CDwABKoKDEEIPRA5DD0MPIg8iEEIQIg9DDyIQQhAhDyIQIg4iECIPQw9CESEPQxAhD0MQIQ9DEAABKYGEEEIPQw9DEEIQIQ8iEEIQIRBCECIQQhAhECEPIg8iDyMPQhBCECIPQhAiEEIQIQ9DEAABKYGEEEIPQxBCD0MPIg8iD0MQIQ9DDyIQQhAhECIPIg8iDyIPQw9DECEPQw8iEEIPIhBCEAABKYKEEEIQQg9CEEIQIg8iD0MQIRBCECEQQg8iECEQIREhECEQQhBCECEPQxAhEEIQIRBCEAANBQAAAAAAAAAAAAA='
+      livingroom_audio_power:
+        friendly_name: "Living Room Audio Power"
+        command_on: 'JgBQAAABJpUUEhETEhMSOBITERURExITETkSOBI4FBERORE5EjgRORMSERQRFBEUEzcRFBETFBIROBI5ETgRORITETkUNhI4EQAFIgABJkwTAA0FAAAAAAAAAAA='
+        command_off: 'JgBQAAABJpUUEhETEhMSOBITERURExITETkSOBI4FBERORE5EjgRORMSERQRFBEUEzcRFBETFBIROBI5ETgRORITETkUNhI4EQAFIgABJkwTAA0FAAAAAAAAAAA='
+      livingroom_audio_source:
+        friendly_name: "Living Room Audio Source"
+        # on = TV/optical
+        command_on: 'JgBQAAABJ5YRFBETEhQROBITEhQRExITEjgSOBI4ERQSOBE5EjgRORE5EjgRFBI4ERMSFBEUERMSFBEUETgSFBE4EjgSORE4EQAFIgABJ0sRAA0FAAAAAAAAAAA=' 
+        # off = MusicPi/3.5mm
+        command_off: 'JgBYAAABKJQSExEVERMSOBITEhMRFBITEjgSOBE5EhMRORI4ETkROBIUETgSFBE4EhMSFBETEhMSOBITETkSExE5EjgSOBE5EgAFIQABJ0sRAAxaAAEnSxMADQU='
+      livingroom_audio_volume:
+        friendly_name: "Living Room Audio Volume"
+        # on = volume up
+        command_on: 'JgBQAAABKZMTEhQRExITNxMSExEVERMSEzYTNxQ3ExEUNxM2EzcUNhQRFDYUERQ2FDYTEhQRFBETNhUREzYVERMSEzYUNhQ3EwAFHwABKUkUAA0FAAAAAAAAAAA='
+        # off = volume down
+        command_off: 'JgBQAAABKZMTEhQRFBETNxQRExITEhQREzYVNhM2FBITNhM3FDcTNhMTEzYTNxQ2FBEUERMSFBEUNhQRFBETEhM3EzYVNhM3EwAFHwABKUkUAA0FAAAAAAAAAAA='
+      livingroom_audio_mute:
+        friendly_name: "Living Room Audio Mute"
+        command_on: 'JgBQAAABKZIVERMSExEVNhMRFBETExMRFDcTNhM3FBETNxQ2FDYTNxQREzcUNhMSFDYTERURExITNxMSExEUNxMRFDcTNhM3FAAFHwABKUkTAA0FAAAAAAAAAAA='
+        command_off: 'JgBQAAABKZIVERMSExEVNhMRFBETExMRFDcTNhM3FBETNxQ2FDYTNxQREzcUNhMSFDYTERURExITNxMSExEUNxMRFDcTNhM3FAAFHwABKUkTAA0FAAAAAAAAAAA='
+
+  - platform: command_line
+    switches:
+#      triplej:
+#        friendly_name: Triple J
+#        command_on:
+#          curl "http://MusicPi:3689/login?pairing-guid=0x1&request-session-id=50";
+#          curl "http://MusicPi:3689/ctrl-int/1/playspec?database-spec='dmap.persistentid:0x1'&container-spec='dmap.persistentid:0x1'&container-item-spec='dmap.containeritemid:0x7'&session-id=50";
+#          curl "http://MusicPi:3689/logout?session-id=50"
+#        command_off:
+#          curl "http://MusicPi:3689/login?pairing-guid=0x1&request-session-id=50";
+#          curl "http://MusicPi:3689/ctrl-int/1/pause?session-id=50";
+#          curl "http://MusicPi:3689/logout?session-id=50"
+#        command_state: "/usr/bin/mpc -h MusicPi current"
+#        value_template: '{{ value == "Triple J NSW - Triple J NSW" }}'
+
+      triplej:
+        friendly_name: Triple J
+        command_on:
+          curl "http://Server-Music:3689/login?pairing-guid=0x1&request-session-id=50";
+          curl "http://Server-Music:3689/ctrl-int/1/playspec?database-spec='dmap.persistentid:0x1'&container-spec='dmap.persistentid:0x1'&container-item-spec='dmap.containeritemid:0x7'&session-id=50";
+          curl "http://Server-Music:3689/logout?session-id=50"
+        command_off:
+          curl "http://Server-Music:3689/login?pairing-guid=0x1&request-session-id=50";
+          curl "http://Server-Music:3689/ctrl-int/1/pause?session-id=50";
+          curl "http://Server-Music:3689/logout?session-id=50"
+        command_state: "/usr/bin/mpc -h Server-Music current"
+        value_template: '{{ value == "Triple J NSW - Triple J NSW" }}'
+
+      airplay_shed:
+        friendly_name: Shed AirPlay
+        command_on: "/usr/bin/mpc -h Server-Music enable 19358"
+        command_off: "/usr/bin/mpc -h Server-Music disable 19358"
+#        command_state: "/usr/bin/mpc -h Server-Music outputs | grep 19358"
+        value_template: '{{ value == "Output 19358 (MusicPi-Shed) is enabled" }}'
+
+      airplay_livingroom:
+        friendly_name: Living Room AirPlay
+        command_on: "/usr/bin/mpc -h Server-Music enable 51348"
+        command_off: "/usr/bin/mpc -h Server-Music disable 51348"
+        command_state: "/usr/bin/mpc -h Server-Music outputs | grep 51348"
+        value_template: '{{ value == "Output 51348 (MusicPi) is enabled" }}'
+      
+      airplay_appletv:
+        friendly_name: Apple TV AirPlay
+        command_on: "/usr/bin/mpc -h Server-Music enable 30673"
+        command_off: "/usr/bin/mpc -h Server-Music disable 30673"
+        command_state: "/usr/bin/mpc -h Server-Music outputs | grep 30673"
+        value_template: '{{ value == "Output 30673 (Apple TV) is enabled" }}'
+      
+
+  - platform: mqtt
+    name: Sprinkler Zone 1
+    state_topic: "node/sprinkler/006/state"
+    command_topic: "node/sprinkler/006/command"
+    payload_on: "1_on"
+    payload_off: "1_off"
+
+  - platform: mqtt
+    name: Sprinkler Zone 2
+    state_topic: "node/sprinkler/006/state"
+    command_topic: "node/sprinkler/006/command"
+    payload_on: "2_on"
+    payload_off: "2_off"
+
+  - platform: mqtt
+    name: Sprinkler Zone 3
+    state_topic: "node/sprinkler/006/state"
+    command_topic: "node/sprinkler/006/command"
+    payload_on: "3_on"
+    payload_off: "3_off"
+
+  - platform: mqtt
+    name: Sprinkler Zone 4
+    state_topic: "node/sprinkler/006/state"
+    command_topic: "node/sprinkler/006/command"
+    payload_on: "4_on"
+    payload_off: "4_off"
+
+  - platform: mqtt
+    name: Sprinkler Zone 5
+    state_topic: "node/sprinkler/006/state"
+    command_topic: "node/sprinkler/006/command"
+    payload_on: "5_on"
+    payload_off: "5_off"
+
+  - platform: mqtt
+    name: Sprinkler Zone 6
+    state_topic: "node/sprinkler/006/state"
+    command_topic: "node/sprinkler/006/command"
+    payload_on: "6_on"
+    payload_off: "6_off"
+
+  - platform: mqtt
+    name: Sprinkler Zone 7
+    state_topic: "node/sprinkler/006/state"
+    command_topic: "node/sprinkler/006/command"
+    payload_on: "7_on"
+    payload_off: "7_off"
+
+  - platform: mqtt
+    name: Sprinkler Zone 8
+    state_topic: "node/sprinkler/006/state"
+    command_topic: "node/sprinkler/006/command"
+    payload_on: "8_on"
+    payload_off: "8_off"
+
+
+  - platform: template
+    switches:
+      vacuum:
+        friendly_name: Vacuum
+        entity_id: vacuum.xiaomi_vacuum_cleaner
+        value_template: "{{ is_state('vacuum.xiaomi_vacuum_cleaner', 'on') }}"
+        turn_on:
+          service: homeassistant.turn_on
+          data:
+            entity_id: vacuum.xiaomi_vacuum_cleaner
+        turn_off:
+          service: homeassistant.turn_off
+          data:
+            entity_id: vacuum.xiaomi_vacuum_cleaner
+
+
+      ac_bedroom:
+        friendly_name: Bedroom AC
+        entity_id: climate.ac_bedroom
+        value_template: "{{ is_state('climate.ac_bedroom', 'Auto') }}"
+        turn_on:
+          service: climate.set_operation_mode
+          data:
+            entity_id: climate.ac_bedroom
+            operation_mode: 'Auto'
+        turn_off:
+          service: climate.set_operation_mode
+          data:
+            entity_id: climate.ac_bedroom
+            operation_mode: 'Off'
+        
+  - platform: flux
+    lights:
+      - light.bedroom
+      - light.front_door
+      - light.laundry
+      - light.back_door
+      - light.kitchen
+      - light.living_room
+      - light.lounge
+      - light.study
+      - light.wardrobe
+      - light.pool_room_front
+      - light.pool_room_rear
+      - light.bathroom
+      - light.toilet
+      - light.bedroom_2
+      - light.bedroom_3
+      - light.yeelight_rgb_7811dca21337
+      - light.yeelight_rgb_34ce008ce68b
+      - light.yeelight_rgb_34ce009133a2
+    name: Flux
+    start_time: '6:00'
+    stop_time: '22:00'
+    start_colortemp: 9000
+    sunset_colortemp: 5500
+    stop_colortemp: 2500
+    disable_brightness_adjust: True
+    mode: mired
+    transition: 5
+    interval: 300
+
+######################################################################################################
+###-------------------------------------------- COVERS --------------------------------------------###
+######################################################################################################
+cover:
+  - platform: mqtt
+    name: "Roller Door"
+    state_topic: "node/cover/008"
+    command_topic: "node/cover/008"
+    payload_open: "up"
+    payload_close: "down"
+    state_open: "open"
+    state_closed: "closed"
+
+######################################################################################################
+###-------------------------------------------- INPUTS --------------------------------------------###
+######################################################################################################
+
+input_select:
+  washing_machine_status:
+    name: Washing Machine Status
+    options:
+      - Idle
+      - Running
+      - Finishing
+      - Clean
+    initial: Idle
+
+  dishwasher_status:
+    name: Dishwasher Status
+    options:
+      - Idle
+      - Running
+      - Finishing
+      - Clean
+    initial: Idle
+
+input_number: 
+  alarmclock_hour:
+     name: Hour
+     icon: mdi:timer
+#     initial: 6
+     min: 4
+     max: 12
+     step: 1
+     mode: slider
+  alarmclock_minutes:
+     name: Minutes
+     icon: mdi:timer
+#     initial: 30
+     min: 0
+     max: 55
+     step: 5
+     mode: slider
+
+  sprinkler_timer:
+    name: Sprinkler Timer
+    icon: mdi:timer
+    min: 5
+    max: 120
+    step: 5
+    mode: slider
+
+  sprinkler_temp:
+    name: Sprinkler Trigger Temp
+    icon: mdi:thermometer
+    unit_of_measurement: °C
+    min: 10
+    max: 40
+    step: 1
+    mode: slider
+
+  dynamic_light_brightness:
+    name: Dynamic Light Brightness
+    icon: mdi:lightbulb-on
+    unit_of_measurement: '%'
+    min: 1
+    max: 100
+    mode: slider
+
+input_boolean:
+  alarmclock_status:
+    name: Alarm
+    initial: on
+    icon: mdi:alarm-check
+  alarmclock_weekday:
+    name: Weekdays Only
+    initial: on
+    icon: mdi:calendar
+
+  light_check:
+    name: Light Check
+    icon: mdi:lightbulb-on
+    initial: off
+
+  sprinkler_control:
+    name: Sprinkler Control
+    icon: mdi:flower
+    initial: off
+
+  homekit_location:
+    name: Homekit Location
+    icon: mdi:account
+
+
+
+######################################################################################################
+###----------------------------------------- BINARY SENSORS ---------------------------------------###
+######################################################################################################
+binary_sensor:
+  - platform: ffmpeg_motion
+    input: rtsp://192.168.1.67/unicast
+    name: Shed Motion Sensor
+    changes: 10
+    reset: 15
+
+
+######################################################################################################
+###-------------------------------------------- SENSORS -------------------------------------------###
+######################################################################################################
+sensor:
+  - platform: google_travel_time
+    name: travel_city
+    api_key: !secret google_api_key
+    origin: zone.home
+    destination: !secret city_address
+    options:
+      mode: driving
+
+  - platform: google_travel_time
+    name: travel_work
+    api_key: !secret google_api_key
+    origin: zone.home
+    destination: !secret work_address
+    options:
+      mode: driving
+
+  - platform: google_travel_time
+    name: travel_home
+    api_key: !secret google_api_key
+    origin: device_tracker.danielsiphone6splus
+    destination: zone.home
+    options:
+      mode: driving
+
+  - platform: pi_hole
+    host: pi-hole.home
+  
+  - platform: plex
+    host: 192.168.1.33
+  
+  - platform: speedtest
+    monitored_conditions:
+      - ping
+      - download
+      - upload
+
+  - platform: openhardwaremonitor
+    host: server.home
+
+  - platform: darksky
+    api_key: !secret darksky_api_key
+    monitored_conditions:
+      - summary
+      - precip_intensity
+      - precip_probability
+      - temperature
+      - cloud_cover
+      - humidity
+      - temperature_max
+      - temperature_min
+      - hourly_summary
+
+  - platform: wunderground
+    api_key: 0235d75e48901961
+    monitored_conditions:
+      - alerts
+      - precip_today_metric
+      - precip_1d_mm
+      - precip_1d
+      - precip_2d_mm
+      - precip_2d
+      - precip_3d_mm
+      - precip_3d
+      - relative_humidity
+      - temp_c
+      - temp_high_1d_c
+      - temp_low_1d_c
+      - temp_high_2d_c
+      - temp_low_2d_c
+      - wind_gust_kph
+      - wind_gust_1d_kph
+      - wind_kph
+      - wind_1d_kph
+
+  - platform: template
+    sensors:
+      alarmclock_time:
+        friendly_name: 'Alarm Clock Time'
+        value_template: '{{ "%0.02d:%0.02d" | format(states("input_number.alarmclock_hour") | int, states("input_number.alarmclock_minutes") | int) }}'    
+      
+  - platform: template
+    sensors:
+      battery_danielsiphone6splus:
+        unit_of_measurement: '%'
+        value_template: >-
+            {%- if states.device_tracker.danielsiphone6splus.attributes.battery %}
+                {{ states.device_tracker.danielsiphone6splus.attributes.battery|round }}
+            {% else %}
+                {{ states.sensor.battery_iphone.state }}
+            {%- endif %}
+      
+      washing_machine_power:
+        friendly_name: Washing Machine Power Usage
+#        entity_id: switch.plug_158d0001db1baf
+        unit_of_measurement: 'watts'
+        value_template: "{{ states.switch.plug_158d0001db1baf.attributes.load_power }}"
+      
+      dishwasher_power:
+        friendly_name: Dishwasher Power Usage
+#        entity_id: switch.plug_158d0001dc90d1
+        unit_of_measurement: 'watts'
+        value_template: "{{ states.switch.plug_158d0001dc90d1.attributes.load_power }}"
+      
+      livingroom_tv:
+        value_template: >-
+            {% if is_state('device_tracker.livingroom_tv', 'home') %}
+                on
+            {% else %}
+                off
+            {% endif %}
+
+  - platform: bom
+    zone_id: !secret bom_zone_id
+    wmo_id: !secret bom_wmo_id
+    monitored_conditions:
+      - rain_trace
+      - wind_spd_kmh
+
+  - platform: time_date
+    display_options:
+      - 'time'
+      - 'date'
+      - 'date_time'
+      - 'time_date'
+      - 'time_utc'
+      - 'beat'
+
+  - platform: sonarr
+    api_key: !secret sonarr_api_key
+    host: server.home
+    monitored_conditions:
+      - series
+      - upcoming
+      - queue
+      - diskspace
+    days: 3
+    urlbase: /sonarr
+    include_paths:
+      - M:\
+    
+  - platform: radarr
+    api_key: !secret radarr_api_key
+    host: server.home
+    monitored_conditions:
+      - movies
+      - upcoming
+      - diskspace
+    days: 3
+    urlbase: /radarr
+    include_paths:
+      - C:\
+
+  - platform: template
+    sensors:
+      location_daniel:
+        value_template: >-
+            {% if is_state('input_boolean.homekit_location', 'on') %}
+                Home
+            {% else %}
+                Away
+            {% endif %}
+        friendly_name: Daniel
+
+  - platform: template
+    sensors:
+      washing_machine_status:
+        value_template: '{{ states.input_select.washing_machine_status.state}}'
+        friendly_name: 'Washing Machine'
+
+      dishwasher_status:
+        value_template: '{{ states.input_select.dishwasher_status.state}}'
+        friendly_name: 'Dishwasher'
+      
+      sprinkler_status:
+        value_template: '{{ states.group.irrigation.state}}'
+        friendly_name: 'Sprinklers'

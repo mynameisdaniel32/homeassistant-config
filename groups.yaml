@@ -1,0 +1,400 @@
+default_view:
+  name: Home
+  view: yes
+  entities:
+    - group.controls
+    - group.audio_controls
+    - group.status
+    - group.main_lights
+    - group.motion_sensors
+    - media_player.bedroom_chromecast
+    - media_player.living_room_tv
+    - group.ac_bedroom
+
+advanced_view:
+  name: Advanced
+  view: yes
+  entities:
+    - group.appliances
+    - group.alarm
+    - group.lights
+
+room_view:
+  name: Rooms
+  view: yes
+  entities:
+  - group.room_living_room
+  - group.room_bedroom
+  - group.room_ensuite
+  - group.room_outside
+  - group.room_study
+    
+light_view:
+  name: Lights
+  icon: mdi:lightbulb
+  view: yes
+  entities:
+    - group.lights
+
+weather_view:
+  name: Weather
+  icon: mdi:weather-partlycloudy
+  view: yes
+  entities:
+    - group.weather
+
+garden_view:
+  name: Garden
+  icon: mdi:flower
+  view: yes
+  entities:
+  - group.irrigation_control
+  - group.irrigation
+
+server_view:
+  name: Server
+  icon: mdi:server-network
+  view: yes
+  entities:
+  - group.pi_hole
+  - group.media
+  - group.internet
+  - group.server
+
+system_view:
+  name: System
+  icon: mdi:settings
+  view: yes
+  entities:
+  - group.all_switches
+  - group.all_automations
+  - group.all_scripts
+  - group.all_devices
+  - group.all_lights
+  - group.all_remotes
+  - group.xiaomi
+
+camera_view:
+  name: Cameras
+  icon: mdi:camera
+  view: yes
+  entities:
+  - camera.shed
+
+xiaomi:
+  name: Xiaomi Zigbee
+  control: hidden
+  entities:
+    - switch.plug_158d0001db1baf
+    - switch.plug_158d0001dc90d1
+    - sensor.illumination_34ce00fa664a
+    - binary_sensor.switch_158d00016c131e
+    - binary_sensor.switch_158d00016be070
+    - binary_sensor.switch_158d0001e41a2c
+    - binary_sensor.switch_158d0001b12757
+    - binary_sensor.switch_158d0001b768a2
+    - binary_sensor.switch_158d0001e01080
+    - binary_sensor.wall_switch_left_158d0001710c46
+    - binary_sensor.wall_switch_right_158d0001710c46
+    - binary_sensor.wall_switch_both_158d0001710c46
+    - binary_sensor.motion_sensor_158d0001874f01
+    - binary_sensor.motion_sensor_158d0001660dc0
+    - binary_sensor.motion_sensor_158d0001abc9d2
+    - sensor.illumination_158d0001660dc0
+    - binary_sensor.motion_sensor_158d00015e8b33
+    - binary_sensor.motion_sensor_158d0001549ba5
+    - binary_sensor.motion_sensor_158d0001ddb1b6
+    - sensor.illumination_158d0001ddb1b6
+    - binary_sensor.door_window_sensor_158d0001aac0f9
+    - binary_sensor.door_window_sensor_158d0001c312c9
+    - binary_sensor.door_window_sensor_158d0001d633f8
+    - binary_sensor.door_window_sensor_158d0001c0335f
+    - binary_sensor.motion_sensor_158d00022507d2
+    - sensor.illumination_158d00022507d2
+    - sensor.temperature_158d0001f52bfc
+    - sensor.humidity_158d0001f52bfc
+    - sensor.pressure_158d0001f52bfc
+    - sensor.temperature_158d000227094f
+    - sensor.humidity_158d000227094f
+    - sensor.pressure_158d000227094f
+    - sensor.temperature_158d0002272833
+    - sensor.humidity_158d0002272833
+    - sensor.pressure_158d0002272833
+
+pi_hole:
+  name: Pi-Hole
+  entities:
+    - sensor.pihole_ads_blocked_today
+    - sensor.pihole_ads_percentage_blocked_today
+    - sensor.pihole_dns_queries_cached
+    - sensor.pihole_dns_queries_forwarded
+    - sensor.pihole_dns_queries_today
+    - sensor.pihole_dns_unique_clients
+    - sensor.pihole_dns_unique_domains
+    - sensor.pihole_domains_blocked
+
+media:
+  name: Media
+  entities:
+    - sensor.radarr_disk_space
+    - sensor.sonarr_disk_space
+    - sensor.radarr_movies
+    - sensor.radarr_upcoming
+    - sensor.sonarr_series
+    - sensor.sonarr_upcoming
+    - sensor.sonarr_queue
+    - sensor.plex
+
+server:
+  name: Server
+  entities:
+    - sensor.server_gigabyte_z170nwificf_ite_it8628e_temperatures_temperature_3
+    - sensor.server_intel_core_i76700_temperatures_cpu_package
+    - sensor.server_sk_hynix_sc311_sata_512gb_temperatures_temperature
+    - sensor.server_st4000dm0001f2168_temperatures_temperature
+    - sensor.server_wdc_wd80efzx68uw8n0_temperatures_temperature
+    - sensor.server_wdc_wd40ezrx00speb0_temperatures_temperature
+    - sensor.server_wdc_wd20ezrx00dc0b0_temperatures_temperature
+
+
+internet:
+  name: Internet
+  entities:
+    - sensor.speedtest_download
+    - sensor.speedtest_upload
+    - sensor.speedtest_ping
+
+status:
+  name: Status
+  entities:
+    - sensor.location_daniel
+    - sensor.battery_danielsiphone6splus
+    - light_controller.last_message
+    - sensor.sprinkler_status
+    - sensor.washing_machine_status
+    - sensor.dishwasher_status
+
+travel:
+  name: Travel
+  entities:
+    - sensor.travel_home
+    - sensor.travel_city
+    - sensor.travel_work
+
+appliances:
+  name: Appliances
+  control: hidden
+  entities:
+    - sensor.washing_machine_status
+    - switch.plug_158d0001db1baf
+    - sensor.washing_machine_power
+    - binary_sensor.door_window_sensor_158d0001aac0f9
+    - sensor.dishwasher_status
+    - switch.plug_158d0001dc90d1
+    - sensor.dishwasher_power
+
+controls:
+  name: Controls
+  control: hidden
+  entities:
+    - input_number.dynamic_light_brightness
+    - switch.flux
+    - cover.roller_door
+    - vacuum.xiaomi_vacuum_cleaner
+
+audio_controls:
+  name: Audio Controls
+  control: hidden
+  entities:
+    - switch.triplej
+    - switch.airplay_livingroom
+    - switch.airplay_shed
+    - switch.airplay_appletv
+    - switch.living_room_audio_source
+    - script.livingroom_volume_up
+    - script.livingroom_volume_down
+
+weather:
+  name: Weather
+  entities:
+    - sensor.dark_sky_hourly_summary
+    - sensor.dark_sky_summary
+    - sensor.pws_temp_c
+    - sensor.pws_precip_today_metric
+    - sensor.bom_rain_today
+    - sensor.pws_relative_humidity
+    - sensor.pws_wind_gust_kph
+    - sensor.pws_wind_kph
+    - sensor.dark_sky_cloud_coverage
+    - sensor.pws_temp_high_1d_c
+    - sensor.pws_temp_low_1d_c
+    - sensor.pws_precip_1d
+    - sensor.pws_precip_1d_mm
+    - sensor.pws_wind_gust_1d_kph
+    - sensor.pws_wind_1d_kph
+    - sensor.pws_temp_high_2d_c
+    - sensor.pws_temp_low_2d_c
+    - sensor.pws_precip_2d
+    - sensor.pws_precip_2d_mm
+    - sensor.pws_temp_high_3d_c
+    - sensor.pws_temp_low_3d_c
+    - sensor.pws_precip_3d
+    - sensor.pws_precip_3d_mm
+    - sun.sun
+    - sensor.pws_alerts
+
+
+irrigation:
+  name: Irrigation
+  entities:
+    - switch.sprinkler_zone_1
+    - switch.sprinkler_zone_2
+    - switch.sprinkler_zone_3
+    - switch.sprinkler_zone_4
+    - switch.sprinkler_zone_5
+    - switch.sprinkler_zone_6
+    - switch.sprinkler_zone_7
+    - switch.sprinkler_zone_8
+
+irrigation_control:
+  name: Irrigation Control
+  entities:
+  - input_number.sprinkler_timer
+  - input_number.sprinkler_temp
+  - input_boolean.sprinkler_control
+
+lights:
+  name: Lights
+  entities:
+    - light.bedroom
+    - light.wardrobe
+    - light.yeelight_rgb_7811dca21337
+    - light.study
+    - light.kitchen
+    - light.living_room
+    - light.lounge
+    - light.front_door
+    - light.laundry
+    - light.back_door
+    - light.carport
+    - light.pool_room_front
+    - light.pool_room_rear
+    - light.bathroom
+    - light.toilet
+    - light.bedroom_2
+    - light.bedroom_3
+    - light.yeelight_rgb_34ce008ce68b
+    - light.yeelight_rgb_34ce009133a2
+    - light.gateway_light_34ce00fa664a
+
+main_lights:
+  name: Lights
+  entities:
+  - light.bedroom
+  - light.wardrobe
+  - light.yeelight_rgb_7811dca21337
+  - light.study
+  - light.kitchen
+  - light.living_room
+  - light.lounge
+  - light.front_door
+  - light.laundry
+  - light.back_door
+  - light.carport
+
+welcome_lights:
+  name: Welcome Lights
+  entities:
+  - light.front_door
+  - light.back_door
+  - light.carport
+  - light.laundry
+  - light.yeelight_rgb_34ce008ce68b
+  - light.yeelight_rgb_34ce009133a2
+
+welcome_control_lights:
+  name: Welcome Control Lights
+  entities:
+  - light.bedroom
+  - light.yeelight_rgb_7811dca21337
+  - light.kitchen
+  - light.lounge
+  - light.study
+  - light.wardrobe
+  - light.pool_room_front
+  - light.pool_room_rear
+
+
+motion_sensors:
+  name: Motion Sensors
+  entities:
+    - binary_sensor.motion_sensor_158d0001874f01
+    - binary_sensor.motion_sensor_158d0001660dc0
+    - binary_sensor.motion_sensor_158d00015e8b33
+    - binary_sensor.motion_sensor_158d0001abc9d2
+    - binary_sensor.motion_sensor_158d0001549ba5
+    - binary_sensor.motion_sensor_158d0001ddb1b6
+    - binary_sensor.shed_motion_sensor
+    - binary_sensor.motion_sensor_158d00022507d2
+
+alarm:
+  name: Alarm Clock
+  control: hidden
+  entities:
+    - input_boolean.alarmclock_status
+    - input_boolean.alarmclock_weekday
+    - sensor.alarmclock_time
+    - input_number.alarmclock_hour
+    - input_number.alarmclock_minutes
+
+room_ensuite:
+  name: Ensuite
+  entities:
+  - light.yeelight_rgb_7811dca21337
+  - binary_sensor.motion_sensor_158d0001549ba5
+  - sensor.temperature_158d0001f52bfc
+  - sensor.humidity_158d0001f52bfc
+  - sensor.pressure_158d0001f52bfc
+
+ac_bedroom:
+  name: Bedroom AC
+  entities:
+  - switch.ac_bedroom
+  - climate.ac_bedroom
+
+room_bedroom:
+  name: Bedroom
+  entities:
+  - light.bedroom
+  - binary_sensor.motion_sensor_158d00015e8b33
+  - sensor.inside_temperature_bedroom_inside_temperature
+
+room_outside:
+  name: Outside
+  entities:
+  - light.carport
+  - sensor.outside_temperature_bedroom_outside_temperature
+  - sensor.sprinkler_status
+
+room_living_room:
+  name: Living Room
+  entities:
+  - light.kitchen
+  - light.lounge
+  - light.living_room
+  - binary_sensor.motion_sensor_158d0001660dc0
+  - binary_sensor.motion_sensor_158d00022507d2
+  - sensor.illumination_158d0001660dc0
+  - sensor.illumination_158d00022507d2
+  - sensor.temperature_158d000227094f
+  - sensor.humidity_158d000227094f
+  - sensor.pressure_158d000227094f
+
+room_study:
+  name: Study
+  entities:
+  - light.study
+  - binary_sensor.motion_sensor_158d0001abc9d2
+  - sensor.temperature_158d0002272833
+  - sensor.humidity_158d0002272833
+  - sensor.pressure_158d0002272833

@@ -1,0 +1,1050 @@
+#- alias: Flux Start
+#  trigger:
+#    platform: homeassistant
+#    event: start
+#  action:
+#    service: homeassistant.turn_on
+#    entity_id: switch.flux
+
+#######################################################################################################
+###--------------------------------------- LIGHT AUTOMATIONS ---------------------------------------###
+#######################################################################################################
+
+# LIGHT CHECK #########################################################################################
+- alias: Light Check Sunset
+  trigger:
+    platform: sun
+    event: sunset
+    offset: "-00:30:00"
+  action:
+    service: homeassistant.turn_on
+    entity_id: input_boolean.light_check
+
+- alias: Light Check Sunrise
+  trigger:
+    platform: sun
+    event: sunrise
+  action: 
+    service: homeassistant.turn_off
+    entity_id: input_boolean.light_check
+    
+- alias: Light Check Startup
+  trigger: 
+    platform: homeassistant
+    event: start
+  condition:
+    condition: or
+    conditions:
+    - condition: sun
+      after: sunset
+      after_offset: "-00:30:00"
+    - condition: sun
+      before: sunrise
+  action:
+    service: homeassistant.turn_on
+    entity_id: input_boolean.light_check
+
+
+# LIGHT CONTROL #######################################################################################
+- alias: Turn on Lights When I Get Home
+  trigger:
+    platform: state
+    entity_id: sensor.location_daniel
+    to: 'Home'
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+    service: homeassistant.turn_on
+    entity_id:
+      - group.welcome_lights
+      - light.living_room
+    data:
+      transition: 5
+
+- alias: Turn on Light If I'm Home
+  trigger:
+    platform: sun
+    event: sunset
+    offset: "-00:30:00"
+  condition:
+    condition: state
+    entity_id: sensor.location_daniel
+    state: 'Home'
+  action:
+    service: homeassistant.turn_on
+    entity_id: light.living_room
+    data:
+      transition: 90
+
+- alias: Turn off Welcome Lights
+  trigger:
+    platform: state
+    entity_id: group.welcome_control_lights
+    from: 'off'
+    to: 'on'
+  action:
+    service: homeassistant.turn_off
+    entity_id: group.welcome_lights
+    data:
+      transition: 5
+
+- alias: Turn on Backdoor + Carport Lights When Roller Door Opens
+  trigger:
+    platform: state
+    entity_id: cover.roller_door
+    from: 'closed'
+    to: 'open'
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+  - service: homeassistant.turn_on
+    entity_id: light.back_door
+    data:
+      transition: 2
+  - service: homeassistant.turn_on
+    entity_id: light.carport
+
+- alias: Fade off front lights
+  trigger:
+    platform: state
+    entity_id: light.yeelight_rgb_34ce008ce68b
+    from: 'unavailable'
+    to: 'on'
+    for:
+      minutes: 2
+  action:
+    service: homeassistant.turn_off
+    entity_id:
+      - light.yeelight_rgb_34ce008ce68b
+      - light.yeelight_rgb_34ce009133a2
+    data:
+      transition: 10
+
+
+# LIGHT BRIGHTNESS #######################################################################################
+- alias: Dynamic Brightness Reset
+  trigger:
+    platform: sun
+    event: sunrise
+  action:
+    service: input_number.set_value
+    data:
+      entity_id: input_number.dynamic_light_brightness
+      value: 100
+ 
+
+- alias: Dynamic Brightness 11 PM
+  trigger:
+    platform: time
+    at: '23:00:00'
+  action:
+    service: input_number.set_value
+    data:
+      entity_id: input_number.dynamic_light_brightness
+      value: 50
+
+- alias: Dynamic Brightness 12 AM
+  trigger:
+    platform: time
+    at: '00:00:00'
+  action:
+    service: input_number.set_value
+    data:
+      entity_id: input_number.dynamic_light_brightness
+      value: 30
+
+- alias: Dynamic Brightness 1 AM
+  trigger:
+    platform: time
+    at: '01:00:00'
+  action:
+    service: input_number.set_value
+    data:
+      entity_id: input_number.dynamic_light_brightness
+      value: 20
+
+#######################################################################################################
+###--------------------------------------- MOTION AUTOMATIONS --------------------------------------###
+#######################################################################################################
+
+# WARDROBE ############################################################################################
+- alias: Wardrobe Motion Detect
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d0001874f01
+    from: 'off'
+    to: 'on'
+  action:
+    service: homeassistant.turn_on
+    entity_id: light.wardrobe
+    data_template:
+      transition: 2
+      brightness_pct: '{{states.input_number.dynamic_light_brightness.state}}'
+
+- alias: Wardrobe Motion Clear
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d0001874f01
+    from: 'on'
+    to: 'off'
+  action:
+    service: homeassistant.turn_off
+    entity_id: light.wardrobe
+    data:
+      transition: 5
+
+# LAUNDRY #############################################################################################
+- alias: Laundry Motion Detect
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d0001ddb1b6
+    from: 'off'
+    to: 'on'
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+    service: homeassistant.turn_on
+    entity_id: light.laundry
+    data_template:
+      transition: 2
+      brightness_pct: '{{states.input_number.dynamic_light_brightness.state}}'
+
+- alias: Laundry Motion Clear
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d0001ddb1b6
+    from: 'on'
+    to: 'off'
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+    service: homeassistant.turn_off
+    entity_id: light.laundry
+    data:
+      transition: 5
+
+# BEDROOM #############################################################################################
+- alias: Bedroom Motion Detect
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d00015e8b33
+    from: 'off'
+    to: 'on'
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+    service: homeassistant.turn_on
+    entity_id: light.bedroom
+    data_template:
+      transition: 2
+      brightness_pct: '{{states.input_number.dynamic_light_brightness.state}}'
+
+- alias: Bedroom Motion Clear
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d00015e8b33
+    from: 'on'
+    to: 'off'
+    for:
+      minutes: 5
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+    service: homeassistant.turn_off
+    entity_id: light.bedroom
+    data:
+      transition: 5
+
+# ENSUITE #############################################################################################
+- alias: Ensuite Motion Detect
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d0001549ba5
+    from: 'off'
+    to: 'on'
+  action:
+    service: homeassistant.turn_on
+    entity_id: light.yeelight_rgb_7811dca21337
+    data_template:
+      transition: 2
+      brightness_pct: '{{states.input_number.dynamic_light_brightness.state}}'
+
+- alias: Ensuite Motion Clear (No Shower)
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d0001549ba5
+    from: 'on'
+    to: 'off'
+    for:
+      minutes: 2
+  condition:
+    condition: numeric_state
+    entity_id: sensor.humidity_158d0001f52bfc
+    below: 75
+  action:
+    service: homeassistant.turn_off
+    entity_id: light.yeelight_rgb_7811dca21337
+    data:
+      transition: 5
+
+- alias: Ensuite Motion Clear (Shower)
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d0001549ba5
+    from: 'on'
+    to: 'off'
+    for:
+      minutes: 20
+  condition:
+    condition: numeric_state
+    entity_id: sensor.humidity_158d0001f52bfc
+    above: 75
+  action:
+    service: homeassistant.turn_off
+    entity_id: light.yeelight_rgb_7811dca21337
+    data:
+      transition: 5
+
+# STUDY #############################################################################################
+- alias: Study Motion Detect
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d0001abc9d2
+    from: 'off'
+    to: 'on'
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+    service: homeassistant.turn_on
+    entity_id: light.study
+    data:
+      transition: 2
+
+- alias: Study Motion Clear
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d0001abc9d2
+    from: 'on'
+    to: 'off'
+    for:
+      minutes: 20
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+    service: homeassistant.turn_off
+    entity_id: light.study
+    data:
+      transition: 5
+
+
+# KITCHEN #############################################################################################
+- alias: Kitchen Motion Detect
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d0001660dc0
+    from: 'off'
+    to: 'on'
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+    service: homeassistant.turn_on
+    entity_id: light.kitchen
+    data_template:
+      transition: 2
+      brightness_pct: '{{states.input_number.dynamic_light_brightness.state}}'
+
+- alias: Kitchen Motion Clear
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d0001660dc0
+    from: 'on'
+    to: 'off'
+    for:
+      minutes: 15
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+    service: homeassistant.turn_off
+    entity_id: light.kitchen
+    data:
+      transition: 5
+
+
+#######################################################################################################
+###--------------------------------------- BUTTON AUTOMATIONS --------------------------------------###
+#######################################################################################################
+
+- alias: Button - Door Bell
+  trigger:
+    platform: event
+    event_type: click
+    event_data:
+      entity_id: binary_sensor.switch_158d00016c131e
+  action:
+  - service: script.door_bell
+  - service: notify.ios_danielsiphone6splus
+    data:
+      message: "Door Bell Pressed!"
+      data:
+        push:
+          badge: 2
+          category: "door_bell_alert"
+#  - service: script.sprinkler_burst
+
+- alias: Button - Roller Door
+  trigger:
+  - platform: event
+    event_type: click
+    event_data:
+      entity_id: binary_sensor.switch_158d00016be070
+  - platform: event
+    event_type: click
+    event_data:
+      entity_id: binary_sensor.switch_158d0001b12757
+  action:
+    service: script.toggle_roller_door
+
+- alias: Button - Carport Light
+  trigger:
+    platform: event
+    event_type: click
+    event_data:
+      entity_id: binary_sensor.switch_158d0001e41a2c
+  action:
+    service: homeassistant.toggle
+    entity_id: light.carport
+
+#######################################################################################################
+###--------------------------------------- OTHER AUTOMATIONS ---------------------------------------###
+#######################################################################################################
+- alias: Turn off Stuff When I Leave Home
+  trigger:
+    platform: state
+    entity_id: sensor.location_daniel
+    from: 'Home'
+    to: 'Away'
+  action:
+  - service: homeassistant.turn_off
+    entity_id:
+      - group.all_lights
+    data:
+      transition: 10
+  - service: homeassistant.turn_off
+    entity_id:
+      - switch.triplej
+
+- alias: Run Vacuum Cleaner
+  trigger:
+    platform: state
+    entity_id: sensor.location_daniel
+    from: 'Home'
+    to: 'Away'
+  condition:
+    condition: and
+    conditions:
+    - condition: time
+      before: '17:00:00'
+    - condition: template
+      value_template: '{{ as_timestamp(now()) - as_timestamp(states.automation.run_vacuum_cleaner.attributes.last_triggered) | int > 129600 }}'
+  action:
+  - service: homeassistant.turn_on
+    entity_id: vacuum.xiaomi_vacuum_cleaner
+    
+- alias: Stop Vacuum Cleaner
+  trigger:
+    platform: state
+    entity_id: sensor.location_daniel
+    to: 'Home'
+  action:
+  - service: homeassistant.turn_off
+    entity_id: vacuum.xiaomi_vacuum_cleaner
+
+- alias: Alarm Clock
+  trigger:
+    platform: template
+    value_template: '{{ states.sensor.time.state == states.sensor.alarmclock_time.state }}'
+  condition:
+    condition: or
+    conditions:
+    - condition: and
+      conditions:
+      - condition: state
+        entity_id: input_boolean.alarmclock_weekday
+        state: 'on'
+      - condition: time
+        weekday:
+        - mon
+        - tue
+        - wed
+        - thu
+        - fri
+    - condition: state
+      entity_id: input_boolean.alarmclock_weekday
+      state: 'off'
+  action:
+  - service: homeassistant.turn_on
+    entity_id:
+      - light.bedroom
+    data:
+      brightness: 255
+      transition: 5
+  - service: homeassistant.turn_off
+    entity_id:
+      - switch.airplay_shed
+      - switch.airplay_appletv
+  - service: homeassistant.turn_on
+    entity_id:
+      - switch.airplay_livingroom
+      - switch.triplej
+
+#######################################################################################################
+###------------------------------------- IRRIGATION AUTOMATIONS ------------------------------------###
+#######################################################################################################
+
+- alias: Sprinkler Warning
+  trigger:
+    - platform: state
+      entity_id: group.irrigation
+      to: 'on'
+      for:
+        seconds: 20
+    - platform: state
+      entity_id: group.irrigation
+      to: 'on'
+      for:
+        minutes: 30
+    - platform: state
+      entity_id: group.irrigation
+      to: 'on'
+      for:
+        hours: 1
+    - platform: state
+      entity_id: group.irrigation
+      to: 'on'
+      for:
+        hours: 2
+  action:
+    service: notify.ios_danielsiphone6splus
+    data:
+      message: "Sprinklers Left On!"
+      data:
+        push:
+          badge: 1
+          category: "sprinkler_alert"
+    
+- alias: Turn off sprinklers
+  trigger:
+    platform: event
+    event_type: ios.notification_action_fired
+    event_data:
+      actionName: SPRINKLERS_OFF
+  action:
+    service: homeassistant.turn_off
+    entity_id:
+      - group.irrigation
+
+- alias: Turn on sprinklers
+  trigger: 
+    platform: sun
+    event: sunrise
+  condition:
+    condition: and
+    conditions:
+      - condition: template
+        value_template: '{{states.sensor.pws_temp_high_1d_c.state > states.input_number.sprinkler_temp.state}}'
+      - condition: numeric_state
+        entity_id: sensor.pws_precip_1d_mm
+        below: 2
+  action:
+    service: homeassistant.turn_on
+    entity_id: input_boolean.sprinkler_control
+
+- alias: Sprinkler Control On
+  trigger:
+    platform: state
+    entity_id: input_boolean.sprinkler_control
+    to: 'on'
+  action:
+    service: script.sprinklers
+
+
+- alias: Sprinkler Control Off
+  trigger:
+    platform: state
+    entity_id: input_boolean.sprinkler_control
+    to: 'off'
+  action:
+    service: homeassistant.turn_off
+    entity_id:
+    - group.irrigation
+    - script.sprinklers
+
+
+
+#######################################################################################################
+###--------------------------------------- AUDIO AUTOMATIONS ---------------------------------------###
+#######################################################################################################
+
+- alias: Toggle TV state
+  trigger:
+    platform: state
+    entity_id:
+      - switch.livingroom_tv
+    from: 'on'
+    to: 'off'
+  action:
+    service: homeassistant.state
+    entity_id:
+      - sensor.livingroom_tv
+    data:
+      state: off
+      
+- alias: Toggle TV audio on when TV turns on
+  trigger:
+    platform: state
+    entity_id:
+      - media_player.living_room_tv
+    from: 'off'
+    to: 'on'
+  action:
+    service: homeassistant.turn_on
+    entity_id:
+      - switch.living_room_audio_source
+
+- alias: Toggle TV audio off when TV turns off
+  trigger:
+    platform: state
+    entity_id:
+      - media_player.living_room_tv
+    from: 'on'
+    to: 'off'
+  action:
+    service: homeassistant.turn_off
+    entity_id:
+      - switch.living_room_audio_source
+
+- alias: Toggle TV audio on when Apple TV starts playing
+  trigger:
+    platform: state
+    entity_id:
+    - media_player.apple_tv
+    to: 'playing'
+  action:
+    service: homeassistant.turn_on
+    entity_id:
+    - switch.living_room_audio_source
+
+- alias: Switch to 3.5mm audio when Triple J starts
+  trigger:
+    platform: state
+    entity_id: switch.triplej
+    from: 'off'
+    to: 'on'
+  action:
+    service: homeassistant.turn_off
+    entity_id: 
+    - switch.living_room_audio_source
+
+- alias: Switch to 3.5mm audio when Living Room AirPlay turns on
+  trigger:
+    platform: state
+    entity_id: switch.airplay_livingroom
+    from: 'off'
+    to: 'on'
+  action:
+    service: homeassistant.turn_off
+    entity_id: 
+    - switch.living_room_audio_source
+
+#######################################################################################################
+###--------------------------------------- COVER AUTOMATIONS ---------------------------------------###
+#######################################################################################################
+
+- alias: Close the roller door
+  trigger:
+    platform: event
+    event_type: ios.notification_action_fired
+    event_data:
+      actionName: ROLLER_DOOR_CLOSE
+  action:
+    service: cover.close_cover
+    entity_id:
+      - cover.roller_door
+
+- alias: Open the roller door
+  trigger:
+    platform: event
+    event_type: ios.notification_action_fired
+    event_data:
+      actionName: ROLLER_DOOR_OPEN
+  action:
+    service: cover.open_cover
+    entity_id:
+      - cover.roller_door
+
+- alias: Notify if roller door opens while I'm away
+  trigger:
+    platform: state
+    entity_id: cover.roller_door
+    from: 'closed'
+    to: 'open'
+  condition:
+    condition: state
+    entity_id: sensor.location_daniel
+    state: 'Away'
+  action:
+    service: notify.ios_danielsiphone6splus
+    data:
+      message: "Roller Door Opened!"
+      data:
+        attachment:
+          content-type: jpeg
+        push:
+          badge: 5
+          category: camera
+        entity_id: camera.shed
+
+
+- alias: Notify if roller door is open when I leave home
+  trigger:
+    platform: state
+    entity_id: sensor.location_daniel
+    from: 'Home'
+    to: 'Away'
+  condition:
+    condition: state
+    entity_id: cover.roller_door
+    state: 'open'
+  action:
+    service: notify.ios_danielsiphone6splus
+    data:
+      message: "Roller Door Left Open!"
+      data:
+        push:
+          badge: 5
+          category: "roller_door_alert"
+
+- alias: Notify if roller door is left open
+  trigger:
+    - platform: state
+      entity_id: cover.roller_door
+      to: 'open'
+      for:
+        minutes: 1
+    - platform: state
+      entity_id: cover.roller_door
+      to: 'open'
+      for:
+        minutes: 15
+    - platform: state
+      entity_id: cover.roller_door
+      to: 'open'
+      for:
+        hours: 1
+    - platform: state
+      entity_id: cover.roller_door
+      to: 'open'
+      for:
+        hours: 2
+    - platform: state
+      entity_id: cover.roller_door
+      to: 'open'
+      for:
+        hours: 3
+    - platform: state
+      entity_id: cover.roller_door
+      to: 'open'
+      for:
+        hours: 4
+    - platform: state
+      entity_id: cover.roller_door
+      to: 'open'
+      for:
+        hours: 5
+    - platform: state
+      entity_id: cover.roller_door
+      to: 'open'
+      for:
+        hours: 6
+  action:
+    service: notify.ios_danielsiphone6splus
+    data:
+      message: "Roller Door Left Open!"
+      data:
+        push:
+          badge: 1
+          category: "roller_door_alert"
+
+- alias: Prompt to open roller door when I arrive home
+  trigger:
+    platform: state
+    entity_id: sensor.location_daniel
+    to: 'Home'
+  condition:
+    condition: state
+    entity_id: cover.roller_door
+    state: 'closed'
+  action:
+    service: notify.ios_danielsiphone6splus
+    data:
+      message: "Open the Roller Door?"
+      data:
+        push:
+          category: "roller_door_prompt"
+
+
+#######################################################################################################
+###---------------------------------------- WASHING MACHINE ----------------------------------------###
+#######################################################################################################
+
+- alias: Set washing machine active when power detected
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.washing_machine_power
+      above: 20
+  condition:
+    condition: or
+    conditions:
+      - condition: state
+        entity_id: sensor.washing_machine_status
+        state: Idle
+      - condition: state
+        entity_id: sensor.washing_machine_status
+        state: Clean
+      - condition: state
+        entity_id: sensor.washing_machine_status
+        state: Finishing
+  action:
+    - service: input_select.select_option
+      data:
+        entity_id: input_select.washing_machine_status
+        option: Running
+
+
+- alias: Set washing machine finished when power drops
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.washing_machine_power
+      below: 1
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: sensor.washing_machine_status
+        state: Running
+  action:
+    - service: input_select.select_option
+      data:
+        entity_id: input_select.washing_machine_status
+        option: Finishing
+
+
+- alias: Set washing machine clean after timeout
+  trigger:
+    - platform: state
+      entity_id: sensor.washing_machine_status
+      to: Finishing
+      for:
+        minutes: 2
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: sensor.washing_machine_status
+        state: Finishing
+  action:
+    - service: input_select.select_option
+      data:
+        entity_id: input_select.washing_machine_status
+        option: Clean
+
+- alias: Set washing machine dirty when door opens and turn it off
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.door_window_sensor_158d0001aac0f9
+      to: 'on'
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: sensor.washing_machine_status
+        state: Clean
+  action:
+    - service: input_select.select_option
+      data:
+        entity_id: input_select.washing_machine_status
+        option: Idle 
+    - service: homeassistant.turn_off
+      data:
+        entity_id: switch.plug_158d0001db1baf
+
+
+- alias: Turn washing machine on when door opens
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.door_window_sensor_158d0001aac0f9
+      to: 'on'
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: sensor.washing_machine_status
+        state: Idle
+      - condition: state
+        entity_id: switch.plug_158d0001db1baf
+        state: 'off'
+  action:
+    - service: homeassistant.turn_on
+      data:
+        entity_id: switch.plug_158d0001db1baf
+
+- alias: Washing Machine Notification
+  trigger:
+    platform: state
+    entity_id: sensor.washing_machine_status
+    to: Clean
+  action:
+  - service: notify.ios_danielsiphone6splus
+    data:
+      message: "Washing Machine Finished!"
+      data:
+        push:
+          badge: 7
+          category: "washing_machine_alert"
+
+#######################################################################################################
+###------------------------------------------- DISHWASHER ------------------------------------------###
+#######################################################################################################
+
+- alias: Set dishwasher active when power detected
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.dishwasher_power
+      above: 5
+  condition:
+    condition: or
+    conditions:
+      - condition: state
+        entity_id: sensor.dishwasher_status
+        state: Idle
+      - condition: state
+        entity_id: sensor.dishwasher_status
+        state: Clean
+      - condition: state
+        entity_id: sensor.dishwasher_status
+        state: Finishing
+  action:
+    - service: input_select.select_option
+      data:
+        entity_id: input_select.dishwasher_status
+        option: Running
+
+- alias: Set dishwasher finished when power drops
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.dishwasher_power
+      below: 5
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: sensor.dishwasher_status
+        state: Running
+  action:
+    - service: input_select.select_option
+      data:
+        entity_id: input_select.dishwasher_status
+        option: Finishing
+
+- alias: Set dishwasher clean after timeout
+  trigger:
+    - platform: state
+      entity_id: sensor.dishwasher_status
+      to: Finishing
+      for:
+        minutes: 2
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: sensor.dishwasher_status
+        state: Finishing
+  action:
+    - service: input_select.select_option
+      data:
+        entity_id: input_select.dishwasher_status
+        option: Clean
+
+- alias: Set dishwasher dirty when door opens and turn it off
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.door_window_sensor_xxx
+      to: 'on'
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: sensor.dishwasher_status
+        state: Clean
+  action:
+    - service: input_select.select_option
+      data:
+        entity_id: input_select.dishwasher_status
+        option: Idle 
+    - service: homeassistant.turn_off
+      data:
+        entity_id: switch.plug_158d0001dc90d1
+
+
+- alias: Turn dishwasher on when door opens
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.door_window_sensor_xxx
+      to: 'on'
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: sensor.dishwasher_status
+        state: Idle
+      - condition: state
+        entity_id: switch.plug_158d0001dc90d1
+        state: 'off'
+  action:
+    - service: homeassistant.turn_on
+      data:
+        entity_id: switch.plug_158d0001dc90d1
+
+- alias: Dishwasher Notification
+  trigger:
+    platform: state
+    entity_id: sensor.dishwasher_status
+    to: Clean
+  action:
+  - service: notify.ios_danielsiphone6splus
+    data:
+      message: "Dishwasher Finished!"
+      data:
+        push:
+          badge: 7
+          category: "dishwasher_alert"

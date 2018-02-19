@@ -1,0 +1,42 @@
+remote.apple_tv:
+  platform: apple_tv
+  unique_id: a4c003b480f44cabf357f7b76a8854c335d8329708487a219fc62dbe1c1aa03b
+light.bedroom_2:
+  platform: lifx
+  unique_id: d0:73:d5:12:b5:b5
+light.bedroom_3:
+  platform: lifx
+  unique_id: d0:73:d5:13:af:47
+light.living_room:
+  platform: lifx
+  unique_id: d0:73:d5:20:5e:e9
+light.study:
+  platform: lifx
+  unique_id: d0:73:d5:22:5c:68
+light.lounge:
+  platform: lifx
+  unique_id: d0:73:d5:20:69:cf
+light.bedroom:
+  platform: lifx
+  unique_id: d0:73:d5:22:d7:e9
+light.kitchen:
+  platform: lifx
+  unique_id: d0:73:d5:20:5c:19
+light.front_door:
+  platform: lifx
+  unique_id: d0:73:d5:26:d1:31
+light.laundry:
+  platform: lifx
+  unique_id: d0:73:d5:26:be:9e
+light.wardrobe:
+  platform: lifx
+  unique_id: d0:73:d5:26:93:2f
+sensor.daniels_iphone_6s_plus_battery_state:
+  platform: ios
+  unique_id: state_danielsiphone6splus
+sensor.daniels_iphone_6s_plus_battery_level:
+  platform: ios
+  unique_id: level_danielsiphone6splus
+media_player.apple_tv:
+  platform: apple_tv
+  unique_id: a4c003b480f44cabf357f7b76a8854c335d8329708487a219fc62dbe1c1aa03b
