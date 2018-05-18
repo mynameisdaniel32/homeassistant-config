@@ -1,10 +1,32 @@
-#- alias: Flux Start
-#  trigger:
-#    platform: homeassistant
-#    event: start
-#  action:
-#    service: homeassistant.turn_on
-#    entity_id: switch.flux
+- alias: Home Assistant Start
+  trigger:
+    platform: homeassistant
+    event: start
+  action:
+  - service: homeassistant.turn_on
+    entity_id:
+    - switch.flux
+    - light.flux
+  - service: input_select.select_option
+    data:
+      entity_id: input_select.tablet_panel_detail
+      option: Lights
+  - service: group.set_visibility
+    entity_id:
+    - group.tile_tablet_panel_lights_advanced
+    - group.tile_tablet_panel_media
+    - group.tile_tablet_panel_cameras
+    - group.tile_tablet_panel_sprinklers
+    - group.tile_tablet_panel_sprinklers_advanced
+    - group.tile_tablet_panel_washer
+    - group.tile_tablet_panel_dishwasher
+    - group.tile_tablet_panel_alarm_clock
+    - group.tile_tablet_panel_vacuum_cleaner
+    - group.tile_tablet_panel_shed
+    - group.tile_tablet_panel_weather
+    - group.tile_tablet_panel_motion
+    data:
+      visible: False
 
 #######################################################################################################
 ###--------------------------------------- LIGHT AUTOMATIONS ---------------------------------------###
@@ -137,6 +159,16 @@
       value: 100
  
 
+- alias: Dynamic Brightness 10 PM
+  trigger:
+    platform: time
+    at: '22:00:00'
+  action:
+    service: input_number.set_value
+    data:
+      entity_id: input_number.dynamic_light_brightness
+      value: 75
+
 - alias: Dynamic Brightness 11 PM
   trigger:
     platform: time
@@ -167,28 +199,57 @@
       entity_id: input_number.dynamic_light_brightness
       value: 20
 
+# LIGHT COLOUR #######################################################################################
+
+- alias: Set LIFX colour temperature
+  trigger:
+    platform: state
+    entity_id: input_number.light_temp
+  action:
+    service: light.lifx_set_state
+    data:
+      transition: 5
+    data_template:
+      kelvin: '{{states.input_number.light_temp.state | int}}'
+      
+      
+- alias: Set light colour temperature
+  trigger:
+    platform: time
+    minutes: /15
+  action:
+    service: input_number.set_value
+    data:
+      entity_id: input_number.light_temp
+    data_template:
+      value: '{{( 1000000 / states.light.flux.attributes.color_temp ) | int}}'
+
+
+
+
+
 #######################################################################################################
 ###--------------------------------------- MOTION AUTOMATIONS --------------------------------------###
 #######################################################################################################
 
 # WARDROBE ############################################################################################
-- alias: Wardrobe Motion Detect
+- alias: Motion Detect - Wardrobe
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_158d0001874f01
+    entity_id: binary_sensor.motion_sensor_wardrobe
     from: 'off'
     to: 'on'
   action:
-    service: homeassistant.turn_on
+  - service: homeassistant.turn_on
     entity_id: light.wardrobe
     data_template:
       transition: 2
       brightness_pct: '{{states.input_number.dynamic_light_brightness.state}}'
 
-- alias: Wardrobe Motion Clear
+- alias: Motion Clear - Wardrobe
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_158d0001874f01
+    entity_id: binary_sensor.motion_sensor_wardrobe
     from: 'on'
     to: 'off'
   action:
@@ -198,10 +259,10 @@
       transition: 5
 
 # LAUNDRY #############################################################################################
-- alias: Laundry Motion Detect
+- alias: Motion Detect - Laundry
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_158d0001ddb1b6
+    entity_id: binary_sensor.motion_sensor_laundry
     from: 'off'
     to: 'on'
   condition:
@@ -209,16 +270,20 @@
     entity_id: input_boolean.light_check
     state: 'on'
   action:
-    service: homeassistant.turn_on
+  - service: homeassistant.turn_on
     entity_id: light.laundry
     data_template:
       transition: 2
       brightness_pct: '{{states.input_number.dynamic_light_brightness.state}}'
+  - service: input_select.select_option
+    data:
+      entity_id: input_select.room_tracker
+      option: Laundry
 
-- alias: Laundry Motion Clear
+- alias: Motion Clear - Laundry
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_158d0001ddb1b6
+    entity_id: binary_sensor.motion_sensor_laundry
     from: 'on'
     to: 'off'
   condition:
@@ -232,10 +297,10 @@
       transition: 5
 
 # BEDROOM #############################################################################################
-- alias: Bedroom Motion Detect
+- alias: Motion Detect - Bedroom
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_158d00015e8b33
+    entity_id: binary_sensor.motion_sensor_bedroom
     from: 'off'
     to: 'on'
   condition:
@@ -243,16 +308,16 @@
     entity_id: input_boolean.light_check
     state: 'on'
   action:
-    service: homeassistant.turn_on
+  - service: homeassistant.turn_on
     entity_id: light.bedroom
     data_template:
       transition: 2
       brightness_pct: '{{states.input_number.dynamic_light_brightness.state}}'
 
-- alias: Bedroom Motion Clear
+- alias: Motion Clear - Bedroom
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_158d00015e8b33
+    entity_id: binary_sensor.motion_sensor_bedroom
     from: 'on'
     to: 'off'
     for:
@@ -268,23 +333,24 @@
       transition: 5
 
 # ENSUITE #############################################################################################
-- alias: Ensuite Motion Detect
+- alias: Motion Detect - Ensuite
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_158d0001549ba5
+    entity_id: binary_sensor.motion_sensor_ensuite
     from: 'off'
     to: 'on'
   action:
-    service: homeassistant.turn_on
+  - service: homeassistant.turn_on
     entity_id: light.yeelight_rgb_7811dca21337
     data_template:
       transition: 2
       brightness_pct: '{{states.input_number.dynamic_light_brightness.state}}'
+      kelvin: '{{states.input_number.light_temp.state | int}}'
 
-- alias: Ensuite Motion Clear (No Shower)
+- alias: Motion Clear - Ensuite (No Shower)
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_158d0001549ba5
+    entity_id: binary_sensor.motion_sensor_ensuite
     from: 'on'
     to: 'off'
     for:
@@ -299,10 +365,10 @@
     data:
       transition: 5
 
-- alias: Ensuite Motion Clear (Shower)
+- alias: Motion Clear - Ensuite (Shower)
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_158d0001549ba5
+    entity_id: binary_sensor.motion_sensor_ensuite
     from: 'on'
     to: 'off'
     for:
@@ -318,10 +384,10 @@
       transition: 5
 
 # STUDY #############################################################################################
-- alias: Study Motion Detect
+- alias: Motion Detect - Study
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_158d0001abc9d2
+    entity_id: binary_sensor.motion_sensor_study
     from: 'off'
     to: 'on'
   condition:
@@ -329,19 +395,19 @@
     entity_id: input_boolean.light_check
     state: 'on'
   action:
-    service: homeassistant.turn_on
+  - service: homeassistant.turn_on
     entity_id: light.study
     data:
       transition: 2
 
-- alias: Study Motion Clear
+- alias: Motion Clear - Study
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_158d0001abc9d2
+    entity_id: binary_sensor.motion_sensor_study
     from: 'on'
     to: 'off'
     for:
-      minutes: 20
+      minutes: 10
   condition:
     condition: state
     entity_id: input_boolean.light_check
@@ -349,15 +415,50 @@
   action:
     service: homeassistant.turn_off
     entity_id: light.study
+    data:
+      transition: 5
+
+# LIVING ROOM #############################################################################################
+- alias: Motion Detect - Living Room
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_living_room
+    from: 'off'
+    to: 'on'
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+  - service: homeassistant.turn_on
+    entity_id: light.living_room
+    data:
+      transition: 2
+
+- alias: Motion Clear - Living Room
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_living_room
+    from: 'on'
+    to: 'off'
+    for:
+      minutes: 30
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+    service: homeassistant.turn_off
+    entity_id: light.living_room
     data:
       transition: 5
 
 
 # KITCHEN #############################################################################################
-- alias: Kitchen Motion Detect
+- alias: Motion Detect - Kitchen
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_158d0001660dc0
+    entity_id: binary_sensor.motion_sensor_kitchen
     from: 'off'
     to: 'on'
   condition:
@@ -365,20 +466,20 @@
     entity_id: input_boolean.light_check
     state: 'on'
   action:
-    service: homeassistant.turn_on
+  - service: homeassistant.turn_on
     entity_id: light.kitchen
     data_template:
       transition: 2
       brightness_pct: '{{states.input_number.dynamic_light_brightness.state}}'
 
-- alias: Kitchen Motion Clear
+- alias: Motion Clear - Kitchen
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_158d0001660dc0
+    entity_id: binary_sensor.motion_sensor_kitchen
     from: 'on'
     to: 'off'
     for:
-      minutes: 15
+      minutes: 5
   condition:
     condition: state
     entity_id: input_boolean.light_check
@@ -389,6 +490,234 @@
     data:
       transition: 5
 
+# FRONT DOOR #############################################################################################
+- alias: Motion Detect - Front Door
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_front_door
+    from: 'off'
+    to: 'on'
+  action:
+  - service: mqtt.publish
+    data:
+      topic: "tablet/1"
+      payload: "on"
+
+- alias: Motion Clear - Front Door
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_front_door
+    from: 'on'
+    to: 'off'
+  action:
+    - service: mqtt.publish
+      data:
+        topic: "tablet/1"
+        payload: "off"
+
+
+#######################################################################################################
+###----------------------------------- ROOM TRACKER AUTOMATIONS ------------------------------------###
+#######################################################################################################
+
+- alias: Room Tracker - Bedroom
+  trigger:
+    platform: state
+    entity_id: input_select.room_tracker
+    to: "Bedroom"
+    for:
+      minutes: 2
+  action:
+  - service: homeassistant.turn_off
+    entity_id:
+    - group.lights_outside
+    - light.living_room
+    - light.study
+    - light.front_door
+    - light.kitchen
+    - light.lounge
+    - light.laundry
+    data:
+      transition: 4
+
+- alias: Room Tracker - Study
+  trigger:
+    platform: state
+    entity_id: input_select.room_tracker
+    to: "Study"
+    for:
+      minutes: 2
+  action:
+  - service: homeassistant.turn_off
+    entity_id:
+    - group.lights_outside
+    - light.living_room
+    - light.bedroom
+    - light.wardrobe
+    - light.ensuite
+    - light.front_door
+    - light.kitchen
+    - light.lounge
+    - light.laundry
+    data:
+      transition: 4
+
+- alias: Room Tracker - Bedroom Motion Detect
+  trigger:
+    platform: state
+    entity_id: group.room_tracker_motion_bedroom_all
+    to: 'on'
+  action:
+  - service: input_select.select_option
+    data:
+      entity_id: input_select.room_tracker
+      option: Bedroom
+
+- alias: Room Tracker - Bedroom Motion Clear
+  trigger:
+    platform: state
+    entity_id: group.room_tracker_motion_bedroom_all
+    to: 'off'
+  condition:
+    condition: state
+    entity_id: input_select.room_tracker
+    state: 'Bedroom'
+  action:
+  - service: input_select.select_option
+    data_template:
+      entity_id: input_select.room_tracker
+      option: >-
+        {% if is_state('binary_sensor.motion_sensor_front_door', 'on') %}
+          Front Door
+        {% elif is_state('binary_sensor.motion_sensor_living_room', 'on') %}
+          Living Room
+        {% endif %}
+
+- alias: Room Tracker - Front Door Motion Detect
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_front_door
+    to: 'on'
+  action:
+  - service: input_select.select_option
+    data:
+      entity_id: input_select.room_tracker
+      option: Front Door
+
+- alias: Room Tracker - Front Door Motion Clear
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_front_door
+    to: 'off'
+  condition:
+    condition: state
+    entity_id: input_select.room_tracker
+    state: 'Front Door'
+  action:
+  - service: input_select.select_option
+    data_template:
+      entity_id: input_select.room_tracker
+      option: >-
+        {% if is_state('binary_sensor.motion_sensor_bedroom', 'on') %}
+          Bedroom
+        {% elif is_state('binary_sensor.motion_sensor_living_room', 'on') %}
+          Living Room
+        {% endif %}
+
+- alias: Room Tracker - Kitchen Motion Detect
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_kitchen
+    to: 'on'
+  action:
+  - service: input_select.select_option
+    data:
+      entity_id: input_select.room_tracker
+      option: Kitchen
+
+- alias: Room Tracker - Kitchen Motion Clear
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_kitchen
+    to: 'off'
+  condition:
+    condition: state
+    entity_id: input_select.room_tracker
+    state: 'Kitchen'
+  action:
+  - service: input_select.select_option
+    data_template:
+      entity_id: input_select.room_tracker
+      option: >-
+        {% if is_state('binary_sensor.motion_sensor_living_room', 'on') %}
+          Living Room
+        {% endif %}
+
+- alias: Room Tracker - Study Motion Detect
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_study
+    to: 'on'
+  action:
+  - service: input_select.select_option
+    data:
+      entity_id: input_select.room_tracker
+      option: Study
+
+- alias: Room Tracker - Study Motion Clear
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_study
+    to: 'off'
+  condition:
+    condition: state
+    entity_id: input_select.room_tracker
+    state: 'Study'
+  action:
+  - service: input_select.select_option
+    data_template:
+      entity_id: input_select.room_tracker
+      option: >-
+        {% if is_state('binary_sensor.motion_sensor_living_room', 'on') %}
+          Living Room
+        {% endif %}
+
+- alias: Room Tracker - Living Room Motion Detect
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_living_room
+    to: 'on'
+  action:
+  - service: input_select.select_option
+    data:
+      entity_id: input_select.room_tracker
+      option: Living Room
+
+- alias: Room Tracker - Living Room Motion Clear
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_living_room
+    to: 'off'
+  condition:
+    condition: state
+    entity_id: input_select.room_tracker
+    state: 'Bedroom'
+  action:
+  - service: input_select.select_option
+    data_template:
+      entity_id: input_select.room_tracker
+      option: >-
+        {% if is_state('binary_sensor.motion_sensor_study', 'on') %}
+          Study
+        {% elif is_state('binary_sensor.motion_sensor_lounge', 'on') %}
+          Lounge
+        {% elif is_state('binary_sensor.motion_sensor_kitchen', 'on') %}
+          Kitchen
+        {% elif is_state('binary_sensor.motion_sensor_front_door', 'on') %}
+          Front Door
+        {% elif is_state('binary_sensor.motion_sensor_bedroom', 'on') %}
+          Bedroom
+        {% endif %}
 
 #######################################################################################################
 ###--------------------------------------- BUTTON AUTOMATIONS --------------------------------------###
@@ -446,7 +775,7 @@
   action:
   - service: homeassistant.turn_off
     entity_id:
-      - group.all_lights
+      - group.lights
     data:
       transition: 10
   - service: homeassistant.turn_off
@@ -489,17 +818,13 @@
     - condition: and
       conditions:
       - condition: state
-        entity_id: input_boolean.alarmclock_weekday
+        entity_id: input_boolean.alarmclock_workday
         state: 'on'
-      - condition: time
-        weekday:
-        - mon
-        - tue
-        - wed
-        - thu
-        - fri
+      - condition: state
+        entity_id: binary_sensor.workday_sensor
+        state: 'on'
     - condition: state
-      entity_id: input_boolean.alarmclock_weekday
+      entity_id: input_boolean.alarmclock_workday
       state: 'off'
   action:
   - service: homeassistant.turn_on
@@ -514,12 +839,103 @@
       - switch.airplay_appletv
   - service: homeassistant.turn_on
     entity_id:
-      - switch.airplay_livingroom
+      - switch.airplay_living_room
       - switch.triplej
+
+- alias: SC Tiles update info
+  trigger:
+    platform: state
+    entity_id: sensor.sc_tiles_latest_version
+  action:
+    service: persistent_notification.create
+    data:
+      title: Update available
+      message: A new version for [Tiles custom state card](https://github.com/c727/home-assistant-tiles#changelog) is available.
 
 #######################################################################################################
 ###------------------------------------- IRRIGATION AUTOMATIONS ------------------------------------###
 #######################################################################################################
+
+- alias: Sprinkler Zone 1 On
+  trigger:
+  - platform: state
+    entity_id: timer.sprinkler_zone_1
+    to: 'active'
+  action:
+  - service: homeassistant.turn_on
+    entity_id: switch.sprinkler_zone_1
+
+- alias: Sprinkler Zone 1 Off
+  trigger:
+  - platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.sprinkler_zone_1
+  action:
+  - service: homeassistant.turn_off
+    entity_id: switch.sprinkler_zone_1
+
+- alias: Sprinkler Zone 2 On
+  trigger:
+  - platform: state
+    entity_id: timer.sprinkler_zone_2
+    to: 'active'
+  action:
+  - service: homeassistant.turn_on
+    entity_id: switch.sprinkler_zone_2
+
+- alias: Sprinkler Zone 2 Off
+  trigger:
+  - platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.sprinkler_zone_2
+  action:
+  - service: homeassistant.turn_off
+    entity_id: switch.sprinkler_zone_2
+
+- alias: Sprinkler Zone 3 On
+  trigger:
+  - platform: state
+    entity_id: timer.sprinkler_zone_3
+    to: 'active'
+  action:
+  - service: homeassistant.turn_on
+    entity_id: switch.sprinkler_zone_3
+
+- alias: Sprinkler Zone 3 Off
+  trigger:
+  - platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.sprinkler_zone_3
+  action:
+  - service: homeassistant.turn_off
+    entity_id: switch.sprinkler_zone_3
+
+- alias: Sprinkler Zone 4 On
+  trigger:
+  - platform: state
+    entity_id: timer.sprinkler_zone_4
+    to: 'active'
+  action:
+  - service: homeassistant.turn_on
+    entity_id: switch.sprinkler_zone_4
+
+- alias: Sprinkler Zone 4 Off
+  trigger:
+  - platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.sprinkler_zone_4
+  action:
+  - service: homeassistant.turn_off
+    entity_id: switch.sprinkler_zone_4
+
+
+
+
+
 
 - alias: Sprinkler Warning
   trigger:
@@ -587,17 +1003,22 @@
   action:
     service: script.sprinklers
 
-
 - alias: Sprinkler Control Off
   trigger:
     platform: state
     entity_id: input_boolean.sprinkler_control
     to: 'off'
   action:
-    service: homeassistant.turn_off
+  - service: homeassistant.turn_off
     entity_id:
     - group.irrigation
     - script.sprinklers
+  - service: timer.finish
+    entity_id:
+    - timer.sprinkler_zone_1
+    - timer.sprinkler_zone_2
+    - timer.sprinkler_zone_3
+    - timer.sprinkler_zone_4
 
 
 
@@ -609,13 +1030,13 @@
   trigger:
     platform: state
     entity_id:
-      - switch.livingroom_tv
+      - switch.living_room_tv
     from: 'on'
     to: 'off'
   action:
     service: homeassistant.state
     entity_id:
-      - sensor.livingroom_tv
+      - sensor.living_room_tv
     data:
       state: off
       
@@ -668,7 +1089,7 @@
 - alias: Switch to 3.5mm audio when Living Room AirPlay turns on
   trigger:
     platform: state
-    entity_id: switch.airplay_livingroom
+    entity_id: switch.airplay_living_room
     from: 'off'
     to: 'on'
   action:
@@ -1048,3 +1469,387 @@
         push:
           badge: 7
           category: "dishwasher_alert"
+
+#######################################################################################################
+###---------------------------------------- PANEL AUTOMATIONS --------------------------------------###
+#######################################################################################################
+##### LIGHTS
+- alias: Tablet Lights Detail Panel On
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    to: "Lights"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_lights
+    data:
+      visible: True
+  - service: homeassistant.turn_on
+    entity_id: input_boolean.tile_tablet_button_lights
+
+- alias: Tablet Lights Detail Panel Off
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    from: "Lights"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_lights
+    data:
+      visible: False
+  - service: homeassistant.turn_off
+    entity_id: input_boolean.tile_tablet_button_lights
+
+##### LIGHTS ADVANCED
+- alias: Tablet Lights Advanced Detail Panel On
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    to: "Lights Advanced"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_lights_advanced
+    data:
+      visible: True
+  - service: homeassistant.turn_on
+    entity_id: input_boolean.tile_tablet_button_lights_advanced
+
+- alias: Tablet Lights Advanced Detail Panel Off
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    from: "Lights Advanced"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_lights_advanced
+    data:
+      visible: False
+  - service: homeassistant.turn_off
+    entity_id: input_boolean.tile_tablet_button_lights_advanced
+
+- alias: Tablet Lights Advanced Panel Timeout
+  trigger:
+  - platform: state
+    entity_id: input_select.tablet_panel_detail
+    to: "Lights Advanced"
+    for:
+      seconds: 45
+  action:
+  - service: input_select.select_option
+    entity_id: input_select.tablet_panel_detail
+    data:
+      option: "Lights"
+  - service: homeassistant.turn_off
+    entity_id: input_boolean.tile_tablet_button_lights_advanced
+
+
+##### MEDIA
+- alias: Tablet Media Detail Panel On
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    to: "Media"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_media
+    data:
+      visible: True
+  - service: homeassistant.turn_on
+    entity_id: input_boolean.tile_tablet_button_media
+
+- alias: Tablet Media Detail Panel Off
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    from: "Media"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_media
+    data:
+      visible: False
+  - service: homeassistant.turn_off
+    entity_id: input_boolean.tile_tablet_button_media
+
+##### CAMERA
+- alias: Tablet Camera Detail Panel On
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    to: "Cameras"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_cameras
+    data:
+      visible: True
+  - service: homeassistant.turn_on
+    entity_id: input_boolean.tile_tablet_button_cameras
+
+- alias: Tablet Camera Detail Panel Off
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    from: "Cameras"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_cameras
+    data:
+      visible: False
+  - service: homeassistant.turn_off
+    entity_id: input_boolean.tile_tablet_button_cameras
+
+##### SPRINKLERS
+- alias: Tablet Sprinklers Panel On
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    to: "Sprinklers"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_sprinklers
+    data:
+      visible: True
+  - service: homeassistant.turn_on
+    entity_id: input_boolean.tile_tablet_button_sprinklers
+
+- alias: Tablet Sprinklers Panel Off
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    from: "Sprinklers"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_sprinklers
+    data:
+      visible: False
+  - service: homeassistant.turn_off
+    entity_id: input_boolean.tile_tablet_button_sprinklers
+
+##### SPRINKLERS ADVANED
+- alias: Tablet Sprinklers Advanced Panel On
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    to: "Sprinklers Advanced"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_sprinklers_advanced
+    data:
+      visible: True
+  - service: homeassistant.turn_on
+    entity_id: input_boolean.tile_tablet_button_sprinklers_advanced
+
+- alias: Tablet Sprinklers Advanced Panel Off
+  trigger:
+  - platform: state
+    entity_id: input_select.tablet_panel_detail
+    from: "Sprinklers Advanced"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_sprinklers_advanced
+    data:
+      visible: False
+  - service: homeassistant.turn_off
+    entity_id: input_boolean.tile_tablet_button_sprinklers_advanced
+
+- alias: Tablet Sprinklers Advanced Panel Timeout
+  trigger:
+  - platform: state
+    entity_id: input_select.tablet_panel_detail
+    to: "Sprinklers Advanced"
+    for:
+      seconds: 45
+  action:
+  - service: input_select.select_option
+    entity_id: input_select.tablet_panel_detail
+    data:
+      option: "Sprinklers"
+
+##### WASHER
+- alias: Tablet Washer Panel On
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    to: "Washer"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_washer
+    data:
+      visible: True
+  - service: homeassistant.turn_on
+    entity_id: input_boolean.tile_tablet_button_washer
+
+- alias: Tablet Washer Panel Off
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    from: "Washer"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_washer
+    data:
+      visible: False
+  - service: homeassistant.turn_off
+    entity_id: input_boolean.tile_tablet_button_washer
+
+##### DISHWASHER
+- alias: Tablet Dishwasher Panel On
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    to: "Dishwasher"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_dishwasher
+    data:
+      visible: True
+  - service: homeassistant.turn_on
+    entity_id: input_boolean.tile_tablet_button_dishwasher
+
+- alias: Tablet Dishwasher Panel Off
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    from: "Dishwasher"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_dishwasher
+    data:
+      visible: False
+  - service: homeassistant.turn_off
+    entity_id: input_boolean.tile_tablet_button_dishwasher
+
+##### ALARM CLOCK
+- alias: Tablet Alarm Clock Panel On
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    to: "Alarm Clock"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_alarm_clock
+    data:
+      visible: True
+  - service: homeassistant.turn_on
+    entity_id: input_boolean.tile_tablet_button_alarm_clock
+
+- alias: Tablet Alarm Clock Panel Off
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    from: "Alarm Clock"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_alarm_clock
+    data:
+      visible: False
+  - service: homeassistant.turn_off
+    entity_id: input_boolean.tile_tablet_button_alarm_clock
+
+##### VACUUM CLEANER
+- alias: Tablet Vacuum Cleaner Panel On
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    to: "Vacuum Cleaner"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_vacuum_cleaner
+    data:
+      visible: True
+  - service: homeassistant.turn_on
+    entity_id: input_boolean.tile_tablet_button_vacuum_cleaner
+
+- alias: Tablet Vacuum Cleaner Panel Off
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    from: "Vacuum Cleaner"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_vacuum_cleaner
+    data:
+      visible: False
+  - service: homeassistant.turn_off
+    entity_id: input_boolean.tile_tablet_button_vacuum_cleaner
+
+##### SHED
+- alias: Tablet Shed Panel On
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    to: "Shed"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_shed
+    data:
+      visible: True
+  - service: homeassistant.turn_on
+    entity_id: input_boolean.tile_tablet_button_shed
+
+- alias: Tablet Shed Panel Off
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    from: "Shed"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_shed
+    data:
+      visible: False
+  - service: homeassistant.turn_off
+    entity_id: input_boolean.tile_tablet_button_shed
+
+##### WEATHER
+- alias: Tablet Weather Panel On
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    to: "Weather"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_weather
+    data:
+      visible: True
+  - service: homeassistant.turn_on
+    entity_id: input_boolean.tile_tablet_button_weather
+
+- alias: Tablet Weather Panel Off
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    from: "Weather"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_weather
+    data:
+      visible: False
+  - service: homeassistant.turn_off
+    entity_id: input_boolean.tile_tablet_button_weather
+
+##### MOTION
+- alias: Tablet Motion Panel On
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    to: "Motion"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_motion
+    data:
+      visible: True
+  - service: homeassistant.turn_on
+    entity_id: input_boolean.tile_tablet_button_motion
+
+- alias: Tablet Motion Panel Off
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    from: "Motion"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_motion
+    data:
+      visible: False
+  - service: homeassistant.turn_off
+    entity_id: input_boolean.tile_tablet_button_motion
+

@@ -1,3 +1,1250 @@
+###############################################################################################################################################
+###############################################################################################################################################
+#                                                           TILE STATE CARDS                                                                  #
+###############################################################################################################################################
+###############################################################################################################################################
+
+input_boolean.tile_lights:
+  custom_ui_state_card: state-card-tiles
+  config:
+    columns: 12
+    row_height: 60px
+    gap: 4px
+#    color: 'hsl(198, 97%, 48%)'    #blue
+    color: 'hsl(0, 0%, 80%)'    #grey
+    color_on: 'hsl(37, 96%, 48%)'  #orange
+    color_off: 'hsl(0, 0%, 80%)'    #grey
+#    icon_size: 18px
+    text_align: left
+    entities:
+      - entity: light.bedroom
+        label: Bedroom
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+      - entity: light.wardrobe
+        label: Wardrobe
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+      - entity: light.yeelight_rgb_7811dca21337
+        label: Ensuite
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+      - entity: light.study
+        label: Study
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+      - entity: light.kitchen
+        label: Kitchen
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+      - entity: light.living_room
+        label: Living Room
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+      - entity: light.lounge
+        label: Lounge
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+      - entity: light.front_door
+        label: Front Door
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+      - entity: light.laundry
+        label: Laundry
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+      - entity: light.carport
+        label: Carport
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+      - entity: group.lights_pool_room
+        label: Pool Room
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+      - entity: light.bathroom
+        label: Bathroom
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+      - entity: light.bedroom_3
+        label: Bedroom 3
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+
+input_boolean.tile_main_lights:
+  custom_ui_state_card: state-card-tiles
+  config:
+    columns: 12
+    row_height: 30px
+    gap: 4px
+    color: 'hsl(0, 0%, 80%)'    #grey
+    color_on: 'hsl(37, 96%, 48%)'  #orange
+    color_off: 'hsl(0, 0%, 80%)'    #grey
+    text_align: left
+    entities:
+      - entity: group.lights
+        label: All Lights
+        text_align: center
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 10
+        color_on: 'hsl(5, 96%, 48%)'  #red
+      - entity: switch.flux
+        label: Flux
+        text_align: center
+#        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 2
+      - entity: light.bedroom
+        label: Bedroom
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+        row_span: 2
+      - entity: light.wardrobe
+        label: Wardrobe
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+        row_span: 2
+      - entity: light.yeelight_rgb_7811dca21337
+        label: Ensuite
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+        row_span: 2
+      - entity: light.study
+        label: Study
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+        row_span: 2
+      - entity: light.kitchen
+        label: Kitchen
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+        row_span: 2
+      - entity: light.living_room
+        label: Living Room
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+        row_span: 2
+      - entity: light.lounge
+        label: Lounge
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+        row_span: 2
+      - entity: light.front_door
+        label: Front Door
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+        row_span: 2
+      - entity: light.laundry
+        label: Laundry
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+        row_span: 2
+      - entity: light.carport
+        label: Carport
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+        row_span: 2
+
+input_boolean.tile_media:
+  custom_ui_state_card: state-card-tiles
+  config:
+    columns: 6
+    row_height: 60px
+    gap: 4px
+    color: 'hsl(0, 0%, 80%)'        #grey
+    color_on: 'hsl(37, 96%, 48%)'   #orange
+    color_off: 'hsl(0, 0%, 80%)'    #grey
+    entities:
+      - entity: switch.triplej
+        label: Triple J
+        icon: mdi:radio
+        column_span: 6
+      - entity: switch.airplay_living_room
+        label: Living Room
+        icon: mdi:airplay
+        column_span: 2
+      - entity: switch.airplay_shed
+        label: Shed
+        icon: mdi:airplay
+        column_span: 2
+      - entity: switch.airplay_appletv
+        label: Apple TV
+        icon: mdi:airplay
+        column_span: 2
+      - entity: script.living_room_volume_down
+        label: Volume Down
+        icon: mdi:volume-medium
+        column_span: 3
+        color: 'hsl(198, 97%, 48%)'     #blue
+      - entity: script.living_room_volume_up
+        label: Volume Up
+        icon: mdi:volume-high
+        column_span: 3
+        color: 'hsl(198, 97%, 48%)'     #blue
+
+input_boolean.tile_home:
+  custom_ui_state_card: state-card-tiles
+  config:
+    columns: 6
+    row_height: 60px
+    gap: 4px
+    color: 'hsl(0, 0%, 80%)'        #grey
+    color_on: 'hsl(37, 96%, 48%)'   #orange
+    color_off: 'hsl(0, 0%, 80%)'    #grey
+    entities:
+      - entity: sensor.location_daniel
+        label_template: "return state"
+        label_sec: Daniel
+        icon: mdi:account
+        text_size: '2.0em'
+        icon_size: '1.0em'
+        text_sec_size: '0.7em'
+        column_span: 6
+        row_span: 2
+        color: 'hsl(198, 97%, 48%)'        #blue
+      - entity: vacuum.xiaomi_vacuum_cleaner
+        label: Vacuum Cleaner
+        icon: mdi:robot-vacuum
+        column_span: 6
+      - entity: sensor.sprinkler_status
+        label_template: "return state"
+        label_sec: Sprinklers
+        text_sec_size: '0.7em'
+        icon: mdi:flower
+        column_span: 2
+        color: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'    #black
+      - entity: sensor.washing_machine_status
+        label_template: "return state"
+        label_sec: Washing Machine
+        text_sec_size: '0.7em'
+        icon: mdi:washing-machine
+        column_span: 2
+        color: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'    #black
+      - entity: sensor.dishwasher_status
+        label_template: "return state"
+        label_sec: Dishwasher
+        text_sec_size: '0.7em'
+        icon: mdi:cup-water
+        column_span: 2
+        color: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'    #black
+      - entity: cover.roller_door
+        label: Roller Door
+        icon_template: "if (state === 'closed') return 'mdi:garage'; else return 'mdi:garage-open'"
+        column_span: 6
+
+
+input_boolean.tile_alarm_clock:
+  custom_ui_state_card: state-card-tiles
+  config:
+    columns: 6
+    row_height: 60px
+    gap: 4px
+    color: 'hsl(0, 0%, 80%)'        #grey
+    color_on: 'hsl(37, 96%, 48%)'   #orange
+    color_off: 'hsl(0, 0%, 80%)'    #grey
+    entities:
+      - entity: sensor.alarmclock_time
+        label_template: "return state"
+        icon: mdi:alarm
+        column_span: 6
+        text_size: '3.0em'
+        icon_size: '1.0em'
+        color: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'    #black
+      - entity: input_boolean.alarmclock_status
+        label: "Alarm"
+        icon_template: "if (state === 'on') return 'mdi:alarm-check'; else return 'mdi:alarm-off'"
+        column_span: 3
+      - entity: input_boolean.alarmclock_workday
+        label: Workdays Only
+        icon_template: "if (state === 'on') return 'mdi:calendar-check'; else return 'mdi:calendar'"
+        column_span: 3
+
+input_boolean.tile_motion_sensors:
+  custom_ui_state_card: state-card-tiles
+  config:
+    columns: 6
+    row_height: 30px
+    gap: 4px
+    color: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+    text_color: 'hsl(0, 0%, 0%)'    #black
+    text_align: left
+    entities:
+      - entity: binary_sensor.motion_sensor_bedroom
+        label: Bedroom
+        icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
+        column_span: 3
+      - entity: binary_sensor.motion_sensor_wardrobe
+        label: Wardrobe
+        icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
+        column_span: 3
+      - entity: binary_sensor.motion_sensor_ensuite
+        label: Ensuite
+        icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
+        column_span: 3
+      - entity: binary_sensor.motion_sensor_study
+        label: Study
+        icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
+        column_span: 3
+      - entity: binary_sensor.motion_sensor_kitchen
+        label: Kitchen
+        icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
+        column_span: 3
+      - entity: binary_sensor.motion_sensor_living_room
+        label: Living Room
+        icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
+        column_span: 3
+      - entity: binary_sensor.motion_sensor_laundry
+        label: Laundry
+        icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
+        column_span: 3
+      - entity: binary_sensor.motion_sensor_shed
+        label: Shed
+        icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
+        column_span: 3
+
+input_boolean.tile_bedroom_ac:
+  custom_ui_state_card: state-card-tiles
+  config:
+    columns: 6
+    row_height: 60px
+    gap: 4px
+#    color: 'hsl(0, 0%, 80%)'        #grey
+    color_on: 'hsl(37, 96%, 48%)'   #orange
+    color_off: 'hsl(0, 0%, 80%)'    #grey
+    entities:
+      - entity: switch.ac_bedroom
+        label: Bedroom
+        icon: mdi:air-conditioner
+        column_span: 6
+
+input_boolean.tile_room_bedroom:
+  custom_ui_state_card: state-card-tiles
+  config:
+    columns: 12
+    row_height: 60px
+    gap: 4px
+    color: 'hsl(0, 0%, 80%)'        #grey
+    color_on: 'hsl(37, 96%, 48%)'   #orange
+    color_off: 'hsl(0, 0%, 80%)'    #grey
+    entities:
+      - entity: light.bedroom
+        label_sec: Bedroom
+        text_sec_size: '0.7em'
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 6
+      - entity: light.wardrobe
+        label_sec: Wardrobe
+        text_sec_size: '0.7em'
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 6
+      - entity: binary_sensor.motion_sensor_bedroom
+        label: " "
+        label_sec: Bedroom
+        text_sec_size: '0.7em'
+        icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
+        column_span: 3
+        color: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        color_on: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'    #black
+        text_color_on: 'hsl(37, 96%, 48%)'    #orange
+        text_color_off: 'hsl(0, 0%, 0%)'    #black
+      - entity: binary_sensor.motion_sensor_wardrobe
+        label: " "
+        label_sec: Wardrobe
+        text_sec_size: '0.7em'
+        icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
+        column_span: 3
+        color: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        color_on: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'    #black
+        text_color_on: 'hsl(37, 96%, 48%)'    #orange
+        text_color_off: 'hsl(0, 0%, 0%)'    #black
+      - entity: sensor.temperature_158d000227b875
+        label_template: "return parseInt(state) + 'ºC'"
+        icon: mdi:thermometer
+        column_span: 3
+        color: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'    #black
+      - entity: sensor.humidity_158d000227b875
+        label_template: "return parseInt(state) + '%'"
+        icon: mdi:water-percent
+        column_span: 3
+        color: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'    #black
+
+input_boolean.tile_room_study:
+  custom_ui_state_card: state-card-tiles
+  config:
+    columns: 6
+    row_height: 60px
+    gap: 4px
+    color: 'hsl(0, 0%, 80%)'        #grey
+    color_on: 'hsl(37, 96%, 48%)'   #orange
+    color_off: 'hsl(0, 0%, 80%)'    #grey
+    entities:
+      - entity: light.study
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 6
+      - entity: binary_sensor.motion_sensor_study
+#        label: Motion
+        label: " "
+#        label_template: "if (state === 'on') return 'Detected'; else return 'Clear'"
+        icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
+        column_span: 2
+        color: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        color_on: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'    #black
+        text_color_on: 'hsl(37, 96%, 48%)'    #orange
+        text_color_off: 'hsl(0, 0%, 0%)'    #black
+      - entity: sensor.temperature_158d0002272833
+        label_template: "return parseInt(state) + 'ºC'"
+        icon: mdi:thermometer
+        column_span: 2
+        color: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'    #black
+      - entity: sensor.humidity_158d0002272833
+        label_template: "return parseInt(state) + '%'"
+        icon: mdi:water-percent
+        column_span: 2
+        color: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'    #black
+
+input_boolean.tile_room_living_room:
+  custom_ui_state_card: state-card-tiles
+  config:
+    columns: 12
+    row_height: 60px
+    gap: 4px
+    color: 'hsl(0, 0%, 80%)'        #grey
+    color_on: 'hsl(37, 96%, 48%)'   #orange
+    color_off: 'hsl(0, 0%, 80%)'    #grey
+    entities:
+      - entity: light.kitchen
+        label_sec: Kitchen
+        text_sec_size: '0.7em'
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+      - entity: light.lounge
+        label_sec: Lounge
+        text_sec_size: '0.7em'
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+      - entity: light.living_room
+        label_sec: Living Room
+        text_sec_size: '0.7em'
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+      - entity: binary_sensor.motion_sensor_kitchen
+        label: " "
+#        label_template: "if (state === 'on') return 'Detected'; else return 'Clear'"
+        label_sec: Kitchen
+        text_sec_size: '0.7em'
+        icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
+        column_span: 3
+        color: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        color_on: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'    #black
+        text_color_on: 'hsl(37, 96%, 48%)'    #orange
+        text_color_off: 'hsl(0, 0%, 0%)'    #black
+      - entity: binary_sensor.motion_sensor_living_room
+        label: " "
+#        label_template: "if (state === 'on') return 'Detected'; else return 'Clear'"
+        label_sec: Living Room
+        text_sec_size: '0.7em'
+        icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
+        column_span: 3
+        color: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        color_on: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'    #black
+        text_color_on: 'hsl(37, 96%, 48%)'    #orange
+        text_color_off: 'hsl(0, 0%, 0%)'    #black
+      - entity: sensor.temperature_158d000227094f
+        label_template: "return parseInt(state) + 'ºC'"
+        icon: mdi:thermometer
+        column_span: 3
+        color: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'    #black
+      - entity: sensor.humidity_158d000227094f
+        label_template: "return parseInt(state) + '%'"
+        icon: mdi:water-percent
+        column_span: 3
+        color: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'    #black
+      - entity: sensor.illumination_158d0001660dc0
+        column_span: 6
+        label_sec: Kitchen
+        text_sec_size: '0.7em'
+        color: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'    #black
+      - entity: sensor.illumination_158d00022507d2
+        column_span: 6
+        label_sec: Living Room
+        text_sec_size: '0.7em'
+        color: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'    #black
+
+
+###############################################################################################################################################
+###############################################################################################################################################
+#                                                            TABLET BUTTONS                                                                   #
+###############################################################################################################################################
+###############################################################################################################################################
+
+input_boolean.tile_tablet_buttons:
+  custom_ui_state_card: state-card-tiles
+  config:
+    columns: 12
+    row_height: 60px
+    gap: 6px
+    color: 'hsl(0, 0%, 80%)'        #grey
+    color_on: 'hsl(37, 96%, 48%)'   #orange
+    color_off: 'hsl(0, 0%, 80%)'    #grey
+    entities:
+      - entity: input_boolean.tile_tablet_button_vacuum_cleaner
+        label_template: "return entities['vacuum.xiaomi_vacuum_cleaner'].attributes.status"
+        text_size: '0.9em'
+        label_sec: Vacuum Cleaner
+        text_sec_size: '0.78em'
+        icon: mdi:robot-vacuum
+        column_span: 3
+        color: 'hsla(0, 0%, 98%, 0)'        #whitetransparent
+        color_on: 'hsl(198, 97%, 48%)'      #blue
+        color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'        #black
+        text_color_on: 'hsl(0, 0%, 98%)'    #white
+        text_color_off: 'hsl(0, 0%, 0%)'    #black
+        service: input_select.select_option
+        data:
+          entity_id: input_select.tablet_panel_detail
+          option: Vacuum Cleaner
+      - entity: input_boolean.tile_tablet_button_alarm_clock
+        label_state: input_boolean.alarmclock_status
+        label_sec: Alarm Clock
+        text_sec_size: '0.7em'
+        icon: mdi:alarm
+        column_span: 3
+        color: 'hsla(0, 0%, 98%, 0)'        #whitetransparent
+        color_on: 'hsl(198, 97%, 48%)'      #blue
+        color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'        #black
+        text_color_on: 'hsl(0, 0%, 98%)'    #white
+        text_color_off: 'hsl(0, 0%, 0%)'    #black
+        service: input_select.select_option
+        data:
+          entity_id: input_select.tablet_panel_detail
+          option: Alarm Clock
+      - entity: input_boolean.tile_tablet_button_sprinklers
+        label_state: sensor.sprinkler_status
+        label_sec: Sprinklers
+        text_sec_size: '0.7em'
+        icon: mdi:flower
+        column_span: 3
+        color: 'hsla(0, 0%, 98%, 0)'        #whitetransparent
+        color_on: 'hsl(198, 97%, 48%)'      #blue
+        color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'        #black
+        text_color_on: 'hsl(0, 0%, 98%)'    #white
+        text_color_off: 'hsl(0, 0%, 0%)'    #black
+        service: input_select.select_option
+        data:
+          entity_id: input_select.tablet_panel_detail
+          option: Sprinklers
+      - entity: sensor.washing_machine_status
+        label_template: "return state"
+        label_sec: Washer
+        text_sec_size: '0.7em'
+        icon: mdi:washing-machine
+        column_span: 3
+        color: 'hsla(0, 0%, 98%, 0)'        #whitetransparent
+        color_on: 'hsl(198, 97%, 48%)'      #blue
+        color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'        #black
+        text_color_on: 'hsl(0, 0%, 98%)'    #white
+        text_color_off: 'hsl(0, 0%, 0%)'    #black
+        service: input_select.select_option
+        data:
+          entity_id: input_select.tablet_panel_detail
+          option: Washer
+      - entity: sensor.dishwasher_status
+        label_template: "return state"
+        label_sec: Dishwasher
+        text_sec_size: '0.7em'
+        icon: mdi:cup-water
+        column_span: 3
+        color: 'hsla(0, 0%, 98%, 0)'        #whitetransparent
+        color_on: 'hsl(198, 97%, 48%)'      #blue
+        color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'        #black
+        text_color_on: 'hsl(0, 0%, 98%)'    #white
+        text_color_off: 'hsl(0, 0%, 0%)'    #black
+        service: input_select.select_option
+        data:
+          entity_id: input_select.tablet_panel_detail
+          option: Dishwasher
+      - entity: input_boolean.tile_tablet_button_shed
+        label_template: "return entities['cover.roller_door'].state"
+        label_sec: Shed
+        text_sec_size: '0.7em'
+        icon_template: "if (entities['cover.roller_door'].state === 'closed') return 'mdi:garage'; else return 'mdi:garage-open'"
+        column_span: 3
+        color: 'hsla(0, 0%, 98%, 0)'        #whitetransparent
+        color_on: 'hsl(198, 97%, 48%)'      #blue
+        color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'        #black
+        text_color_on: 'hsl(0, 0%, 98%)'    #white
+        text_color_off: 'hsl(0, 0%, 0%)'    #black
+        service: input_select.select_option
+        data:
+          entity_id: input_select.tablet_panel_detail
+          option: Shed
+      - entity: input_boolean.tile_tablet_button_motion
+        label_template: "if (entities['group.motion_sensors'].state == 'off') return 'Clear'; else return 'Detected'"
+        text_size: '0.9em'
+        label_sec: Motion Sensors
+        text_sec_size: '0.78em'
+        icon_template: "if (entities['group.motion_sensors'].state === 'off') return 'mdi:walk'; else return 'mdi:run-fast'"
+        column_span: 3
+        color: 'hsla(0, 0%, 98%, 0)'        #whitetransparent
+        color_on: 'hsl(198, 97%, 48%)'      #blue
+        color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'        #black
+        text_color_on: 'hsl(0, 0%, 98%)'    #white
+        text_color_off: 'hsl(0, 0%, 0%)'    #black
+        service: input_select.select_option
+        data:
+          entity_id: input_select.tablet_panel_detail
+          option: Motion
+
+input_boolean.tile_tablet_status:
+  custom_ui_state_card: state-card-tiles
+  config:
+    columns: 24
+    row_height: 30px
+    gap: 6px
+    color_on: 'hsl(198, 97%, 48%)'      #blue
+    color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+    entities:
+      - entity: sensor.time
+        label_template: "return state"
+        text_size: '3.0em'
+#        icon: mdi:clock
+        column_span: 12
+        row_span: 2
+        color: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'    #black
+      - entity: input_boolean.tile_tablet_button_weather
+        style_template: "   if (entities['weather.yweather'].attributes.forecast[0].condition == 'sunny')           return 'background-image: url(\"/local/weather_icons/animated/day.svg\"); background-size: 140%';
+                            if (entities['weather.yweather'].attributes.forecast[0].condition == 'cloudy')          return 'background-image: url(\"/local/weather_icons/animated/cloudy.svg\"); background-size: 140%';
+                            if (entities['weather.yweather'].attributes.forecast[0].condition == 'rainy')           return 'background-image: url(\"/local/weather_icons/animated/rainy-5.svg\"); background-size: 140%';
+                            if (entities['weather.yweather'].attributes.forecast[0].condition == 'clear-night')     return 'background-image: url(\"/local/weather_icons/animated/night.svg\"); background-size: 140%';
+                            if (entities['weather.yweather'].attributes.forecast[0].condition == 'windy-variant')   return 'background-image: url(\"/local/weather_icons/animated/cloudy-day-3.svg\"); background-size: 140%';
+                            if (entities['weather.yweather'].attributes.forecast[0].condition == 'windy')           return 'background-image: url(\"/local/weather_icons/animated/cloudy.svg\"); background-size: 140%';
+                            if (entities['weather.yweather'].attributes.forecast[0].condition == 'pouring')         return 'background-image: url(\"/local/weather_icons/animated/rainy-6.svg\"); background-size: 140%';
+                            if (entities['weather.yweather'].attributes.forecast[0].condition == 'partly-cloudy')   return 'background-image: url(\"/local/weather_icons/animated/cloudy-day-3.svg\"); background-size: 140%';
+                            if (entities['weather.yweather'].attributes.forecast[0].condition == 'mostly-cloudy')   return 'background-image: url(\"/local/weather_icons/animated/cloudy-day-3.svg\"); background-size: 140%';
+                            if (entities['weather.yweather'].attributes.forecast[0].condition == 'fog')             return 'background-image: url(\"/local/weather_icons/animated/cloudy.svg\"); background-size: 140%';
+                            if (entities['weather.yweather'].attributes.forecast[0].condition == 'hail')            return 'background-image: url(\"/local/weather_icons/animated/rainy-7.svg\"); background-size: 140%';
+                            if (entities['weather.yweather'].attributes.forecast[0].condition == 'lightning')       return 'background-image: url(\"/local/weather_icons/animated/thunder.svg\"); background-size: 140%';
+                            if (entities['weather.yweather'].attributes.forecast[0].condition == 'lightning-rainy') return 'background-image: url(\"/local/weather_icons/animated/thunder.svg\"); background-size: 140%';
+                            "
+        column_span: 5
+        row_span: 2
+        color_on: 'hsla(0, 0%, 98%, 0)'     #whitetransparent
+        color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        color: 'hsla(0, 0%, 98%, 0)'        #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'        #black
+        service: input_select.select_option
+        data:
+          entity_id: input_select.tablet_panel_detail
+          option: Weather
+      - entity: input_boolean.tile_tablet_button_weather
+        text_align: left
+        label_template: "return entities['sensor.pws_temp_high_1d_c'].state + '°C'"
+        text_size: '3.0em'
+        text_sec_size: '0.5em'
+        column_span: 7
+        row_span: 2
+        color_on: 'hsla(0, 0%, 98%, 0)'     #whitetransparent
+        color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        color: 'hsla(0, 0%, 98%, 0)'        #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'        #black
+        service: input_select.select_option
+        data:
+          entity_id: input_select.tablet_panel_detail
+          option: Weather
+      - entity: sensor.friendly_date
+        label_template: "return state"
+        text_size: '2.0em'
+#        icon: mdi:calendar
+        column_span: 12
+        row_span: 1
+        color: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'    #black
+      - entity: input_boolean.tile_tablet_button_weather
+        label_template: "return 'Currently: ' + entities['sensor.pws_temp_c'].state + 'ºC'"
+        text_size: '1.0em'
+        label_sec_template: "return entities['sensor.dark_sky_hourly_summary'].state"
+        text_sec_size: '0.7em'
+        column_span: 12
+        row_span: 2
+        text_color_on: 'hsl(0, 0%, 98%)'    #white
+        text_color_off: 'hsl(0, 0%, 0%)'    #black
+        color: 'hsla(0, 0%, 98%, 0)'        #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'        #black
+        service: input_select.select_option
+        data:
+          entity_id: input_select.tablet_panel_detail
+          option: Weather
+
+input_boolean.tile_tablet_button_lights:
+  custom_ui_state_card: state-card-tiles
+  config:
+    columns: 12
+    row_height: 30px
+    gap: 6px
+    color_on: 'hsl(198, 97%, 48%)'  #blue
+    color_off: 'hsl(0, 0%, 80%)'    #grey
+    entities:
+      - entity: input_boolean.tile_tablet_button_lights
+        label: Light Controls
+        icon: mdi:lightbulb
+        column_span: 12
+        row_span: 2
+        service: input_select.select_option
+        data:
+          entity_id: input_select.tablet_panel_detail
+          option: Lights
+
+input_boolean.tile_tablet_button_media:
+  custom_ui_state_card: state-card-tiles
+  config:
+    columns: 12
+    row_height: 30px
+    gap: 6px
+    color_on: 'hsl(198, 97%, 48%)'  #blue
+    color_off: 'hsl(0, 0%, 80%)'    #grey
+    entities:
+      - entity: input_boolean.tile_tablet_button_media
+        label: Media Controls
+        icon: mdi:music
+        column_span: 12
+        row_span: 2
+        service: input_select.select_option
+        data:
+          entity_id: input_select.tablet_panel_detail
+          option: Media
+
+input_boolean.tile_tablet_button_cameras:
+  custom_ui_state_card: state-card-tiles
+  config:
+    columns: 12
+    row_height: 30px
+    gap: 6px
+    color_on: 'hsl(198, 97%, 48%)'  #blue
+    color_off: 'hsl(0, 0%, 80%)'    #grey
+    entities:
+      - entity: input_boolean.tile_tablet_button_cameras
+        label: Cameras
+        icon: mdi:camera
+        column_span: 12
+        row_span: 2
+        service: input_select.select_option
+        data:
+          entity_id: input_select.tablet_panel_detail
+          option: Cameras
+
+
+###############################################################################################################################################
+###############################################################################################################################################
+#                                                            TABLET PANELS                                                                    #
+###############################################################################################################################################
+###############################################################################################################################################
+
+########## LIGHTS ##########
+input_boolean.tile_tablet_panel_lights:
+  custom_ui_state_card: state-card-tiles
+  config:
+    columns: 12
+    row_height: 30px
+    gap: 7px
+    color: 'hsl(0, 0%, 98%)'        #white
+    color_on: 'hsl(37, 96%, 48%)'   #orange
+    color_off: 'hsl(0, 0%, 80%)'    #grey
+    text_align: center
+    entities:
+      - entity: group.lights
+        label: All Lights
+        text_align: center
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 10
+        color_on: 'hsl(5, 96%, 48%)'  #red
+        row_span: 2
+      - entity: input_boolean.tile_tablet_button_lights_advanced
+        label: ' '
+        text_align: center
+        icon: mdi:settings
+#        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 2
+        row_span: 2
+        service: input_select.select_option
+        data:
+          entity_id: input_select.tablet_panel_detail
+          option: Lights Advanced
+      - entity: light.bedroom
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+      - entity: light.wardrobe
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+      - entity: light.yeelight_rgb_7811dca21337
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+      - entity: light.study
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+      - entity: light.kitchen
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+      - entity: light.living_room
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+      - entity: light.lounge
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+      - entity: light.front_door
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+      - entity: light.laundry
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+      - entity: light.back_door
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+      - entity: light.carport
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+      - entity: light.pool_room_front
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+      - entity: light.pool_room_rear
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+
+
+########## LIGHTS ADVANCED ##########
+input_boolean.tile_tablet_panel_lights_advanced:
+  custom_ui_state_card: state-card-tiles
+  config:
+    columns: 12
+    row_height: 30px
+    gap: 7px
+    color: 'hsl(0, 0%, 98%)'        #white
+    color_on: 'hsl(37, 96%, 48%)'   #orange
+    color_off: 'hsl(0, 0%, 80%)'    #grey
+    text_align: center
+    entities:
+      - entity: group.all_lights
+        label: All Lights
+        text_align: center
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 10
+        color_on: 'hsl(5, 96%, 48%)'  #red
+        row_span: 2
+      - entity: input_boolean.tile_tablet_button_lights_advanced
+        label: ' '
+        icon: mdi:settings
+#        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 2
+        row_span: 2
+        service: input_select.select_option
+        data:
+          entity_id: input_select.tablet_panel_detail
+          option: Lights
+      - entity: light.bedroom
+        more_info: light.bedroom
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+      - entity: light.wardrobe
+        more_info: light.wardrobe
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+      - entity: light.yeelight_rgb_7811dca21337
+        more_info: light.yeelight_rgb_7811dca21337
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+      - entity: light.study
+        more_info: light.study
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+      - entity: light.kitchen
+        more_info: light.kitchen
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+      - entity: light.living_room
+        more_info: light.living_room
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+      - entity: light.lounge
+        more_info: light.lounge
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+      - entity: light.front_door
+        more_info: light.front_door
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+      - entity: light.laundry
+        more_info: light.laundry
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+      - entity: light.back_door
+        more_info: light.back_door
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+      - entity: light.carport
+        more_info: light.carport
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+      - entity: light.pool_room_front
+        more_info: light.pool_room_front
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+      - entity: light.pool_room_rear
+        more_info: light.pool_room_rear
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+
+########## MEDIA ##########
+input_boolean.tile_tablet_panel_media:
+  custom_ui_state_card: state-card-tiles
+  config:
+    columns: 12
+    row_height: 30px
+    gap: 7px
+    color: 'hsl(0, 0%, 98%)'        #white
+    color_on: 'hsl(37, 96%, 48%)'   #orange
+    color_off: 'hsl(0, 0%, 80%)'    #grey
+    text_align: center
+    entities:
+      - entity: switch.triplej
+        label: Triple J
+        icon: mdi:radio
+        column_span: 12
+        row_span: 2
+      - entity: switch.airplay_living_room
+        label: Living Room
+        icon: mdi:airplay
+        column_span: 4
+        row_span: 2
+      - entity: switch.airplay_shed
+        label: Shed
+        icon: mdi:airplay
+        column_span: 4
+        row_span: 2
+      - entity: switch.airplay_appletv
+        label: Apple TV
+        icon: mdi:airplay
+        column_span: 4
+        row_span: 2
+      - entity: script.living_room_volume_down
+        label: Volume Down
+        icon: mdi:volume-medium
+        column_span: 6
+        row_span: 2
+        color: 'hsl(198, 97%, 48%)'     #blue
+      - entity: script.living_room_volume_up
+        label: Volume Up
+        icon: mdi:volume-high
+        column_span: 6
+        row_span: 2
+        color: 'hsl(198, 97%, 48%)'     #blue
+
+
+########## ALARM CLOCK ##########
+input_boolean.tile_tablet_panel_alarm_clock:
+  custom_ui_state_card: state-card-tiles
+  config:
+    columns: 12
+    row_height: 30px
+    gap: 7px
+    color: 'hsl(0, 0%, 98%)'        #white
+    color_on: 'hsl(37, 96%, 48%)'   #orange
+    color_off: 'hsl(0, 0%, 80%)'    #grey
+    entities:
+      - entity: sensor.alarmclock_time
+        label_template: "return state"
+        icon: mdi:alarm
+        column_span: 12
+        row_span: 2
+        text_size: '2.0em'
+        icon_size: '1.0em'
+        color: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        text_color: 'hsl(0, 0%, 0%)'    #black
+      - entity: input_boolean.alarmclock_status
+        label: Alarm
+        icon_template: "if (state === 'on') return 'mdi:alarm-check'; else return 'mdi:alarm-off'"
+        column_span: 6
+        row_span: 2
+      - entity: input_boolean.alarmclock_workday
+        label: Workdays Only
+        icon_template: "if (state === 'on') return 'mdi:calendar-check'; else return 'mdi:calendar'"
+        column_span: 6
+        row_span: 2
+
+
+
+########## SPRINKLERS ##########
+input_boolean.tile_tablet_panel_sprinklers:
+  custom_ui_state_card: state-card-tiles
+  config:
+    columns: 12
+    row_height: 30px
+    gap: 7px
+    color: 'hsl(0, 0%, 98%)'        #white
+    color_on: 'hsl(37, 96%, 48%)'   #orange
+    color_off: 'hsl(0, 0%, 80%)'    #grey
+    entities:
+      - entity: input_boolean.sprinkler_control
+        label: Run Sprinklers
+        icon: mdi:water
+        column_span: 8
+        row_span: 2
+      - entity: input_boolean.tile_tablet_button_sprinklers_advanced
+        label: Advanced
+        icon: mdi:settings
+        column_span: 4
+        row_span: 2
+        service: input_select.select_option
+        data:
+          entity_id: input_select.tablet_panel_detail
+          option: Sprinklers Advanced
+      - entity: switch.sprinkler_zone_1
+        label_template: "return attributes['friendly_name']"
+        icon: mdi:flower
+        column_span: 6
+        row_span: 2
+      - entity: switch.sprinkler_timer_1
+        label: Timer
+        icon: mdi:flower
+        label_sec_template: "if (state === 'on') return entities['timer.sprinkler_zone_1'].attributes.remaining; else return parseInt(entities['input_number.sprinkler_timer_1'].state) + ' minutes'"
+        text_sec_size: '0.7em'
+        column_span: 6
+        row_span: 2
+      - entity: switch.sprinkler_zone_2
+        label_template: "return attributes['friendly_name']"
+        icon: mdi:flower
+        column_span: 6
+        row_span: 2
+      - entity: switch.sprinkler_timer_2
+        label: Timer
+        icon: mdi:flower
+        label_sec_template: "if (state === 'on') return entities['timer.sprinkler_zone_2'].attributes.remaining; else return parseInt(entities['input_number.sprinkler_timer_2'].state) + ' minutes'"
+        text_sec_size: '0.7em'
+        column_span: 6
+        row_span: 2
+      - entity: switch.sprinkler_zone_3
+        label_template: "return attributes['friendly_name']"
+        icon: mdi:flower
+        column_span: 6
+        row_span: 2
+      - entity: switch.sprinkler_timer_3
+        label: Timer
+        icon: mdi:flower
+        label_sec_template: "if (state === 'on') return entities['timer.sprinkler_zone_3'].attributes.remaining; else return parseInt(entities['input_number.sprinkler_timer_3'].state) + ' minutes'"
+        text_sec_size: '0.7em'
+        column_span: 6
+        row_span: 2
+      - entity: switch.sprinkler_zone_4
+        label_template: "return attributes['friendly_name']"
+        icon: mdi:flower
+        column_span: 6
+        row_span: 2
+      - entity: switch.sprinkler_timer_4
+        label: Timer
+        icon: mdi:flower
+        label_sec_template: "if (state === 'on') return entities['timer.sprinkler_zone_4'].attributes.remaining; else return parseInt(entities['input_number.sprinkler_timer_4'].state) + ' minutes'"
+        text_sec_size: '0.7em'
+        column_span: 6
+        row_span: 2
+
+input_boolean.tile_tablet_panel_motion:
+  custom_ui_state_card: state-card-tiles
+  config:
+    columns: 12
+    row_height: 30px
+    gap: 7px
+    color: 'hsl(0, 0%, 98%)'        #white
+    color_on: 'hsl(37, 96%, 48%)'   #orange
+    color_off: 'hsl(0, 0%, 80%)'    #grey
+    entities:
+      - entity: binary_sensor.motion_sensor_wardrobe
+        label_sec_template: "return attributes['friendly_name']"
+        text_size: '1.0em'
+        icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
+        column_span: 4
+        row_span: 2
+        color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        color_on: 'hsl(37, 96%, 48%)'       #orange
+        text_color_off: 'hsl(0, 0%, 0%)'    #black
+        text_color_on: 'hsl(0, 0%, 98%)'    #white
+#        style_template: "if (state === 'on') return 'background-color: hsl(37, 96%, 48%); color: hsl(0, 0%, 98%)'"
+      - entity: binary_sensor.motion_sensor_kitchen
+        label_sec_template: "return attributes['friendly_name']"
+        text_size: '1.0em'
+        icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
+        column_span: 4
+        row_span: 2
+        color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        color_on: 'hsl(37, 96%, 48%)'       #orange
+        text_color_off: 'hsl(0, 0%, 0%)'    #black
+        text_color_on: 'hsl(0, 0%, 98%)'    #white
+      - entity: binary_sensor.motion_sensor_bedroom
+        label_sec_template: "return attributes['friendly_name']"
+        text_size: '1.0em'
+        icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
+        column_span: 4
+        row_span: 2
+        color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        color_on: 'hsl(37, 96%, 48%)'       #orange
+        text_color_off: 'hsl(0, 0%, 0%)'    #black
+        text_color_on: 'hsl(0, 0%, 98%)'    #white
+      - entity: binary_sensor.motion_sensor_study
+        label_sec_template: "return attributes['friendly_name']"
+        text_size: '1.0em'
+        icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
+        column_span: 4
+        row_span: 2
+        color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        color_on: 'hsl(37, 96%, 48%)'       #orange
+        text_color_off: 'hsl(0, 0%, 0%)'    #black
+        text_color_on: 'hsl(0, 0%, 98%)'    #white
+      - entity: binary_sensor.motion_sensor_ensuite
+        label_sec_template: "return attributes['friendly_name']"
+        text_size: '1.0em'
+        icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
+        column_span: 4
+        row_span: 2
+        color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        color_on: 'hsl(37, 96%, 48%)'       #orange
+        text_color_off: 'hsl(0, 0%, 0%)'    #black
+        text_color_on: 'hsl(0, 0%, 98%)'    #white
+      - entity: binary_sensor.motion_sensor_laundry
+        label_sec_template: "return attributes['friendly_name']"
+        text_size: '1.0em'
+        icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
+        column_span: 4
+        row_span: 2
+        color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        color_on: 'hsl(37, 96%, 48%)'       #orange
+        text_color_off: 'hsl(0, 0%, 0%)'    #black
+        text_color_on: 'hsl(0, 0%, 98%)'    #white
+      - entity: binary_sensor.motion_sensor_shed
+        label_sec_template: "return attributes['friendly_name']"
+        text_size: '1.0em'
+        icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
+        column_span: 4
+        row_span: 2
+        color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        color_on: 'hsl(37, 96%, 48%)'       #orange
+        text_color_off: 'hsl(0, 0%, 0%)'    #black
+        text_color_on: 'hsl(0, 0%, 98%)'    #white
+      - entity: binary_sensor.motion_sensor_living_room
+        label_sec_template: "return attributes['friendly_name']"
+        text_size: '1.0em'
+        icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
+        column_span: 4
+        row_span: 2
+        color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        color_on: 'hsl(37, 96%, 48%)'       #orange
+        text_color_off: 'hsl(0, 0%, 0%)'    #black
+        text_color_on: 'hsl(0, 0%, 98%)'    #white
+      - entity: binary_sensor.motion_sensor_front_door
+        label_sec_template: "return attributes['friendly_name']"
+        text_size: '1.0em'
+        icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
+        column_span: 4
+        row_span: 2
+        color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        color_on: 'hsl(37, 96%, 48%)'       #orange
+        text_color_off: 'hsl(0, 0%, 0%)'    #black
+        text_color_on: 'hsl(0, 0%, 98%)'    #white
+      - entity: binary_sensor.motion_sensor_158d0001e5441a
+        label_sec_template: "return attributes['friendly_name']"
+        text_size: '1.0em'
+        icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
+        column_span: 4
+        row_span: 2
+        color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        color_on: 'hsl(37, 96%, 48%)'       #orange
+        text_color_off: 'hsl(0, 0%, 0%)'    #black
+        text_color_on: 'hsl(0, 0%, 98%)'    #white
+
+input_boolean.tile_weather:
+  custom_ui_state_card: custom-weather-card
+  config:
+    weather: weather.yweather
+    currenttemp: sensor.pws_temp_c
+
+
+
 ######################################################################################################
 ###-------------------------------------------- WEATHER -------------------------------------------###
 ######################################################################################################
@@ -83,7 +1330,7 @@ sensor.alarmclock_time:
 switch.airplay_shed:
   icon: mdi:airplay
   homebridge_visible: true
-switch.airplay_livingroom:
+switch.airplay_living_room:
   icon: mdi:airplay
   homebridge_visible: true
 switch.airplay_appletv:
@@ -91,12 +1338,12 @@ switch.airplay_appletv:
   homebridge_visible: true
 input_boolean.homekit_location:
   homebridge_visible: true
-script.livingroom_tv_on:
+script.living_room_tv_on:
   icon: mdi:television
-script.livingroom_volume_up:
+script.living_room_volume_up:
   icon: mdi:volume-high
 #  custom_ui_state_card: state-card-custom_volume
-script.livingroom_volume_down:
+script.living_room_volume_down:
   icon: mdi:volume-medium
 cover.roller_door:
   device_class: garage
@@ -137,7 +1384,7 @@ sensor.dishwasher_power:
 vacuum.xiaomi_vacuum_cleaner:
   friendly_name: Vacuum Cleaner
 switch.vacuum:
-  icon: mdi:roomba
+  icon: mdi:robot-vacuum
   homebridge_visible: true
   google_assistant: true
   google_assistant_name: Vacuum Cleaner
@@ -178,59 +1425,10 @@ sensor.outside_temperature_bedroom_outside_temperature:
 ######################################################################################################
 ###-------------------------------------------- XIAOMI --------------------------------------------###
 ######################################################################################################
-switch.plug_158d0001db1baf:
-  friendly_name: Washing Machine
-switch.plug_158d0001dc90d1:
-  friendly_name: Dishwasher
-sensor.illumination_34ce00fa664a:
-  friendly_name: Gateway Light Sensor
-sensor.illumination_158d00022507d2:
-  friendly_name: Living Room Illumination
-binary_sensor.switch_158d00016c131e:
-  friendly_name: Door Bell
-binary_sensor.switch_158d00016be070:
-  friendly_name: Roller Door Button
-binary_sensor.switch_158d0001b12757:
-  friendly_name: Roller Door Button
-binary_sensor.switch_158d0001e41a2c:
-  friendly_name: Carport Lights
-binary_sensor.motion_sensor_158d0001874f01:
-  friendly_name: Wardrobe Motion Sensor
-binary_sensor.motion_sensor_158d0001660dc0:
-  friendly_name: Kitchen Motion Sensor
-binary_sensor.motion_sensor_158d0001abc9d2:
-  friendly_name: Study Motion Sensor
-sensor.illumination_158d0001660dc0:
-  friendly_name: Kitchen Illumination
-binary_sensor.motion_sensor_158d00015e8b33:
-  friendly_name: Bedroom Motion Sensor
-binary_sensor.motion_sensor_158d0001549ba5:
-  friendly_name: Ensuite Motion Sensor
-binary_sensor.motion_sensor_158d0001ddb1b6:
-  friendly_name: Laundry Motion Sensor
-binary_sensor.motion_sensor_158d00022507d2:
-  friendly_name: Living Room Motion Sensor
+
 binary_sensor.door_window_sensor_158d0001aac0f9:
-  friendly_name: Washing Machine Door
   icon: mdi:washing-machine
-binary_sensor.door_window_sensor_158d0001c312c9:
-  friendly_name: Shed Door
-sensor.temperature_158d0001f52bfc:
-  friendly_name: Ensuite Temperature
-sensor.humidity_158d0001f52bfc:
-  friendly_name: Ensuite Humidity
-  icon: mdi:humidity
-sensor.pressure_158d0001f52bfc:
-  friendly_name: Ensuite Pressure
-  icon: mdi:gauge
-sensor.temperature_158d000227094f:
-  friendly_name: Living Room Temperature
-sensor.humidity_158d000227094f:
-  friendly_name: Living Room Humidity
-  icon: mdi:humidity
-sensor.pressure_158d000227094f:
-  friendly_name: Living Room Pressure
-  icon: mdi:gauge
+
 ######################################################################################################
 ###-------------------------------------------- GROUPS --------------------------------------------###
 ######################################################################################################
@@ -322,9 +1520,9 @@ media_player.daniels_iphone_6s_plus:
   hidden: true
 automation.restart_hass:
   hidden: true
-device_tracker.livingroom_tv:
+device_tracker.living_room_tv:
   hidden: true
-media_player.livingroom_chromecast:
+media_player.living_room_chromecast:
   hidden: true
 sensor.time:
   hidden: true
@@ -342,7 +1540,7 @@ sensor.daniels_iphone_6s_plus_battery_level:
   hidden: true
 sensor.daniels_iphone_6s_plus_battery_state:
   hidden: true
-sensor.livingroom_tv:
+sensor.living_room_tv:
   hidden: true
 sensor.server_generic_hard_disk_load_used_space:
   hidden: true

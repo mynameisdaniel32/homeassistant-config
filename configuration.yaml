@@ -1,11 +1,13 @@
 homeassistant:
-  name: Home Assistant
+  name: !secret address
   unit_system: metric
   latitude: !secret home_latitude
   longitude: !secret home_longitude
   elevation: 102
   time_zone: Australia/Adelaide
   customize: !include customize.yaml
+  whitelist_external_dirs:
+  - '/tmp'
 
 zone:
   name: Home
@@ -26,9 +28,11 @@ script: !include scripts.yaml
 frontend:
   javascript_version: latest
   extra_html_url:
-    - /local/custom_ui/state-card-custom_volume.html
+    - /local/custom_ui/state-card-tiles.html
+    - /local/custom_ui/custom-weather-card.html
   extra_html_url_es5:
-    - /local/custom_ui/state-card-custom_volume.html
+    - /local/custom_ui/state-card-tiles_es5.html
+    - /local/custom_ui/custom-weather-card.html
 
 
 updater:
@@ -49,6 +53,8 @@ recorder:
   purge_interval: 2
   purge_keep_days: 14
 
+shopping_list:
+
 influxdb:
   host: Server-InfluxDB.home
 
@@ -62,6 +68,11 @@ light:
     payload_off: 'OFF'
     state_topic: stat/sonoff/carport-lights/POWER
 
+  - platform: mqtt
+    name: Flux
+    command_topic: "light/flux/command"
+    color_temp_command_topic: "light/flux/color_temp"
+
 light_controller:
   topic: node/light_switch/
   
@@ -69,6 +80,11 @@ climate:
   - platform: daikin
     name: ac_bedroom
     host: 192.168.1.253
+
+fan:
+  - platform: xiaomi_miio
+    host: 192.168.1.253
+    token: !secret xiaomi_miio_token_airpurifier
 
 emulated_hue:
     listen_port: 8300
@@ -85,9 +101,9 @@ media_player:
       - media_player.living_room_chromecast
     commands:
       turn_on:
-        service: script.livingroom_tv_on
+        service: script.living_room_tv_on
       turn_off:
-        service: script.livingroom_tv_off
+        service: script.living_room_tv_off
       volume_up:
         service: switch.turn_on
         data:
@@ -102,7 +118,7 @@ media_player:
           entity_id: switch.living_room_audio_mute
     attributes:
       # is_volume_muted: ENTITY_ID|ATTRIBUTE
-      state: sensor.livingroom_tv
+      state: sensor.living_room_tv
 
 ifttt:
   key: !secret ifttt_key
@@ -115,6 +131,11 @@ camera:
     input: -rtsp_transport tcp -i rtsp://192.168.1.67/unicast
     name: Shed
     extra_arguments: -pred 1 -q:v 2
+
+  - platform: ffmpeg
+    input: -rtsp_transport tcp -i rtsp://192.168.1.29:8554/unicast
+    name: Front Yard
+    
 
 http:
   api_password: !secret api_password
@@ -204,6 +225,17 @@ xiaomi_aqara:
 apple_tv:
   - host: 192.168.1.237
     login_id: !secret apple_tv_id
+
+weather:
+  - platform: yweather
+
+# DON'T ENABLE. TOO MANY API CALLS
+#  - platform: darksky
+#    api_key: !secret darksky_api_key
+
+  - platform: bom
+    station: 'IDS60901.95677'
+
 
 ######################################################################################################
 ###----------------------------------------- NOTIFICATIONS ----------------------------------------###
@@ -298,6 +330,16 @@ ios:
             destructive: yes
 
 ######################################################################################################
+###-------------------------------------------- TIMERS --------------------------------------------###
+######################################################################################################
+timer:
+  sprinkler_zone_1:
+  sprinkler_zone_2:
+  sprinkler_zone_3:
+  sprinkler_zone_4:
+
+
+######################################################################################################
 ###------------------------------------------- SWITCHES -------------------------------------------###
 ######################################################################################################
 switch:
@@ -305,27 +347,27 @@ switch:
     host: 192.168.1.101
     mac: 'B4:43:0D:F9:1F:3A'
     switches:
-      livingroom_tv_power:
+      living_room_tv_power:
         friendly_name: "Living Room TV Power"
         command_on: 'JgAOAYKDEEIPQhBDEEIPIw8hEEIRIQ9DDyIPQw8iDyIPIw4iECIPQhFBECIQQg8iD0MQIg9CDwABKoKDEEIPRA5DD0MPIg8iEEIQIg9DDyIQQhAhDyIQIg4iECIPQw9CESEPQxAhD0MQIQ9DEAABKYGEEEIPQw9DEEIQIQ8iEEIQIRBCECIQQhAhECEPIg8iDyMPQhBCECIPQhAiEEIQIQ9DEAABKYGEEEIPQxBCD0MPIg8iD0MQIQ9DDyIQQhAhECIPIg8iDyIPQw9DECEPQw8iEEIPIhBCEAABKYKEEEIQQg9CEEIQIg8iD0MQIRBCECEQQg8iECEQIREhECEQQhBCECEPQxAhEEIQIRBCEAANBQAAAAAAAAAAAAA='
         command_off: 'JgAOAYKDEEIPQhBDEEIPIw8hEEIRIQ9DDyIPQw8iDyIPIw4iECIPQhFBECIQQg8iD0MQIg9CDwABKoKDEEIPRA5DD0MPIg8iEEIQIg9DDyIQQhAhDyIQIg4iECIPQw9CESEPQxAhD0MQIQ9DEAABKYGEEEIPQw9DEEIQIQ8iEEIQIRBCECIQQhAhECEPIg8iDyMPQhBCECIPQhAiEEIQIQ9DEAABKYGEEEIPQxBCD0MPIg8iD0MQIQ9DDyIQQhAhECIPIg8iDyIPQw9DECEPQw8iEEIPIhBCEAABKYKEEEIQQg9CEEIQIg8iD0MQIRBCECEQQg8iECEQIREhECEQQhBCECEPQxAhEEIQIRBCEAANBQAAAAAAAAAAAAA='
-      livingroom_audio_power:
+      living_room_audio_power:
         friendly_name: "Living Room Audio Power"
         command_on: 'JgBQAAABJpUUEhETEhMSOBITERURExITETkSOBI4FBERORE5EjgRORMSERQRFBEUEzcRFBETFBIROBI5ETgRORITETkUNhI4EQAFIgABJkwTAA0FAAAAAAAAAAA='
         command_off: 'JgBQAAABJpUUEhETEhMSOBITERURExITETkSOBI4FBERORE5EjgRORMSERQRFBEUEzcRFBETFBIROBI5ETgRORITETkUNhI4EQAFIgABJkwTAA0FAAAAAAAAAAA='
-      livingroom_audio_source:
+      living_room_audio_source:
         friendly_name: "Living Room Audio Source"
         # on = TV/optical
         command_on: 'JgBQAAABJ5YRFBETEhQROBITEhQRExITEjgSOBI4ERQSOBE5EjgRORE5EjgRFBI4ERMSFBEUERMSFBEUETgSFBE4EjgSORE4EQAFIgABJ0sRAA0FAAAAAAAAAAA=' 
         # off = MusicPi/3.5mm
         command_off: 'JgBYAAABKJQSExEVERMSOBITEhMRFBITEjgSOBE5EhMRORI4ETkROBIUETgSFBE4EhMSFBETEhMSOBITETkSExE5EjgSOBE5EgAFIQABJ0sRAAxaAAEnSxMADQU='
-      livingroom_audio_volume:
+      living_room_audio_volume:
         friendly_name: "Living Room Audio Volume"
         # on = volume up
         command_on: 'JgBQAAABKZMTEhQRExITNxMSExEVERMSEzYTNxQ3ExEUNxM2EzcUNhQRFDYUERQ2FDYTEhQRFBETNhUREzYVERMSEzYUNhQ3EwAFHwABKUkUAA0FAAAAAAAAAAA='
         # off = volume down
         command_off: 'JgBQAAABKZMTEhQRFBETNxQRExITEhQREzYVNhM2FBITNhM3FDcTNhMTEzYTNxQ2FBEUERMSFBEUNhQRFBETEhM3EzYVNhM3EwAFHwABKUkUAA0FAAAAAAAAAAA='
-      livingroom_audio_mute:
+      living_room_audio_mute:
         friendly_name: "Living Room Audio Mute"
         command_on: 'JgBQAAABKZIVERMSExEVNhMRFBETExMRFDcTNhM3FBETNxQ2FDYTNxQREzcUNhMSFDYTERURExITNxMSExEUNxMRFDcTNhM3FAAFHwABKUkTAA0FAAAAAAAAAAA='
         command_off: 'JgBQAAABKZIVERMSExEVNhMRFBETExMRFDcTNhM3FBETNxQ2FDYTNxQREzcUNhMSFDYTERURExITNxMSExEUNxMRFDcTNhM3FAAFHwABKUkTAA0FAAAAAAAAAAA='
@@ -348,35 +390,35 @@ switch:
       triplej:
         friendly_name: Triple J
         command_on:
-          curl "http://Server-Music:3689/login?pairing-guid=0x1&request-session-id=50";
-          curl "http://Server-Music:3689/ctrl-int/1/playspec?database-spec='dmap.persistentid:0x1'&container-spec='dmap.persistentid:0x1'&container-item-spec='dmap.containeritemid:0x7'&session-id=50";
-          curl "http://Server-Music:3689/logout?session-id=50"
+          curl "http://Server-Music.home:3689/login?pairing-guid=0x1&request-session-id=50";
+          curl "http://Server-Music.home:3689/ctrl-int/1/playspec?database-spec='dmap.persistentid:0x1'&container-spec='dmap.persistentid:0x1'&container-item-spec='dmap.containeritemid:0x7'&session-id=50";
+          curl "http://Server-Music.home:3689/logout?session-id=50"
         command_off:
-          curl "http://Server-Music:3689/login?pairing-guid=0x1&request-session-id=50";
-          curl "http://Server-Music:3689/ctrl-int/1/pause?session-id=50";
-          curl "http://Server-Music:3689/logout?session-id=50"
-        command_state: "/usr/bin/mpc -h Server-Music current"
+          curl "http://Server-Music.home:3689/login?pairing-guid=0x1&request-session-id=50";
+          curl "http://Server-Music.home:3689/ctrl-int/1/pause?session-id=50";
+          curl "http://Server-Music.home:3689/logout?session-id=50"
+        command_state: "/usr/bin/mpc -h Server-Music.home current"
         value_template: '{{ value == "Triple J NSW - Triple J NSW" }}'
 
       airplay_shed:
         friendly_name: Shed AirPlay
-        command_on: "/usr/bin/mpc -h Server-Music enable 19358"
-        command_off: "/usr/bin/mpc -h Server-Music disable 19358"
-#        command_state: "/usr/bin/mpc -h Server-Music outputs | grep 19358"
+        command_on: "/usr/bin/mpc -h Server-Music.home enable 19358"
+        command_off: "/usr/bin/mpc -h Server-Music.home disable 19358"
+        command_state: "/usr/bin/mpc -h Server-Music.home outputs | grep 19358"
         value_template: '{{ value == "Output 19358 (MusicPi-Shed) is enabled" }}'
 
-      airplay_livingroom:
+      airplay_living_room:
         friendly_name: Living Room AirPlay
-        command_on: "/usr/bin/mpc -h Server-Music enable 51348"
-        command_off: "/usr/bin/mpc -h Server-Music disable 51348"
-        command_state: "/usr/bin/mpc -h Server-Music outputs | grep 51348"
+        command_on: "/usr/bin/mpc -h Server-Music.home enable 51348"
+        command_off: "/usr/bin/mpc -h Server-Music.home disable 51348"
+        command_state: "/usr/bin/mpc -h Server-Music.home outputs | grep 51348"
         value_template: '{{ value == "Output 51348 (MusicPi) is enabled" }}'
       
       airplay_appletv:
         friendly_name: Apple TV AirPlay
-        command_on: "/usr/bin/mpc -h Server-Music enable 30673"
-        command_off: "/usr/bin/mpc -h Server-Music disable 30673"
-        command_state: "/usr/bin/mpc -h Server-Music outputs | grep 30673"
+        command_on: "/usr/bin/mpc -h Server-Music.home enable 30673"
+        command_off: "/usr/bin/mpc -h Server-Music.home disable 30673"
+        command_state: "/usr/bin/mpc -h Server-Music.home outputs | grep 30673"
         value_template: '{{ value == "Output 30673 (Apple TV) is enabled" }}'
       
 
@@ -436,6 +478,66 @@ switch:
     payload_on: "8_on"
     payload_off: "8_off"
 
+  - platform: mqtt
+    name: "Dafang Left Right"
+    command_topic: "topic/dafang/set"
+    payload_off: "motor_left"
+    payload_on: "motor_right"
+    optimistic: false
+
+  - platform: template
+    switches:
+      sprinkler_timer_1:
+        friendly_name: Sprinkler Zone 1 Timer
+        value_template: "{{ is_state('timer.sprinkler_zone_1', 'active') }}"
+        turn_on:
+          service: timer.start
+          data_template:
+            entity_id: timer.sprinkler_zone_1
+            duration: '00:{{states.input_number.sprinkler_timer_1.state | int}}:00'
+        turn_off:
+          service: timer.finish
+          data:
+            entity_id: timer.sprinkler_zone_1
+
+      sprinkler_timer_2:
+        friendly_name: Sprinkler Zone 2 Timer
+        value_template: "{{ is_state('timer.sprinkler_zone_2', 'active') }}"
+        turn_on:
+          service: timer.start
+          data_template:
+            entity_id: timer.sprinkler_zone_2
+            duration: '00:{{states.input_number.sprinkler_timer_2.state | int}}:00'
+        turn_off:
+          service: timer.finish
+          data:
+            entity_id: timer.sprinkler_zone_2
+
+      sprinkler_timer_3:
+        friendly_name: Sprinkler Zone 3 Timer
+        value_template: "{{ is_state('timer.sprinkler_zone_3', 'active') }}"
+        turn_on:
+          service: timer.start
+          data_template:
+            entity_id: timer.sprinkler_zone_3
+            duration: '00:{{states.input_number.sprinkler_timer_3.state | int}}:00'
+        turn_off:
+          service: timer.finish
+          data:
+            entity_id: timer.sprinkler_zone_3
+
+      sprinkler_timer_4:
+        friendly_name: Sprinkler Zone 4 Timer
+        value_template: "{{ is_state('timer.sprinkler_zone_4', 'active') }}"
+        turn_on:
+          service: timer.start
+          data_template:
+            entity_id: timer.sprinkler_zone_4
+            duration: '00:{{states.input_number.sprinkler_timer_4.state | int}}:00'
+        turn_off:
+          service: timer.finish
+          data:
+            entity_id: timer.sprinkler_zone_4
 
   - platform: template
     switches:
@@ -470,21 +572,7 @@ switch:
         
   - platform: flux
     lights:
-      - light.bedroom
-      - light.front_door
-      - light.laundry
-      - light.back_door
-      - light.kitchen
-      - light.living_room
-      - light.lounge
-      - light.study
-      - light.wardrobe
-      - light.pool_room_front
-      - light.pool_room_rear
-      - light.bathroom
-      - light.toilet
-      - light.bedroom_2
-      - light.bedroom_3
+      - light.flux
       - light.yeelight_rgb_7811dca21337
       - light.yeelight_rgb_34ce008ce68b
       - light.yeelight_rgb_34ce009133a2
@@ -496,8 +584,8 @@ switch:
     stop_colortemp: 2500
     disable_brightness_adjust: True
     mode: mired
-    transition: 5
-    interval: 300
+    transition: 30
+    interval: 30
 
 ######################################################################################################
 ###-------------------------------------------- COVERS --------------------------------------------###
@@ -535,6 +623,36 @@ input_select:
       - Clean
     initial: Idle
 
+  room_tracker:
+    name: Last Room
+    options:
+    - Study
+    - Laundry
+    - Bedroom
+    - Living Room
+    - Lounge
+    - Kitchen
+    - Front Door
+    - Carport
+
+  tablet_panel_detail:
+    name: Active Tablet Detail Panel
+    options:
+    - Lights
+    - Lights Advanced
+    - Media
+    - Cameras
+    - Sprinklers
+    - Sprinklers Advanced
+    - Washer
+    - Dishwasher
+    - Alarm Clock
+    - Vacuum Cleaner
+    - Shed
+    - Weather
+    - Motion
+    - All
+
 input_number: 
   alarmclock_hour:
      name: Hour
@@ -553,10 +671,34 @@ input_number:
      step: 5
      mode: slider
 
-  sprinkler_timer:
-    name: Sprinkler Timer
+  sprinkler_timer_1:
+    name: Sprinkler Timer 1
     icon: mdi:timer
-    min: 5
+    min: 0
+    max: 120
+    step: 5
+    mode: slider
+
+  sprinkler_timer_2:
+    name: Sprinkler Timer 2
+    icon: mdi:timer
+    min: 0
+    max: 120
+    step: 5
+    mode: slider
+
+  sprinkler_timer_3:
+    name: Sprinkler Timer 3
+    icon: mdi:timer
+    min: 0
+    max: 120
+    step: 5
+    mode: slider
+
+  sprinkler_timer_4:
+    name: Sprinkler Timer 4
+    icon: mdi:timer
+    min: 0
     max: 120
     step: 5
     mode: slider
@@ -578,13 +720,23 @@ input_number:
     max: 100
     mode: slider
 
+  light_temp:
+    name: Light Temperature
+    icon: mdi:lightbulb-on
+    unit_of_measurement: 'K'
+    min: 2000
+    max: 9000
+    step: 100
+    mode: slider
+
 input_boolean:
   alarmclock_status:
     name: Alarm
     initial: on
     icon: mdi:alarm-check
-  alarmclock_weekday:
-    name: Weekdays Only
+
+  alarmclock_workday:
+    name: Workdays Only
     initial: on
     icon: mdi:calendar
 
@@ -601,8 +753,51 @@ input_boolean:
   homekit_location:
     name: Homekit Location
     icon: mdi:account
-
-
+  
+  tile_lights:
+  tile_media:
+  tile_room_bedroom:
+  tile_room_study:
+  tile_room_living_room:
+  tile_main_lights:
+  tile_alarm_clock:
+  tile_motion_sensors:
+  tile_home:
+  tile_bedroom_ac:
+  tile_tablet_buttons:
+  tile_tablet_detail:
+  tile_tablet_status:
+  tile_tablet_date:
+  tile_weather:
+  
+  tile_tablet_button_lights:
+  tile_tablet_button_lights_advanced:
+  tile_tablet_button_media:
+  tile_tablet_button_cameras:
+  tile_tablet_button_sprinklers:
+  tile_tablet_button_sprinklers_advanced:
+  tile_tablet_button_washer:
+  tile_tablet_button_dishwasher:
+  tile_tablet_button_alarm_clock:
+  tile_tablet_button_vacuum_cleaner:
+  tile_tablet_button_shed:
+  tile_tablet_button_weather:
+  tile_tablet_button_motion:
+  
+  tile_tablet_panel_lights:
+  tile_tablet_panel_lights_advanced:
+  tile_tablet_panel_media:
+  tile_tablet_panel_cameras:
+  tile_tablet_panel_sprinklers:
+  tile_tablet_panel_sprinklers_advanced:
+  tile_tablet_panel_washer:
+  tile_tablet_panel_dishwasher:
+  tile_tablet_panel_alarm_clock:
+  tile_tablet_panel_vacuum_cleaner:
+  tile_tablet_panel_shed:
+  tile_tablet_panel_weather:
+  tile_tablet_panel_motion:
+  
 
 ######################################################################################################
 ###----------------------------------------- BINARY SENSORS ---------------------------------------###
@@ -610,10 +805,14 @@ input_boolean:
 binary_sensor:
   - platform: ffmpeg_motion
     input: rtsp://192.168.1.67/unicast
-    name: Shed Motion Sensor
+    name: Motion Sensor Shed
     changes: 10
     reset: 15
 
+  - platform: workday
+    country: AU
+    province: SA
+    workdays: [ mon, tue, wed, thu, fri ]
 
 ######################################################################################################
 ###-------------------------------------------- SENSORS -------------------------------------------###
@@ -655,6 +854,11 @@ sensor:
       - download
       - upload
 
+  - platform: time_date
+    display_options:
+    - 'time'
+    - 'date'
+
   - platform: openhardwaremonitor
     host: server.home
 
@@ -667,8 +871,8 @@ sensor:
       - temperature
       - cloud_cover
       - humidity
-      - temperature_max
-      - temperature_min
+      - temperature_high
+      - temperature_low
       - hourly_summary
 
   - platform: wunderground
@@ -692,6 +896,9 @@ sensor:
       - wind_gust_1d_kph
       - wind_kph
       - wind_1d_kph
+      - weather
+      - weather_1d_metric
+      - weather_1n_metric
 
   - platform: template
     sensors:
@@ -722,13 +929,19 @@ sensor:
         unit_of_measurement: 'watts'
         value_template: "{{ states.switch.plug_158d0001dc90d1.attributes.load_power }}"
       
-      livingroom_tv:
+      living_room_tv:
         value_template: >-
-            {% if is_state('device_tracker.livingroom_tv', 'home') %}
+            {% if is_state('device_tracker.living_room_tv', 'home') %}
                 on
             {% else %}
                 off
             {% endif %}
+
+  - platform: template
+    sensors:
+      friendly_date:
+        friendly_name: Current Date
+        value_template: "{{ now().strftime('%d %B') }}"
 
   - platform: bom
     zone_id: !secret bom_zone_id
@@ -795,3 +1008,7 @@ sensor:
       sprinkler_status:
         value_template: '{{ states.group.irrigation.state}}'
         friendly_name: 'Sprinklers'
+
+  - platform: rest
+    name: SC Tiles latest version
+    resource: https://raw.githubusercontent.com/c727/home-assistant-tiles/master/LATEST_VERSION

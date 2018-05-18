@@ -1,7 +1,7 @@
 ######################################################################################################
 ###---------------------------------------------- AV ----------------------------------------------###
 ######################################################################################################
-livingroom_tv_on:
+living_room_tv_on:
   alias: Living Room TV On
   sequence:
     - service: homeassistant.turn_on
@@ -10,7 +10,7 @@ livingroom_tv_on:
           - switch.living_room_tv_power
           - switch.living_room_audio_source
 
-livingroom_tv_off:
+living_room_tv_off:
   alias: Living Room TV Off
   sequence:
     - service: homeassistant.turn_off
@@ -19,7 +19,7 @@ livingroom_tv_off:
           - switch.living_room_tv_power
           - switch.living_room_audio_source           
 
-livingroom_volume_up:
+living_room_volume_up:
   alias: Living Room Volume Up
   sequence:
     - service: homeassistant.turn_on
@@ -27,7 +27,7 @@ livingroom_volume_up:
         entity_id:
           - switch.living_room_audio_volume
 
-livingroom_volume_down:
+living_room_volume_down:
   alias: Living Room Volume Down
   sequence:
     - service: homeassistant.turn_off
@@ -47,27 +47,41 @@ sprinklers:
     - service: homeassistant.turn_on
       data:
         entity_id:
-        - input_boolean.sprinkler_control
-        - switch.sprinkler_zone_1
-        - switch.sprinkler_zone_2
-        - switch.sprinkler_zone_3
-    - delay: '00:{{states.input_number.sprinkler_timer.state | int}}:00'
-    - service: homeassistant.turn_off
-      data:
-        entity_id:
-        - switch.sprinkler_zone_1
-        - switch.sprinkler_zone_2
-        - switch.sprinkler_zone_3
+        - switch.sprinkler_timer_1
+        - switch.sprinkler_timer_2
+        - switch.sprinkler_timer_3
+    - delay: '00:{{[(states.input_number.sprinkler_timer_1.state | int), (states.input_number.sprinkler_timer_2.state | int), (states.input_number.sprinkler_timer_3.state | int)]|max}}:00'
     - service: homeassistant.turn_on
       data:
         entity_id:
-        - switch.sprinkler_zone_4
-    - delay: '00:{{states.input_number.sprinkler_timer.state | int}}:00'
+        - switch.sprinkler_timer_4
+    - delay: '00:{{(states.input_number.sprinkler_timer_1.state | int)}}:00'
     - service: homeassistant.turn_off
       data:
         entity_id:
         - group.irrigation
         - input_boolean.sprinkler_control
+
+    # - service: timer.start
+      # entity_id: timer.sprinkler_zone_4
+      # data_template:
+        # duration: '00:{{states.input_number.sprinkler_timer_4.state | int}}:00'
+    # - service: homeassistant.turn_off
+      # data:
+        # entity_id:
+        # - switch.sprinkler_zone_1
+        # - switch.sprinkler_zone_2
+        # - switch.sprinkler_zone_3
+    # - service: homeassistant.turn_on
+      # data:
+        # entity_id:
+        # - switch.sprinkler_zone_4
+    # - delay: '00:{{states.input_number.sprinkler_timer_4.state | int}}:00'
+    # - service: homeassistant.turn_off
+      # data:
+        # entity_id:
+        # - group.irrigation
+        # - input_boolean.sprinkler_control
 
 sprinkler_burst:
   alias: Sprinkler Burst
@@ -85,6 +99,7 @@ sprinkler_burst:
 ######################################################################################################
 ###-------------------------------------------- OTHER ---------------------------------------------###
 ######################################################################################################
+
 
 toggle_roller_door:
   sequence:
