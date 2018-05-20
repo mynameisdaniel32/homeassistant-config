@@ -5,7 +5,7 @@ homeassistant:
   longitude: !secret home_longitude
   elevation: 102
   time_zone: Australia/Adelaide
-  customize: !include customize.yaml
+  customize: !include_dir_merge_named configuration/customize/
   whitelist_external_dirs:
   - '/tmp'
 
@@ -18,15 +18,15 @@ zone:
 ######################################################################################################
 ###------------------------------------------ YAML FILES ------------------------------------------###
 ######################################################################################################
-automation: !include automations.yaml
-group: !include groups.yaml
+automation: !include_dir_merge_list configuration/automation/
+group: !include_dir_merge_named configuration/group/
 script: !include scripts.yaml
 
 ######################################################################################################
 ###------------------------------------------ COMPONENTS ------------------------------------------###
 ######################################################################################################
 frontend:
-  javascript_version: latest
+  javascript_version: es5
   extra_html_url:
     - /local/custom_ui/state-card-tiles.html
     - /local/custom_ui/custom-weather-card.html
@@ -76,18 +76,18 @@ light:
 light_controller:
   topic: node/light_switch/
   
-climate:
-  - platform: daikin
-    name: ac_bedroom
-    host: 192.168.1.253
+#climate:
+#  - platform: daikin
+#    name: ac_bedroom
+#    host: 192.168.1.253
 
 fan:
   - platform: xiaomi_miio
     host: 192.168.1.253
     token: !secret xiaomi_miio_token_airpurifier
 
-emulated_hue:
-    listen_port: 8300
+#emulated_hue:
+#    listen_port: 8300
 
 media_player:
   - platform: plex
@@ -98,7 +98,6 @@ media_player:
     name: Living Room TV
     children:
       - media_player.apple_tv
-      - media_player.living_room_chromecast
     commands:
       turn_on:
         service: script.living_room_tv_on
@@ -761,7 +760,6 @@ input_boolean:
   tile_room_living_room:
   tile_main_lights:
   tile_alarm_clock:
-  tile_motion_sensors:
   tile_home:
   tile_bedroom_ac:
   tile_tablet_buttons:
@@ -803,12 +801,6 @@ input_boolean:
 ###----------------------------------------- BINARY SENSORS ---------------------------------------###
 ######################################################################################################
 binary_sensor:
-  - platform: ffmpeg_motion
-    input: rtsp://192.168.1.67/unicast
-    name: Motion Sensor Shed
-    changes: 10
-    reset: 15
-
   - platform: workday
     country: AU
     province: SA

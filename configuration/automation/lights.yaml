@@ -1,0 +1,195 @@
+#######################################################################################################
+###--------------------------------------- LIGHT AUTOMATIONS ---------------------------------------###
+#######################################################################################################
+
+# LIGHT CHECK #########################################################################################
+- alias: Light Check Sunset
+  trigger:
+    platform: sun
+    event: sunset
+    offset: "-00:30:00"
+  action:
+    service: homeassistant.turn_on
+    entity_id: input_boolean.light_check
+
+- alias: Light Check Sunrise
+  trigger:
+    platform: sun
+    event: sunrise
+  action: 
+    service: homeassistant.turn_off
+    entity_id: input_boolean.light_check
+    
+- alias: Light Check Startup
+  trigger: 
+    platform: homeassistant
+    event: start
+  condition:
+    condition: or
+    conditions:
+    - condition: sun
+      after: sunset
+      after_offset: "-00:30:00"
+    - condition: sun
+      before: sunrise
+  action:
+    service: homeassistant.turn_on
+    entity_id: input_boolean.light_check
+
+
+# LIGHT CONTROL #######################################################################################
+- alias: Turn on Lights When I Get Home
+  trigger:
+    platform: state
+    entity_id: sensor.location_daniel
+    to: 'Home'
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+    service: homeassistant.turn_on
+    entity_id:
+      - group.welcome_lights
+      - light.living_room
+    data:
+      transition: 5
+
+- alias: Turn on Light If I'm Home
+  trigger:
+    platform: sun
+    event: sunset
+    offset: "-00:30:00"
+  condition:
+    condition: state
+    entity_id: sensor.location_daniel
+    state: 'Home'
+  action:
+    service: homeassistant.turn_on
+    entity_id: light.living_room
+    data:
+      transition: 90
+
+- alias: Turn off Welcome Lights
+  trigger:
+    platform: state
+    entity_id: group.welcome_control_lights
+    from: 'off'
+    to: 'on'
+  action:
+    service: homeassistant.turn_off
+    entity_id: group.welcome_lights
+    data:
+      transition: 5
+
+- alias: Turn on Backdoor + Carport Lights When Roller Door Opens
+  trigger:
+    platform: state
+    entity_id: cover.roller_door
+    from: 'closed'
+    to: 'open'
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+  - service: homeassistant.turn_on
+    entity_id: light.back_door
+    data:
+      transition: 2
+  - service: homeassistant.turn_on
+    entity_id: light.carport
+
+- alias: Fade off front lights
+  trigger:
+    platform: state
+    entity_id: light.yeelight_rgb_34ce008ce68b
+    from: 'unavailable'
+    to: 'on'
+    for:
+      minutes: 2
+  action:
+    service: homeassistant.turn_off
+    entity_id:
+      - light.yeelight_rgb_34ce008ce68b
+      - light.yeelight_rgb_34ce009133a2
+    data:
+      transition: 10
+
+
+# LIGHT BRIGHTNESS #######################################################################################
+- alias: Dynamic Brightness Reset
+  trigger:
+    platform: sun
+    event: sunrise
+  action:
+    service: input_number.set_value
+    data:
+      entity_id: input_number.dynamic_light_brightness
+      value: 100
+ 
+
+- alias: Dynamic Brightness 10 PM
+  trigger:
+    platform: time
+    at: '22:00:00'
+  action:
+    service: input_number.set_value
+    data:
+      entity_id: input_number.dynamic_light_brightness
+      value: 75
+
+- alias: Dynamic Brightness 11 PM
+  trigger:
+    platform: time
+    at: '23:00:00'
+  action:
+    service: input_number.set_value
+    data:
+      entity_id: input_number.dynamic_light_brightness
+      value: 50
+
+- alias: Dynamic Brightness 12 AM
+  trigger:
+    platform: time
+    at: '00:00:00'
+  action:
+    service: input_number.set_value
+    data:
+      entity_id: input_number.dynamic_light_brightness
+      value: 30
+
+- alias: Dynamic Brightness 1 AM
+  trigger:
+    platform: time
+    at: '01:00:00'
+  action:
+    service: input_number.set_value
+    data:
+      entity_id: input_number.dynamic_light_brightness
+      value: 20
+
+# LIGHT COLOUR #######################################################################################
+
+- alias: Set LIFX colour temperature
+  trigger:
+    platform: state
+    entity_id: input_number.light_temp
+  action:
+    service: light.lifx_set_state
+    data:
+      transition: 5
+    data_template:
+      kelvin: '{{states.input_number.light_temp.state | int}}'
+      
+      
+- alias: Set light colour temperature
+  trigger:
+    platform: time
+    minutes: /15
+  action:
+    service: input_number.set_value
+    data:
+      entity_id: input_number.light_temp
+    data_template:
+      value: '{{( 1000000 / states.light.flux.attributes.color_temp ) | int}}'

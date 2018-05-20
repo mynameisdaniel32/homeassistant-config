@@ -34,6 +34,26 @@ binary_sensor.motion_sensor_158d0001e5441a:
   name: Motion Sensor Y
   platform: xiaomi_aqara
   unique_id: status158d0001e5441a
+binary_sensor.motion_sensor_carport:
+  name: Carport
+  platform: xiaomi_aqara
+  unique_id: status158d0001e514e7
+binary_sensor.motion_sensor_back_door:
+  name: Back Door
+  platform: xiaomi_aqara
+  unique_id: status158d0001e514f0
+binary_sensor.motion_sensor_lounge:
+  name: Lounge
+  platform: xiaomi_aqara
+  unique_id: status158d0001e55635
+binary_sensor.motion_sensor_158d0001e5562e:
+  name:
+  platform: xiaomi_aqara
+  unique_id: status158d0001e5562e
+binary_sensor.motion_sensor_158d0001e55776:
+  name:
+  platform: xiaomi_aqara
+  unique_id: status158d0001e55776
 binary_sensor.wall_switch_right_158d0001710c46:
   name:
   platform: xiaomi_aqara
@@ -342,3 +362,23 @@ fan.xiaomi_miio_device:
   name:
   platform: xiaomi_miio
   unique_id: zhimi.airpurifier.m1-78:11:DC:4C:2A:60
+sensor.illumination_carport:
+  name: Carport
+  platform: xiaomi_aqara
+  unique_id: lux158d0001e514e7
+sensor.illumination_158d0001e5562e:
+  name:
+  platform: xiaomi_aqara
+  unique_id: lux158d0001e5562e
+sensor.illumination_158d0001e55776:
+  name:
+  platform: xiaomi_aqara
+  unique_id: lux158d0001e55776
+sensor.illumination_back_door:
+  name: Back Door
+  platform: xiaomi_aqara
+  unique_id: lux158d0001e514f0
+sensor.illumination_lounge:
+  name: Lounge
+  platform: xiaomi_aqara
+  unique_id: lux158d0001e55635

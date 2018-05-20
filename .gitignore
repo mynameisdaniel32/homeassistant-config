@@ -1,4 +1,10 @@
-*
+/*
+!/configuration
+/configuration/*
+!/configuration/*.yaml
+!/configuration/*/
+/configuration/*/*
+!/configuration/*/*.yaml
 !*.yaml
 !.gitignore
 secrets.yaml

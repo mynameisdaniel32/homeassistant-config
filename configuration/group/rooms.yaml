@@ -1,0 +1,58 @@
+tile_room_bedroom:
+  name: Bedroom
+  entities: input_boolean.tile_room_bedroom
+
+tile_room_study:
+  name: Study
+  entities:
+  - input_boolean.tile_room_study
+
+tile_room_living_room:
+  name: Living Room
+  entities:
+  - input_boolean.tile_room_living_room
+
+room_ensuite:
+  name: Ensuite
+  entities:
+  - light.yeelight_rgb_7811dca21337
+  - binary_sensor.motion_sensor_ensuite
+  - sensor.temperature_158d0001f52bfc
+  - sensor.humidity_158d0001f52bfc
+
+room_bedroom:
+  name: Bedroom
+  entities:
+  - light.bedroom
+  - binary_sensor.motion_sensor_bedroom
+  - sensor.inside_temperature_bedroom_inside_temperature
+  - sensor.temperature_158d000227b875
+  - sensor.humidity_158d000227b875
+
+room_outside:
+  name: Outside
+  entities:
+  - light.carport
+  - sensor.outside_temperature_bedroom_outside_temperature
+  - sensor.sprinkler_status
+
+room_living_room:
+  name: Living Room
+  entities:
+  - light.kitchen
+  - light.lounge
+  - light.living_room
+  - binary_sensor.motion_sensor_kitchen
+  - binary_sensor.motion_sensor_living_room
+  - sensor.illumination_158d0001660dc0
+  - sensor.illumination_158d00022507d2
+  - sensor.temperature_158d000227094f
+  - sensor.humidity_158d000227094f
+
+room_study:
+  name: Study
+  entities:
+  - light.study
+  - binary_sensor.motion_sensor_study
+  - sensor.temperature_158d0002272833
+  - sensor.humidity_158d0002272833

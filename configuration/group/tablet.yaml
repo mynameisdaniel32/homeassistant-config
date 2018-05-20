@@ -1,0 +1,84 @@
+tile_tablet_control:
+  name: ' '
+  entities:
+  - input_boolean.tile_tablet_status
+  - input_boolean.tile_tablet_button_lights
+  - input_boolean.tile_tablet_button_media
+  - input_boolean.tile_tablet_button_cameras
+  - input_boolean.tile_tablet_buttons
+
+
+tile_tablet_panel_lights:
+  name: ' '
+  entities:
+  - input_boolean.tile_tablet_panel_lights
+
+tile_tablet_panel_lights_advanced:
+  name: ' '
+  entities:
+  - input_boolean.tile_tablet_panel_lights_advanced
+  - input_number.dynamic_light_brightness
+  - input_number.light_temp
+  - switch.flux
+
+tile_tablet_panel_media:
+  name: ' '
+  entities:
+  - input_boolean.tile_tablet_panel_media
+  - media_player.bedroom_chromecast
+  - media_player.living_room_tv
+  
+tile_tablet_panel_cameras:
+  name: ' '
+  entities:
+  - camera.shed
+  - camera.front_yard
+
+tile_tablet_panel_sprinklers:
+  name: ' '
+  entities:
+  - input_boolean.tile_tablet_panel_sprinklers
+#  - switch.sprinkler_zone_1
+#  - switch.sprinkler_zone_2
+#  - switch.sprinkler_zone_3
+#  - switch.sprinkler_zone_4
+
+tile_tablet_panel_sprinklers_advanced:
+  name: ' '
+  entities:
+  - input_number.sprinkler_timer_1
+  - input_number.sprinkler_timer_2
+  - input_number.sprinkler_timer_3
+  - input_number.sprinkler_timer_4
+  - input_number.sprinkler_temp
+  - input_boolean.sprinkler_control
+
+tile_tablet_panel_alarm_clock:
+  name: ' '
+  entities:
+  - input_boolean.tile_tablet_panel_alarm_clock
+  - input_number.alarmclock_hour
+  - input_number.alarmclock_minutes
+
+tile_tablet_panel_vacuum_cleaner:
+  name: ' '
+  entities:
+  - vacuum.xiaomi_vacuum_cleaner
+
+tile_tablet_panel_shed:
+  name: ' '
+  entities:
+  - cover.roller_door
+  - camera.shed
+  - light.carport
+
+tile_tablet_panel_weather:
+  name: ' '
+  entities:
+  - input_boolean.tile_weather
+
+tile_tablet_panel_motion:
+  name: ' '
+  entities:
+  - input_boolean.tile_tablet_panel_motion
+#  - group.motion_sensor

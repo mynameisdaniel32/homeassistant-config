@@ -1,0 +1,611 @@
+#######################################################################################################
+###--------------------------------------- MOTION AUTOMATIONS --------------------------------------###
+#######################################################################################################
+
+# WARDROBE ############################################################################################
+- alias: Motion Detect - Wardrobe
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_wardrobe
+    to: 'on'
+  action:
+  - service: homeassistant.turn_on
+    entity_id: light.wardrobe
+    data_template:
+      transition: 2
+      brightness_pct: '{{states.input_number.dynamic_light_brightness.state}}'
+
+- alias: Motion Clear - Wardrobe
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_wardrobe
+    to: 'off'
+  action:
+    service: homeassistant.turn_off
+    entity_id: light.wardrobe
+    data:
+      transition: 5
+
+# LAUNDRY #############################################################################################
+- alias: Motion Detect - Laundry
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_laundry
+    to: 'on'
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+  - service: homeassistant.turn_on
+    entity_id: light.laundry
+    data_template:
+      transition: 2
+      brightness_pct: '{{states.input_number.dynamic_light_brightness.state}}'
+  - service: input_select.select_option
+    data:
+      entity_id: input_select.room_tracker
+      option: Laundry
+
+- alias: Motion Clear - Laundry
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_laundry
+    to: 'off'
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+    service: homeassistant.turn_off
+    entity_id: light.laundry
+    data:
+      transition: 5
+
+# BEDROOM #############################################################################################
+- alias: Motion Detect - Bedroom
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_bedroom
+    to: 'on'
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+  - service: homeassistant.turn_on
+    entity_id: light.bedroom
+    data_template:
+      transition: 2
+      brightness_pct: '{{states.input_number.dynamic_light_brightness.state}}'
+
+- alias: Motion Clear - Bedroom
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_bedroom
+    to: 'off'
+    for:
+      minutes: 5
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+    service: homeassistant.turn_off
+    entity_id: light.bedroom
+    data:
+      transition: 5
+
+# ENSUITE #############################################################################################
+- alias: Motion Detect - Ensuite
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_ensuite
+    from: 'off'
+    to: 'on'
+  action:
+  - service: homeassistant.turn_on
+    entity_id: light.yeelight_rgb_7811dca21337
+    data_template:
+      transition: 2
+      brightness_pct: '{{states.input_number.dynamic_light_brightness.state}}'
+      kelvin: '{{states.input_number.light_temp.state | int}}'
+
+- alias: Motion Clear - Ensuite (No Shower)
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_ensuite
+    to: 'off'
+    for:
+      minutes: 2
+  condition:
+    condition: numeric_state
+    entity_id: sensor.humidity_158d0001f52bfc
+    below: 75
+  action:
+    service: homeassistant.turn_off
+    entity_id: light.yeelight_rgb_7811dca21337
+    data:
+      transition: 5
+
+- alias: Motion Clear - Ensuite (Shower)
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_ensuite
+    to: 'off'
+    for:
+      minutes: 20
+  condition:
+    condition: numeric_state
+    entity_id: sensor.humidity_158d0001f52bfc
+    above: 75
+  action:
+    service: homeassistant.turn_off
+    entity_id: light.yeelight_rgb_7811dca21337
+    data:
+      transition: 5
+
+# STUDY #############################################################################################
+- alias: Motion Detect - Study
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_study
+    to: 'on'
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+  - service: homeassistant.turn_on
+    entity_id: light.study
+    data:
+      transition: 2
+
+- alias: Motion Clear - Study
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_study
+    to: 'off'
+    for:
+      minutes: 10
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+    service: homeassistant.turn_off
+    entity_id: light.study
+    data:
+      transition: 5
+
+# LIVING ROOM #############################################################################################
+- alias: Motion Detect - Living Room
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_living_room
+    to: 'on'
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+  - service: homeassistant.turn_on
+    entity_id: light.living_room
+    data:
+      transition: 2
+
+- alias: Motion Clear - Living Room
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_living_room
+    to: 'off'
+    for:
+      minutes: 30
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+    service: homeassistant.turn_off
+    entity_id: light.living_room
+    data:
+      transition: 5
+
+
+# KITCHEN #############################################################################################
+- alias: Motion Detect - Kitchen
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_kitchen
+    to: 'on'
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+  - service: homeassistant.turn_on
+    entity_id: light.kitchen
+    data_template:
+      transition: 2
+      brightness_pct: '{{states.input_number.dynamic_light_brightness.state}}'
+
+- alias: Motion Clear - Kitchen
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_kitchen
+    to: 'off'
+    for:
+      minutes: 5
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+    service: homeassistant.turn_off
+    entity_id: light.kitchen
+    data:
+      transition: 5
+
+# Lounge #############################################################################################
+- alias: Motion Detect - Lounge
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_lounge
+    to: 'on'
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+  - service: homeassistant.turn_on
+    entity_id: light.lounge
+    data_template:
+      transition: 2
+      brightness_pct: '{{states.input_number.dynamic_light_brightness.state}}'
+
+- alias: Motion Clear - Lounge
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_lounge
+    to: 'off'
+    for:
+      minutes: 5
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+    service: homeassistant.turn_off
+    entity_id: light.lounge
+    data:
+      transition: 5
+
+# BACK DOOR #############################################################################################
+- alias: Motion Detect - Back Door
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_back_door
+    to: 'on'
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+  - service: homeassistant.turn_on
+    entity_id: light.back_door
+    data_template:
+      transition: 2
+      brightness_pct: '{{states.input_number.dynamic_light_brightness.state}}'
+
+- alias: Motion Clear - Back Door
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_back_door
+    to: 'off'
+    for:
+      minutes: 0
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+    service: homeassistant.turn_off
+    entity_id: light.back_door
+    data:
+      transition: 5
+
+# CARPORT #############################################################################################
+- alias: Motion Detect - Carport
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_carport
+    to: 'on'
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+  - service: homeassistant.turn_on
+    entity_id: light.carport
+    data_template:
+      transition: 2
+      brightness_pct: '{{states.input_number.dynamic_light_brightness.state}}'
+
+- alias: Motion Clear - Carport
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_carport
+    to: 'off'
+    for:
+      minutes: 0
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+    service: homeassistant.turn_off
+    entity_id: light.carport
+    data:
+      transition: 5
+
+# FRONT DOOR #############################################################################################
+- alias: Motion Detect - Front Door
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_front_door
+    to: 'on'
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+  - service: homeassistant.turn_on
+    entity_id: light.front_door
+    data_template:
+      transition: 2
+      brightness_pct: '{{states.input_number.dynamic_light_brightness.state}}'
+
+- alias: Motion Clear - Front Door
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_front_door
+    to: 'off'
+    for:
+      minutes: 0
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+    service: homeassistant.turn_off
+    entity_id: light.front_door
+    data:
+      transition: 5
+
+# FRONT DOOR TABLET #############################################################################################
+- alias: Motion Detect - Front Door - Tablet
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_front_door
+    to: 'on'
+  action:
+  - service: mqtt.publish
+    data:
+      topic: "tablet/1"
+      payload: "on"
+
+- alias: Motion Clear - Front Door - Tablet
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_front_door
+    from: 'on'
+    to: 'off'
+  action:
+    - service: mqtt.publish
+      data:
+        topic: "tablet/1"
+        payload: "off"
+
+
+#######################################################################################################
+###----------------------------------- ROOM TRACKER AUTOMATIONS ------------------------------------###
+#######################################################################################################
+
+- alias: Room Tracker - Bedroom
+  trigger:
+    platform: state
+    entity_id: input_select.room_tracker
+    to: "Bedroom"
+    for:
+      minutes: 2
+  action:
+  - service: homeassistant.turn_off
+    entity_id:
+    - group.lights_outside
+    - light.living_room
+    - light.study
+    - light.front_door
+    - light.kitchen
+    - light.lounge
+    - light.laundry
+    data:
+      transition: 4
+
+- alias: Room Tracker - Study
+  trigger:
+    platform: state
+    entity_id: input_select.room_tracker
+    to: "Study"
+    for:
+      minutes: 2
+  action:
+  - service: homeassistant.turn_off
+    entity_id:
+    - group.lights_outside
+    - light.living_room
+    - light.bedroom
+    - light.wardrobe
+    - light.ensuite
+    - light.front_door
+    - light.kitchen
+    - light.lounge
+    - light.laundry
+    data:
+      transition: 4
+
+- alias: Room Tracker - Bedroom Motion Detect
+  trigger:
+    platform: state
+    entity_id: group.room_tracker_motion_bedroom_all
+    to: 'on'
+  action:
+  - service: input_select.select_option
+    data:
+      entity_id: input_select.room_tracker
+      option: Bedroom
+
+- alias: Room Tracker - Bedroom Motion Clear
+  trigger:
+    platform: state
+    entity_id: group.room_tracker_motion_bedroom_all
+    to: 'off'
+  condition:
+    condition: state
+    entity_id: input_select.room_tracker
+    state: 'Bedroom'
+  action:
+  - service: input_select.select_option
+    data_template:
+      entity_id: input_select.room_tracker
+      option: >-
+        {% if is_state('binary_sensor.motion_sensor_front_door', 'on') %}
+          Front Door
+        {% elif is_state('binary_sensor.motion_sensor_living_room', 'on') %}
+          Living Room
+        {% endif %}
+
+- alias: Room Tracker - Front Door Motion Detect
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_front_door
+    to: 'on'
+  action:
+  - service: input_select.select_option
+    data:
+      entity_id: input_select.room_tracker
+      option: Front Door
+
+- alias: Room Tracker - Front Door Motion Clear
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_front_door
+    to: 'off'
+  condition:
+    condition: state
+    entity_id: input_select.room_tracker
+    state: 'Front Door'
+  action:
+  - service: input_select.select_option
+    data_template:
+      entity_id: input_select.room_tracker
+      option: >-
+        {% if is_state('binary_sensor.motion_sensor_bedroom', 'on') %}
+          Bedroom
+        {% elif is_state('binary_sensor.motion_sensor_living_room', 'on') %}
+          Living Room
+        {% endif %}
+
+- alias: Room Tracker - Kitchen Motion Detect
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_kitchen
+    to: 'on'
+  action:
+  - service: input_select.select_option
+    data:
+      entity_id: input_select.room_tracker
+      option: Kitchen
+
+- alias: Room Tracker - Kitchen Motion Clear
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_kitchen
+    to: 'off'
+  condition:
+    condition: state
+    entity_id: input_select.room_tracker
+    state: 'Kitchen'
+  action:
+  - service: input_select.select_option
+    data_template:
+      entity_id: input_select.room_tracker
+      option: >-
+        {% if is_state('binary_sensor.motion_sensor_living_room', 'on') %}
+          Living Room
+        {% endif %}
+
+- alias: Room Tracker - Study Motion Detect
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_study
+    to: 'on'
+  action:
+  - service: input_select.select_option
+    data:
+      entity_id: input_select.room_tracker
+      option: Study
+
+- alias: Room Tracker - Study Motion Clear
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_study
+    to: 'off'
+  condition:
+    condition: state
+    entity_id: input_select.room_tracker
+    state: 'Study'
+  action:
+  - service: input_select.select_option
+    data_template:
+      entity_id: input_select.room_tracker
+      option: >-
+        {% if is_state('binary_sensor.motion_sensor_living_room', 'on') %}
+          Living Room
+        {% endif %}
+
+- alias: Room Tracker - Living Room Motion Detect
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_living_room
+    to: 'on'
+  action:
+  - service: input_select.select_option
+    data:
+      entity_id: input_select.room_tracker
+      option: Living Room
+
+- alias: Room Tracker - Living Room Motion Clear
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_living_room
+    to: 'off'
+  condition:
+    condition: state
+    entity_id: input_select.room_tracker
+    state: 'Bedroom'
+  action:
+  - service: input_select.select_option
+    data_template:
+      entity_id: input_select.room_tracker
+      option: >-
+        {% if is_state('binary_sensor.motion_sensor_study', 'on') %}
+          Study
+        {% elif is_state('binary_sensor.motion_sensor_lounge', 'on') %}
+          Lounge
+        {% elif is_state('binary_sensor.motion_sensor_kitchen', 'on') %}
+          Kitchen
+        {% elif is_state('binary_sensor.motion_sensor_front_door', 'on') %}
+          Front Door
+        {% elif is_state('binary_sensor.motion_sensor_bedroom', 'on') %}
+          Bedroom
+        {% endif %}

@@ -1,0 +1,347 @@
+- alias: Home Assistant Start
+  trigger:
+    platform: homeassistant
+    event: start
+  action:
+  - service: homeassistant.turn_on
+    entity_id:
+    - switch.flux
+    - light.flux
+  - service: input_select.select_option
+    data:
+      entity_id: input_select.tablet_panel_detail
+      option: Lights
+  - service: group.set_visibility
+    entity_id:
+    - group.tile_tablet_panel_lights_advanced
+    - group.tile_tablet_panel_media
+    - group.tile_tablet_panel_cameras
+    - group.tile_tablet_panel_sprinklers
+    - group.tile_tablet_panel_sprinklers_advanced
+    - group.tile_tablet_panel_washer
+    - group.tile_tablet_panel_dishwasher
+    - group.tile_tablet_panel_alarm_clock
+    - group.tile_tablet_panel_vacuum_cleaner
+    - group.tile_tablet_panel_shed
+    - group.tile_tablet_panel_weather
+    - group.tile_tablet_panel_motion
+    data:
+      visible: False
+
+#######################################################################################################
+###--------------------------------------- BUTTON AUTOMATIONS --------------------------------------###
+#######################################################################################################
+
+- alias: Button - Door Bell
+  trigger:
+    platform: event
+    event_type: click
+    event_data:
+      entity_id: binary_sensor.switch_158d00016c131e
+  action:
+  - service: script.door_bell
+  - service: notify.ios_danielsiphone6splus
+    data:
+      message: "Door Bell Pressed!"
+      data:
+        push:
+          badge: 2
+          category: "door_bell_alert"
+#  - service: script.sprinkler_burst
+
+- alias: Button - Roller Door
+  trigger:
+  - platform: event
+    event_type: click
+    event_data:
+      entity_id: binary_sensor.switch_158d00016be070
+  - platform: event
+    event_type: click
+    event_data:
+      entity_id: binary_sensor.switch_158d0001b12757
+  action:
+    service: script.toggle_roller_door
+
+- alias: Button - Carport Light
+  trigger:
+    platform: event
+    event_type: click
+    event_data:
+      entity_id: binary_sensor.switch_158d0001e41a2c
+  action:
+    service: homeassistant.toggle
+    entity_id: light.carport
+
+#######################################################################################################
+###--------------------------------------- OTHER AUTOMATIONS ---------------------------------------###
+#######################################################################################################
+- alias: Turn off Stuff When I Leave Home
+  trigger:
+    platform: state
+    entity_id: sensor.location_daniel
+    from: 'Home'
+    to: 'Away'
+  action:
+  - service: homeassistant.turn_off
+    entity_id:
+      - group.lights
+    data:
+      transition: 10
+  - service: homeassistant.turn_off
+    entity_id:
+      - switch.triplej
+
+- alias: Alarm Clock
+  trigger:
+    platform: template
+    value_template: '{{ states.sensor.time.state == states.sensor.alarmclock_time.state }}'
+  condition:
+    condition: or
+    conditions:
+    - condition: and
+      conditions:
+      - condition: state
+        entity_id: input_boolean.alarmclock_workday
+        state: 'on'
+      - condition: state
+        entity_id: binary_sensor.workday_sensor
+        state: 'on'
+    - condition: state
+      entity_id: input_boolean.alarmclock_workday
+      state: 'off'
+  action:
+  - service: homeassistant.turn_on
+    entity_id:
+      - light.bedroom
+    data:
+      brightness: 255
+      transition: 5
+  - service: homeassistant.turn_off
+    entity_id:
+      - switch.airplay_shed
+      - switch.airplay_appletv
+  - service: homeassistant.turn_on
+    entity_id:
+      - switch.airplay_living_room
+      - switch.triplej
+
+- alias: SC Tiles update info
+  trigger:
+    platform: state
+    entity_id: sensor.sc_tiles_latest_version
+  action:
+    service: persistent_notification.create
+    data:
+      title: Update available
+      message: A new version for [Tiles custom state card](https://github.com/c727/home-assistant-tiles#changelog) is available.
+
+#######################################################################################################
+###--------------------------------------- AUDIO AUTOMATIONS ---------------------------------------###
+#######################################################################################################
+
+- alias: Toggle TV state
+  trigger:
+    platform: state
+    entity_id:
+      - switch.living_room_tv
+    from: 'on'
+    to: 'off'
+  action:
+    service: homeassistant.state
+    entity_id:
+      - sensor.living_room_tv
+    data:
+      state: off
+      
+- alias: Toggle TV audio on when TV turns on
+  trigger:
+    platform: state
+    entity_id:
+      - media_player.living_room_tv
+    from: 'off'
+    to: 'on'
+  action:
+    service: homeassistant.turn_on
+    entity_id:
+      - switch.living_room_audio_source
+
+- alias: Toggle TV audio off when TV turns off
+  trigger:
+    platform: state
+    entity_id:
+      - media_player.living_room_tv
+    from: 'on'
+    to: 'off'
+  action:
+    service: homeassistant.turn_off
+    entity_id:
+      - switch.living_room_audio_source
+
+- alias: Toggle TV audio on when Apple TV starts playing
+  trigger:
+    platform: state
+    entity_id:
+    - media_player.apple_tv
+    to: 'playing'
+  action:
+    service: homeassistant.turn_on
+    entity_id:
+    - switch.living_room_audio_source
+
+- alias: Switch to 3.5mm audio when Triple J starts
+  trigger:
+    platform: state
+    entity_id: switch.triplej
+    from: 'off'
+    to: 'on'
+  action:
+    service: homeassistant.turn_off
+    entity_id: 
+    - switch.living_room_audio_source
+
+- alias: Switch to 3.5mm audio when Living Room AirPlay turns on
+  trigger:
+    platform: state
+    entity_id: switch.airplay_living_room
+    from: 'off'
+    to: 'on'
+  action:
+    service: homeassistant.turn_off
+    entity_id: 
+    - switch.living_room_audio_source
+
+#######################################################################################################
+###--------------------------------------- COVER AUTOMATIONS ---------------------------------------###
+#######################################################################################################
+
+- alias: Close the roller door
+  trigger:
+    platform: event
+    event_type: ios.notification_action_fired
+    event_data:
+      actionName: ROLLER_DOOR_CLOSE
+  action:
+    service: cover.close_cover
+    entity_id:
+      - cover.roller_door
+
+- alias: Open the roller door
+  trigger:
+    platform: event
+    event_type: ios.notification_action_fired
+    event_data:
+      actionName: ROLLER_DOOR_OPEN
+  action:
+    service: cover.open_cover
+    entity_id:
+      - cover.roller_door
+
+- alias: Notify if roller door opens while I'm away
+  trigger:
+    platform: state
+    entity_id: cover.roller_door
+    from: 'closed'
+    to: 'open'
+  condition:
+    condition: state
+    entity_id: sensor.location_daniel
+    state: 'Away'
+  action:
+    service: notify.ios_danielsiphone6splus
+    data:
+      message: "Roller Door Opened!"
+      data:
+        attachment:
+          content-type: jpeg
+        push:
+          badge: 5
+          category: camera
+        entity_id: camera.shed
+
+
+- alias: Notify if roller door is open when I leave home
+  trigger:
+    platform: state
+    entity_id: sensor.location_daniel
+    from: 'Home'
+    to: 'Away'
+  condition:
+    condition: state
+    entity_id: cover.roller_door
+    state: 'open'
+  action:
+    service: notify.ios_danielsiphone6splus
+    data:
+      message: "Roller Door Left Open!"
+      data:
+        push:
+          badge: 5
+          category: "roller_door_alert"
+
+- alias: Notify if roller door is left open
+  trigger:
+    - platform: state
+      entity_id: cover.roller_door
+      to: 'open'
+      for:
+        minutes: 1
+    - platform: state
+      entity_id: cover.roller_door
+      to: 'open'
+      for:
+        minutes: 15
+    - platform: state
+      entity_id: cover.roller_door
+      to: 'open'
+      for:
+        hours: 1
+    - platform: state
+      entity_id: cover.roller_door
+      to: 'open'
+      for:
+        hours: 2
+    - platform: state
+      entity_id: cover.roller_door
+      to: 'open'
+      for:
+        hours: 3
+    - platform: state
+      entity_id: cover.roller_door
+      to: 'open'
+      for:
+        hours: 4
+    - platform: state
+      entity_id: cover.roller_door
+      to: 'open'
+      for:
+        hours: 5
+    - platform: state
+      entity_id: cover.roller_door
+      to: 'open'
+      for:
+        hours: 6
+  action:
+    service: notify.ios_danielsiphone6splus
+    data:
+      message: "Roller Door Left Open!"
+      data:
+        push:
+          badge: 1
+          category: "roller_door_alert"
+
+- alias: Prompt to open roller door when I arrive home
+  trigger:
+    platform: state
+    entity_id: sensor.location_daniel
+    to: 'Home'
+  condition:
+    condition: state
+    entity_id: cover.roller_door
+    state: 'closed'
+  action:
+    service: notify.ios_danielsiphone6splus
+    data:
+      message: "Open the Roller Door?"
+      data:
+        push:
+          category: "roller_door_prompt"

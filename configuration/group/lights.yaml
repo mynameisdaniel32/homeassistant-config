@@ -1,0 +1,77 @@
+lights:
+  name: Lights
+  entities:
+  - light.bedroom
+  - light.wardrobe
+  - light.yeelight_rgb_7811dca21337
+  - light.study
+  - light.kitchen
+  - light.living_room
+  - light.lounge
+  - light.front_door
+  - light.laundry
+  - light.back_door
+  - light.carport
+  - light.pool_room_front
+  - light.pool_room_rear
+  - light.bathroom
+  - light.toilet
+  - light.bedroom_2
+  - light.bedroom_3
+  - light.yeelight_rgb_34ce008ce68b
+  - light.yeelight_rgb_34ce009133a2
+  - light.gateway_light_34ce00fa664a
+
+main_lights:
+  name: Lights
+  entities:
+  - input_boolean.tile_main_lights
+  - input_number.dynamic_light_brightness
+  - input_number.light_temp
+#  - light.bedroom
+#  - light.wardrobe
+#  - light.yeelight_rgb_7811dca21337
+#  - light.study
+#  - light.kitchen
+#  - light.living_room
+#  - light.lounge
+#  - light.front_door
+#  - light.laundry
+#  - light.back_door
+#  - light.carport
+
+welcome_lights:
+  name: Welcome Lights
+  entities:
+  - light.front_door
+  - light.back_door
+  - light.carport
+  - light.laundry
+  - light.yeelight_rgb_34ce008ce68b
+  - light.yeelight_rgb_34ce009133a2
+
+welcome_control_lights:
+  name: Welcome Control Lights
+  entities:
+  - light.bedroom
+  - light.yeelight_rgb_7811dca21337
+  - light.kitchen
+  - light.lounge
+  - light.study
+  - light.wardrobe
+  - light.pool_room_front
+  - light.pool_room_rear
+
+lights_outside:
+  name: Outside Lights
+  entities:
+  - light.front_door
+  - light.back_door
+  - light.carport
+
+
+lights_pool_room:
+  name: Pool Room
+  entities:
+  - light.pool_room_front
+  - light.pool_room_rear

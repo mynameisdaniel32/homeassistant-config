@@ -1,0 +1,162 @@
+#######################################################################################################
+###------------------------------------- IRRIGATION AUTOMATIONS ------------------------------------###
+#######################################################################################################
+
+- alias: Sprinkler Zone 1 On
+  trigger:
+  - platform: state
+    entity_id: timer.sprinkler_zone_1
+    to: 'active'
+  action:
+  - service: homeassistant.turn_on
+    entity_id: switch.sprinkler_zone_1
+
+- alias: Sprinkler Zone 1 Off
+  trigger:
+  - platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.sprinkler_zone_1
+  action:
+  - service: homeassistant.turn_off
+    entity_id: switch.sprinkler_zone_1
+
+- alias: Sprinkler Zone 2 On
+  trigger:
+  - platform: state
+    entity_id: timer.sprinkler_zone_2
+    to: 'active'
+  action:
+  - service: homeassistant.turn_on
+    entity_id: switch.sprinkler_zone_2
+
+- alias: Sprinkler Zone 2 Off
+  trigger:
+  - platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.sprinkler_zone_2
+  action:
+  - service: homeassistant.turn_off
+    entity_id: switch.sprinkler_zone_2
+
+- alias: Sprinkler Zone 3 On
+  trigger:
+  - platform: state
+    entity_id: timer.sprinkler_zone_3
+    to: 'active'
+  action:
+  - service: homeassistant.turn_on
+    entity_id: switch.sprinkler_zone_3
+
+- alias: Sprinkler Zone 3 Off
+  trigger:
+  - platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.sprinkler_zone_3
+  action:
+  - service: homeassistant.turn_off
+    entity_id: switch.sprinkler_zone_3
+
+- alias: Sprinkler Zone 4 On
+  trigger:
+  - platform: state
+    entity_id: timer.sprinkler_zone_4
+    to: 'active'
+  action:
+  - service: homeassistant.turn_on
+    entity_id: switch.sprinkler_zone_4
+
+- alias: Sprinkler Zone 4 Off
+  trigger:
+  - platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.sprinkler_zone_4
+  action:
+  - service: homeassistant.turn_off
+    entity_id: switch.sprinkler_zone_4
+
+- alias: Sprinkler Warning
+  trigger:
+    - platform: state
+      entity_id: group.irrigation
+      to: 'on'
+      for:
+        seconds: 20
+    - platform: state
+      entity_id: group.irrigation
+      to: 'on'
+      for:
+        minutes: 30
+    - platform: state
+      entity_id: group.irrigation
+      to: 'on'
+      for:
+        hours: 1
+    - platform: state
+      entity_id: group.irrigation
+      to: 'on'
+      for:
+        hours: 2
+  action:
+    service: notify.ios_danielsiphone6splus
+    data:
+      message: "Sprinklers Left On!"
+      data:
+        push:
+          badge: 1
+          category: "sprinkler_alert"
+    
+- alias: Turn off sprinklers
+  trigger:
+    platform: event
+    event_type: ios.notification_action_fired
+    event_data:
+      actionName: SPRINKLERS_OFF
+  action:
+    service: homeassistant.turn_off
+    entity_id:
+      - group.irrigation
+
+- alias: Turn on sprinklers
+  trigger: 
+    platform: sun
+    event: sunrise
+  condition:
+    condition: and
+    conditions:
+      - condition: template
+        value_template: '{{states.sensor.pws_temp_high_1d_c.state > states.input_number.sprinkler_temp.state}}'
+      - condition: numeric_state
+        entity_id: sensor.pws_precip_1d_mm
+        below: 2
+  action:
+    service: homeassistant.turn_on
+    entity_id: input_boolean.sprinkler_control
+
+- alias: Sprinkler Control On
+  trigger:
+    platform: state
+    entity_id: input_boolean.sprinkler_control
+    to: 'on'
+  action:
+    service: script.sprinklers
+
+- alias: Sprinkler Control Off
+  trigger:
+    platform: state
+    entity_id: input_boolean.sprinkler_control
+    to: 'off'
+  action:
+  - service: homeassistant.turn_off
+    entity_id:
+    - group.irrigation
+    - script.sprinklers
+  - service: timer.finish
+    entity_id:
+    - timer.sprinkler_zone_1
+    - timer.sprinkler_zone_2
+    - timer.sprinkler_zone_3
+    - timer.sprinkler_zone_4
