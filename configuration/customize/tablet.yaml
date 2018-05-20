@@ -220,7 +220,7 @@ input_boolean.tile_tablet_button_lights:
     color_off: 'hsl(0, 0%, 80%)'    #grey
     entities:
       - entity: input_boolean.tile_tablet_button_lights
-        label: Light Controls
+        label: Lights
         icon: mdi:lightbulb
         column_span: 12
         row_span: 2
@@ -239,7 +239,7 @@ input_boolean.tile_tablet_button_media:
     color_off: 'hsl(0, 0%, 80%)'    #grey
     entities:
       - entity: input_boolean.tile_tablet_button_media
-        label: Media Controls
+        label: Media
         icon: mdi:music
         column_span: 12
         row_span: 2

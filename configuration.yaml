@@ -15,12 +15,17 @@ zone:
   longitude: !secret home_longitude
   radius: 50
 
+logger:
+  default: warn
+  logs:
+    homeassistant.components.switch.command_line: fatal
+
 ######################################################################################################
 ###------------------------------------------ YAML FILES ------------------------------------------###
 ######################################################################################################
 automation: !include_dir_merge_list configuration/automation/
 group: !include_dir_merge_named configuration/group/
-script: !include scripts.yaml
+script: !include configuration/scripts.yaml
 
 ######################################################################################################
 ###------------------------------------------ COMPONENTS ------------------------------------------###

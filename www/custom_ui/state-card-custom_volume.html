@@ -1,0 +1,67 @@
+<dom-module id="state-card-custom_volume">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
+    <style>
+      :host {
+        line-height: 1.5;
+      }
+      paper-button {
+        min-width: 60px;
+        background-color:#f3f3f3
+      }
+    </style>
+
+<div class='horizontal justified layout'>
+  <state-info state-obj="[[stateObj]]"></state-info>
+  <paper-button-group>
+      <paper-button on-tap="btntap2" on-down="btndown2" on-up="btnup2"><svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="#848484" d="M3,9H7L12,4V20L7,15H3V9M14,11H22V13H14V11Z" /></svg></paper-button>
+      <paper-button on-tap="btntap1" on-down="btndown1" on-up="btnup1"><svg style="width:24px;height:24px" viewBox="0 0 24 24"><path fill="#848484" d="M3,9H7L12,4V20L7,15H3V9M14,11H17V8H19V11H22V13H19V16H17V13H14V11Z" /></svg></paper-button>
+  </paper-button-group>
+</div>
+</template>
+</dom-module>
+<script>
+        Polymer({
+          is: 'state-card-custom_volume',
+          properties: {
+            hass: {
+              type: Object,
+            },
+            stateObj: {
+              type: Object,
+            },
+          },
+
+          btndown1: function (ev) {
+            this.setVol('livingroom_volume_up', ev);
+          },
+          btndown2: function (ev) {
+            this.setVol('livingroom_volume_down', ev);
+          },
+
+          btnup1: function (ev) {
+            this.setVol('livingroom_volume_up', ev);
+          },
+          btnup2: function (ev) {
+            this.setVol('livingroom_volume_down', ev);
+          },
+
+
+
+
+
+          btntap1: function (ev) {
+            this.setVol('livingroom_volume_up', ev);
+          },
+          btntap2: function (ev) {
+            this.setVol('livingroom_volume_down', ev);
+          },
+
+          setVol(vol,ev) {
+            var serviceData = {entity_id:('script.'+vol)};
+            this.hass.callService('script', 'turn_on', serviceData);
+            ev.stopPropagation();
+  },
+
+});
+</script>
