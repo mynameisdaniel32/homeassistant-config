@@ -382,3 +382,199 @@ sensor.illumination_lounge:
   name: Lounge
   platform: xiaomi_aqara
   unique_id: lux158d0001e55635
+sensor.study_battery:
+  name:
+  platform: mqtt
+  unique_id: motion_sensor_study_battery
+sensor.living_room_illumination_battery:
+  name:
+  platform: mqtt
+  unique_id: illumination_158d00022507d2_battery
+sensor.living_room_battery:
+  name:
+  platform: mqtt
+  unique_id: motion_sensor_living_room_battery
+sensor.lounge_battery:
+  name:
+  platform: mqtt
+  unique_id: illumination_lounge_battery
+sensor.kitchen_battery:
+  name:
+  platform: mqtt
+  unique_id: motion_sensor_kitchen_battery
+sensor.lounge_battery_2:
+  name:
+  platform: mqtt
+  unique_id: motion_sensor_lounge_battery
+sensor.motion_sensor_y_battery:
+  name:
+  platform: mqtt
+  unique_id: illumination_158d0001e5441a_battery
+sensor.motion_sensor_y_battery_2:
+  name:
+  platform: mqtt
+  unique_id: motion_sensor_158d0001e5441a_battery
+sensor.bedroom_battery:
+  name:
+  platform: mqtt
+  unique_id: motion_sensor_bedroom_battery
+sensor.study_temperature_battery:
+  name:
+  platform: mqtt
+  unique_id: temperature_158d0002272833_battery
+sensor.study_humidity_battery:
+  name:
+  platform: mqtt
+  unique_id: humidity_158d0002272833_battery
+sensor.study_pressure_battery:
+  name:
+  platform: mqtt
+  unique_id: pressure_158d0002272833_battery
+sensor.motion_sensor_x_battery:
+  name:
+  platform: mqtt
+  unique_id: illumination_158d0001e543e8_battery
+sensor.illumination_158d0001ddb1b6_battery:
+  name:
+  platform: mqtt
+  unique_id: illumination_158d0001ddb1b6_battery
+sensor.back_door_battery:
+  name:
+  platform: mqtt
+  unique_id: illumination_back_door_battery
+sensor.living_room_temperature_battery:
+  name:
+  platform: mqtt
+  unique_id: temperature_158d000227094f_battery
+sensor.living_room_humidity_battery:
+  name:
+  platform: mqtt
+  unique_id: humidity_158d000227094f_battery
+sensor.living_rooom_pressure_battery:
+  name:
+  platform: mqtt
+  unique_id: pressure_158d000227094f_battery
+sensor.bedroom_temperature_battery:
+  name:
+  platform: mqtt
+  unique_id: temperature_158d000227b875_battery
+sensor.bedroom_humidity_battery:
+  name:
+  platform: mqtt
+  unique_id: humidity_158d000227b875_battery
+sensor.bedroom_pressure_battery:
+  name:
+  platform: mqtt
+  unique_id: pressure_158d000227b875_battery
+sensor.illumination_158d0001e5562e_battery:
+  name:
+  platform: mqtt
+  unique_id: illumination_158d0001e5562e_battery
+sensor.motion_sensor_158d0001e55776_battery:
+  name:
+  platform: mqtt
+  unique_id: motion_sensor_158d0001e55776_battery
+sensor.illumination_158d0001e55776_battery:
+  name:
+  platform: mqtt
+  unique_id: illumination_158d0001e55776_battery
+sensor.carport_battery:
+  name:
+  platform: mqtt
+  unique_id: illumination_carport_battery
+sensor.ensuite_temperature_battery:
+  name:
+  platform: mqtt
+  unique_id: temperature_158d0001f52bfc_battery
+sensor.ensuite_humidity_battery:
+  name:
+  platform: mqtt
+  unique_id: humidity_158d0001f52bfc_battery
+sensor.ensuite_pressure_battery:
+  name:
+  platform: mqtt
+  unique_id: pressure_158d0001f52bfc_battery
+sensor.kitchen_illumination_battery:
+  name:
+  platform: mqtt
+  unique_id: illumination_158d0001660dc0_battery
+sensor.motion_sensor_158d0001e5562e_battery:
+  name:
+  platform: mqtt
+  unique_id: motion_sensor_158d0001e5562e_battery
+sensor.front_door_battery:
+  name:
+  platform: mqtt
+  unique_id: motion_sensor_front_door_battery
+sensor.wardrobe_battery:
+  name:
+  platform: mqtt
+  unique_id: motion_sensor_wardrobe_battery
+sensor.ensuite_battery:
+  name:
+  platform: mqtt
+  unique_id: motion_sensor_ensuite_battery
+sensor.door_window_sensor_158d0001c0335f_battery:
+  name:
+  platform: mqtt
+  unique_id: door_window_sensor_158d0001c0335f_battery
+sensor.back_door_battery_2:
+  name:
+  platform: mqtt
+  unique_id: motion_sensor_back_door_battery
+sensor.daniel_battery:
+  name:
+  platform: mqtt
+  unique_id: danielsiphone6splus_battery
+sensor.carport_lights_button_battery:
+  name:
+  platform: mqtt
+  unique_id: switch_158d0001e41a2c_battery
+sensor.washing_machine_door_battery:
+  name:
+  platform: mqtt
+  unique_id: door_window_sensor_158d0001aac0f9_battery
+sensor.door_bell_battery:
+  name:
+  platform: mqtt
+  unique_id: switch_158d00016c131e_battery
+sensor.wall_switch_left_158d0001710c46_battery:
+  name:
+  platform: mqtt
+  unique_id: wall_switch_left_158d0001710c46_battery
+sensor.wall_switch_right_158d0001710c46_battery:
+  name:
+  platform: mqtt
+  unique_id: wall_switch_right_158d0001710c46_battery
+sensor.wall_switch_both_158d0001710c46_battery:
+  name:
+  platform: mqtt
+  unique_id: wall_switch_both_158d0001710c46_battery
+sensor.laundry_battery:
+  name:
+  platform: mqtt
+  unique_id: motion_sensor_laundry_battery
+sensor.carport_battery_2:
+  name:
+  platform: mqtt
+  unique_id: motion_sensor_carport_battery
+sensor.roller_door_button_battery:
+  name:
+  platform: mqtt
+  unique_id: switch_158d00016be070_battery
+sensor.roller_door_button_battery_2:
+  name:
+  platform: mqtt
+  unique_id: switch_158d0001b12757_battery
+sensor.shed_door_battery:
+  name:
+  platform: mqtt
+  unique_id: door_window_sensor_158d0001c312c9_battery
+sensor.vacuum_cleaner_battery:
+  name:
+  platform: mqtt
+  unique_id: xiaomi_vacuum_cleaner_battery
+sensor.washing_machine_battery:
+  name:
+  platform: mqtt
+  unique_id: plug_158d0001db1baf_battery

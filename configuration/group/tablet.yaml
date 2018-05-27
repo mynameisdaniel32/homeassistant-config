@@ -82,3 +82,21 @@ tile_tablet_panel_motion:
   entities:
   - input_boolean.tile_tablet_panel_motion
 #  - group.motion_sensor
+
+tile_tablet_panel_rooms:
+  name: ' '
+  entities:
+  - input_boolean.tile_tablet_panel_rooms
+  - input_boolean.tile_tablet_panel_rooms_bedroom
+  - input_boolean.tile_tablet_panel_rooms_study
+
+tile_tablet_panel_rooms_bedroom:
+  name: ' '
+  entities:
+  - input_boolean.tile_tablet_panel_rooms_bedroom
+
+tile_tablet_panel_rooms_study:
+  name: ' '
+  entities:
+  - input_boolean.tile_tablet_panel_rooms_study
+

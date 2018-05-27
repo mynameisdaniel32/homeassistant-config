@@ -112,3 +112,4 @@ tablet_view:
   - group.tile_tablet_panel_shed
   - group.tile_tablet_panel_weather
   - group.tile_tablet_panel_motion
+  - group.tile_tablet_panel_rooms

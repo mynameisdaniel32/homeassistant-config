@@ -8,6 +8,7 @@ homeassistant:
   customize: !include_dir_merge_named configuration/customize/
   whitelist_external_dirs:
   - '/tmp'
+  packages: !include_dir_named packages
 
 zone:
   name: Home
@@ -31,7 +32,8 @@ script: !include configuration/scripts.yaml
 ###------------------------------------------ COMPONENTS ------------------------------------------###
 ######################################################################################################
 frontend:
-  javascript_version: es5
+  javascript_version: latest
+  themes: !include configuration/themes.yaml
   extra_html_url:
     - /local/custom_ui/state-card-tiles.html
     - /local/custom_ui/custom-weather-card.html
@@ -155,6 +157,7 @@ google_assistant:
   project_id: home-assistant-144414
   client_id: !secret google_client_id
   access_token: !secret google_access_token
+  api_key: !secret google_homegraph_api_key
   exposed_domains:
     - switch
     - light
@@ -168,9 +171,9 @@ notify:
     phone_number: !secret mobile_number
 
   - platform: html5
-    name: HTML5 Notify
+    name: html5
     gcm_api_key: !secret gcm_api_key
-    gcm_sender_key: !secret gcm_sender_key
+    gcm_sender_id: !secret gcm_sender_id
 
 device_tracker:
 #  - platform: icloud
@@ -195,6 +198,8 @@ mqtt:
   port: 1883
   username: !secret mqtt_username
   password: !secret mqtt_password
+  discovery: true
+  discovery_prefix: homeassistant
 
 panel_iframe:
   router:
@@ -655,7 +660,14 @@ input_select:
     - Shed
     - Weather
     - Motion
+    - Rooms
     - All
+
+  tablet_panel_detail_rooms:
+    name: Active Tablet Detail Rooms Panel
+    options:
+    - Bedroom
+    - Study
 
 input_number: 
   alarmclock_hour:
@@ -786,6 +798,7 @@ input_boolean:
   tile_tablet_button_shed:
   tile_tablet_button_weather:
   tile_tablet_button_motion:
+  tile_tablet_button_rooms:
   
   tile_tablet_panel_lights:
   tile_tablet_panel_lights_advanced:
@@ -800,6 +813,11 @@ input_boolean:
   tile_tablet_panel_shed:
   tile_tablet_panel_weather:
   tile_tablet_panel_motion:
+  tile_tablet_panel_rooms:
+  
+  tile_tablet_panel_rooms_bedroom:
+  tile_tablet_panel_rooms_study:
+  
   
 
 ######################################################################################################

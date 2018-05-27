@@ -381,3 +381,30 @@
   - service: homeassistant.turn_off
     entity_id: input_boolean.tile_tablet_button_motion
 
+##### ROOMS
+- alias: Tablet Rooms Panel On
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    to: "Rooms"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_rooms
+    data:
+      visible: True
+  - service: homeassistant.turn_on
+    entity_id: input_boolean.tile_tablet_button_rooms
+
+- alias: Tablet Rooms Panel Off
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    from: "Rooms"
+  action:
+  - service: group.set_visibility
+    entity_id: group.tile_tablet_panel_rooms
+    data:
+      visible: False
+  - service: homeassistant.turn_off
+    entity_id: input_boolean.tile_tablet_button_rooms
+
