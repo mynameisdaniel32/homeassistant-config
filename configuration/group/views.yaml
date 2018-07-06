@@ -13,6 +13,7 @@ default_view:
     - media_player.bedroom_chromecast
     - media_player.living_room_tv
     - group.ac_bedroom
+    - plant.peace_lily
 
 advanced_view:
   name: Advanced
@@ -25,6 +26,7 @@ advanced_view:
     - group.controls
     - input_select.room_tracker
     - fan.xiaomi_miio_device
+    
 
 room_view:
   name: Rooms

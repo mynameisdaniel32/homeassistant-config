@@ -1,3 +1,18 @@
+homekit_entities:
+  name: HomeKit Entities
+  entities:
+  - light.bedroom
+  - light.wardrobe
+  - light.ensuite
+  - light.study
+  - light.kitchen
+  - light.living_room
+  - light.lounge
+  - light.front_door
+  - light.laundry
+  - light.back_door
+  - light.carport
+
 tile_lights:
   name: Lights
   entities:
@@ -11,6 +26,7 @@ tile_media:
   name: Media
   entities:
   - input_boolean.tile_media
+  - switch.living_room_audio_source
 
 tile_weather:
   name: Weather
@@ -46,7 +62,7 @@ xiaomi:
   - binary_sensor.motion_sensor_158d0001e5441a
   - sensor.illumination_158d0001e5441a
   - binary_sensor.door_window_sensor_158d0001aac0f9
-  - binary_sensor.door_window_sensor_158d0001c312c9
+  - binary_sensor.door_window_sensor_shed_door
   - binary_sensor.door_window_sensor_158d0001d633f8
   - binary_sensor.door_window_sensor_158d0001c0335f
   - binary_sensor.motion_sensor_living_room

@@ -38,7 +38,7 @@
 
 
 # LIGHT CONTROL #######################################################################################
-- alias: Turn on Lights When I Get Home
+- alias: Lights - Arrival 
   trigger:
     platform: state
     entity_id: sensor.location_daniel
@@ -55,7 +55,7 @@
     data:
       transition: 5
 
-- alias: Turn on Light If I'm Home
+- alias: Lights - Sunset
   trigger:
     platform: sun
     event: sunset
@@ -70,7 +70,7 @@
     data:
       transition: 90
 
-- alias: Turn off Welcome Lights
+- alias: Lights - Turn off Welcome Lights
   trigger:
     platform: state
     entity_id: group.welcome_control_lights
@@ -82,7 +82,7 @@
     data:
       transition: 5
 
-- alias: Turn on Backdoor + Carport Lights When Roller Door Opens
+- alias: Lights - Roller Door Opening
   trigger:
     platform: state
     entity_id: cover.roller_door
@@ -100,25 +100,9 @@
   - service: homeassistant.turn_on
     entity_id: light.carport
 
-- alias: Fade off front lights
-  trigger:
-    platform: state
-    entity_id: light.yeelight_rgb_34ce008ce68b
-    from: 'unavailable'
-    to: 'on'
-    for:
-      minutes: 2
-  action:
-    service: homeassistant.turn_off
-    entity_id:
-      - light.yeelight_rgb_34ce008ce68b
-      - light.yeelight_rgb_34ce009133a2
-    data:
-      transition: 10
-
 
 # LIGHT BRIGHTNESS #######################################################################################
-- alias: Dynamic Brightness Reset
+- alias: Lights Dynamic Brightness Reset
   trigger:
     platform: sun
     event: sunrise
@@ -129,7 +113,7 @@
       value: 100
  
 
-- alias: Dynamic Brightness 10 PM
+- alias: Lights Dynamic Brightness 10 PM
   trigger:
     platform: time
     at: '22:00:00'
@@ -139,7 +123,7 @@
       entity_id: input_number.dynamic_light_brightness
       value: 75
 
-- alias: Dynamic Brightness 11 PM
+- alias: Lights Dynamic Brightness 11 PM
   trigger:
     platform: time
     at: '23:00:00'
@@ -149,7 +133,7 @@
       entity_id: input_number.dynamic_light_brightness
       value: 50
 
-- alias: Dynamic Brightness 12 AM
+- alias: Lights Dynamic Brightness 12 AM
   trigger:
     platform: time
     at: '00:00:00'
@@ -159,7 +143,7 @@
       entity_id: input_number.dynamic_light_brightness
       value: 30
 
-- alias: Dynamic Brightness 1 AM
+- alias: Lights Dynamic Brightness 1 AM
   trigger:
     platform: time
     at: '01:00:00'
@@ -169,24 +153,36 @@
       entity_id: input_number.dynamic_light_brightness
       value: 20
 
-# LIGHT COLOUR #######################################################################################
-
-- alias: Set LIFX colour temperature
+- alias: Lights Dynamic Brightness 2 AM
   trigger:
-    platform: state
+    platform: time
+    at: '01:00:00'
+  action:
+    service: input_number.set_value
+    data:
+      entity_id: input_number.dynamic_light_brightness
+      value: 10
+
+# LIFX SET #######################################################################################
+- alias: Lights Set LIFX Colour and Brightness
+  trigger:
+  - platform: state
     entity_id: input_number.light_temp
+  - platform: state
+    entity_id: input_number.dynamic_light_brightness
   action:
     service: light.lifx_set_state
     data:
       transition: 5
     data_template:
       kelvin: '{{states.input_number.light_temp.state | int}}'
-      
-      
-- alias: Set light colour temperature
+      brightness_pct: '{{states.input_number.dynamic_light_brightness.state}}'      
+
+# LIGHT COLOUR #######################################################################################
+- alias: Lights Set Light Colour Temp
   trigger:
-    platform: time
-    minutes: /15
+    platform: state
+    entity_id: light.flux
   action:
     service: input_number.set_value
     data:

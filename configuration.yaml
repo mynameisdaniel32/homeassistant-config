@@ -44,17 +44,31 @@ frontend:
 
 updater:
   include_used_components: true
+
 discovery:
+
 conversation:
+
 history:
+
 logbook:
   exclude:
     entities:
     - light_controller.last_message
+    - automation.battery_sensor_from_battery_level_attribute
+    - automation.battery_sensor_from_battery_attribute
+    - automation.update_battery_status_group_members
+    - sensor.time
+    - sensor.time_2
+    - sensor.time__date
+    - sensor.time_utc
     domains:
     - group
+
 sun:
+
 config:
+
 map:
 recorder:
   purge_interval: 2
@@ -80,6 +94,12 @@ light:
     command_topic: "light/flux/command"
     color_temp_command_topic: "light/flux/color_temp"
 
+  - platform: xiaomi_miio
+    name: Down Light
+    host: 192.168.1.115
+    token: !secret xiaomi_miio_token_light
+    model: philips.light.bulb
+
 light_controller:
   topic: node/light_switch/
   
@@ -99,8 +119,6 @@ fan:
 media_player:
   - platform: plex
   
-  - platform: cast
-
   - platform: universal
     name: Living Room TV
     children:
@@ -141,8 +159,8 @@ camera:
   - platform: ffmpeg
     input: -rtsp_transport tcp -i rtsp://192.168.1.29:8554/unicast
     name: Front Yard
+    extra_arguments: -pred 1 -q:v 2
     
-
 http:
   api_password: !secret api_password
   trusted_networks:
@@ -164,11 +182,11 @@ google_assistant:
     - group
 
 notify:
-  - platform: telstra
-    name: Telstra_SMS
-    consumer_key: !secret telstra_key
-    consumer_secret: !secret telstra_secret
-    phone_number: !secret mobile_number
+#  - platform: telstra
+#    name: Telstra_SMS
+#    consumer_key: !secret telstra_key
+#    consumer_secret: !secret telstra_secret
+#    phone_number: !secret mobile_number
 
   - platform: html5
     name: html5
@@ -234,6 +252,7 @@ xiaomi_aqara:
 apple_tv:
   - host: 192.168.1.237
     login_id: !secret apple_tv_id
+    credentials: !secret apple_tv_credentials
 
 weather:
   - platform: yweather
@@ -244,6 +263,29 @@ weather:
 
   - platform: bom
     station: 'IDS60901.95677'
+
+
+######################################################################################################
+###-------------------------------------------- HOMEKIT  ------------------------------------------###
+######################################################################################################
+
+homekit:
+  auto_start: false
+  ip_address: 192.168.1.37
+  filter:
+    include_entities:
+    - light.bedroom
+    - light.ensuite
+    - light.study
+    - light.kitchen
+    - light.living_room
+    - light.lounge
+    - light.front_door
+    - light.laundry
+    - light.back_door
+    - light.pool_room_front
+    - light.pool_room_rear
+    - light.carport
 
 
 ######################################################################################################
@@ -346,6 +388,8 @@ timer:
   sprinkler_zone_2:
   sprinkler_zone_3:
   sprinkler_zone_4:
+  
+  sleep_bedroom:
 
 
 ######################################################################################################
@@ -380,6 +424,21 @@ switch:
         friendly_name: "Living Room Audio Mute"
         command_on: 'JgBQAAABKZIVERMSExEVNhMRFBETExMRFDcTNhM3FBETNxQ2FDYTNxQREzcUNhMSFDYTERURExITNxMSExEUNxMRFDcTNhM3FAAFHwABKUkTAA0FAAAAAAAAAAA='
         command_off: 'JgBQAAABKZIVERMSExEVNhMRFBETExMRFDcTNhM3FBETNxQ2FDYTNxQREzcUNhMSFDYTERURExITNxMSExEUNxMRFDcTNhM3FAAFHwABKUkTAA0FAAAAAAAAAAA='
+
+  - platform: broadlink
+    host: 192.168.1.128
+    mac: '34:EA:34:42:BA:9F'
+    switches:
+      bedroom_tv_power:
+        friendly_name: "Bedroom TV Power"
+        command_on: 'JgBmAAo7ChoJGgkaCRoJGgk8CTwJGgo7CRoKGQkaCTwKGggABewKPAkaCRkKGgkaCTwJGgkZCjwJGgk8CTwKOwkbCTwJAAWnCTwKGQkbCRkKGQkbCTsKPAkZCjwJGgkaCRoJPAoZCQANBQAA='
+        command_off: 'JgBmAAo7ChoJGgkaCRoJGgk8CTwJGgo7CRoKGQkaCTwKGggABewKPAkaCRkKGgkaCTwJGgkZCjwJGgk8CTwKOwkbCTwJAAWnCTwKGQkbCRkKGQkbCTsKPAkZCjwJGgkaCRoJPAoZCQANBQAA='
+
+#    switches:
+#      bedroom_tv_power:
+#        friendly_name: "Bedroom TV Power"
+#        command_on: 'JgDMAAw5CxkLFwwXCxkLFww6CzkMGAs5DBgLGAsXDDoLGAsABeoLOgwXCxgKGQsYCzsLFwsYCjsMFws6DDoLOQwYCjsLAAWlDDoLGAoZCxgKGQoZCzoLOgwXCjsMFwoaChgLOwsXCwAGNQw5CxkLFwsYCxkKOgwYCxgKOwsYCzoMOQs6CxgLOgwABaUMOQwXDBcLGAwXCxgLOgw6CxcMOgsYCxcMGAs5DBgLAAXpDDoLGAsYDBcLGAs6DBcLGAw5CxkLOQs6DDoLGAs6DAANBQAAAAAAAAAAAAAAAA'
+#        command_off: 'JgDMAAw5CxkLFwwXCxkLFww6CzkMGAs5DBgLGAsXDDoLGAsABeoLOgwXCxgKGQsYCzsLFwsYCjsMFws6DDoLOQwYCjsLAAWlDDoLGAoZCxgKGQoZCzoLOgwXCjsMFwoaChgLOwsXCwAGNQw5CxkLFwsYCxkKOgwYCxgKOwsYCzoMOQs6CxgLOgwABaUMOQwXDBcLGAwXCxgLOgw6CxcMOgsYCxcMGAs5DBgLAAXpDDoLGAsYDBcLGAs6DBcLGAw5CxkLOQs6DDoLGAs6DAANBQAAAAAAAAAAAAAAAA'
 
   - platform: command_line
     switches:
@@ -639,9 +698,9 @@ input_select:
     - Laundry
     - Bedroom
     - Living Room
-    - Lounge
-    - Kitchen
-    - Front Door
+#    - Lounge
+#    - Kitchen
+#    - Front Door
     - Carport
 
   tablet_panel_detail:
@@ -760,6 +819,15 @@ input_boolean:
     name: Light Check
     icon: mdi:lightbulb-on
     initial: off
+
+  homekit_control:
+    name: Homekit Control
+    initial: off
+
+  motion_control:
+    name: Motion Control
+    icon: mdi:run
+    initial: on
 
   sprinkler_control:
     name: Sprinkler Control
@@ -1027,3 +1095,43 @@ sensor:
   - platform: rest
     name: SC Tiles latest version
     resource: https://raw.githubusercontent.com/c727/home-assistant-tiles/master/LATEST_VERSION
+
+  - platform: mqtt
+    name: /plant_1_moisture
+    state_topic: /plant/plant_1/
+    value_template: '{{ value_json.moisture }}'
+    unit_of_measurement: '%'
+  - platform: mqtt
+    name: plant_1_battery
+    state_topic: /plant/plant_1/
+    value_template: '{{ value_json.battery }}'
+  - platform: mqtt
+    name: plant_1_temperature
+    state_topic: /plant/plant_1/
+    value_template: '{{ value_json.temperature }}'
+    unit_of_measurement: '°C'
+  - platform: mqtt
+    name: plant_1_conductivity
+    state_topic: /plant/plant_1/
+    value_template: '{{ value_json.conductivity }}'
+    unit_of_measurement: 'μS/cm'
+  - platform: mqtt
+    name: plant_1_brightness
+    state_topic: /plant/plant_1/
+    value_template: '{{ value_json.brightness }}'
+    unit_of_measurement: 'lux'
+
+######################################################################################################
+###--------------------------------------------- OTHER --------------------------------------------###
+######################################################################################################
+
+plant:
+  peace_lily:
+    sensors:
+      moisture: sensor.plant_1_moisture
+      battery: sensor.plant_1_battery
+      temperature: sensor.plant_1_temperature
+      conductivity: sensor.plant_1_conductivity
+      brightness: sensor.plant_1_brightness
+    min_moisture: 15
+    max_moisture: 65

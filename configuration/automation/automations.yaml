@@ -7,6 +7,9 @@
     entity_id:
     - switch.flux
     - light.flux
+  - service: homeassistant.turn_off
+    entity_id:
+    - input_boolean.homekit_control
   - service: input_select.select_option
     data:
       entity_id: input_select.tablet_panel_detail
@@ -30,6 +33,36 @@
     - group.tile_tablet_panel_rooms_study
     data:
       visible: False
+
+
+- alias: Homekit Start
+  trigger:
+    platform: state
+    entity_id: group.homekit_entities
+  condition:
+    condition: and
+    conditions:
+    - condition: template
+      value_template: >-
+        {%- for entity_id in states.group.homekit_entities.attributes.entity_id if states(entity_id) == 'unknown' -%}
+          {% if loop.first -%}
+            {{false}}
+          {%- endif -%}
+        {%- endfor -%}
+        {{true}}
+    - condition: state
+      entity_id: input_boolean.homekit_control
+      state: 'off'
+  action:
+  - service: persistent_notification.create
+    data:
+      title: HomeKit Starting
+      message: This might actually work.
+  - service: homekit.start
+  - service: homeassistant.turn_on
+    entity_id:
+    - input_boolean.homekit_control
+
 
 #######################################################################################################
 ###--------------------------------------- BUTTON AUTOMATIONS --------------------------------------###
@@ -75,6 +108,25 @@
     service: homeassistant.toggle
     entity_id: light.carport
 
+- alias: Button - Bedroom
+  trigger:
+    platform: event
+    event_type: click
+    event_data:
+      entity_id: binary_sensor.switch_158d0001e01080
+  action:
+  - service: homeassistant.turn_off
+    entity_id: light.bedroom
+  - service: timer.cancel
+    entity_id: timer.sleep_bedroom
+  - service: timer.start
+    entity_id: timer.sleep_bedroom
+    data_template:
+      duration: '00:20:00'
+
+
+
+
 #######################################################################################################
 ###--------------------------------------- OTHER AUTOMATIONS ---------------------------------------###
 #######################################################################################################
@@ -113,6 +165,10 @@
       entity_id: input_boolean.alarmclock_workday
       state: 'off'
   action:
+  - service: input_number.set_value
+    data:
+      entity_id: input_number.dynamic_light_brightness
+      value: 100
   - service: homeassistant.turn_on
     entity_id:
       - light.bedroom
@@ -138,11 +194,55 @@
       title: Update available
       message: A new version for [Tiles custom state card](https://github.com/c727/home-assistant-tiles#changelog) is available.
 
+- alias: Turn off Bedroom TV with Chromecast
+  trigger:
+    platform: state
+    entity_id:
+    - media_player.bedroom_chromecast
+    to: 'off'
+    for:
+      seconds: 5
+  action:
+    service: homeassistant.turn_off
+    entity_id:
+    - switch.bedroom_tv_power
+
+- alias: Sleep Timer - Bedroom TV
+  trigger:
+  - platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.sleep_bedroom
+  condition:
+    condition: template
+    value_template: "{% if not is_state('media_player.bedroom_chromecast', 'off') %}true{% endif %}"
+  action:
+    service: media_player.turn_off
+    entity_id:
+    - media_player.bedroom_chromecast
+
+
+- alias: Nofify Sonarr Queue
+  trigger:
+  - platform: state
+    entity_id: sensor.sonarr_queue
+  condition:
+    condition: numeric_state
+    entity_id: sensor.sonarr_queue
+    above: 2
+  action:
+    service: persistent_notification.create
+    data:
+      title: Sonarr Queue
+      message: Sonarr Queue has exceeded 2
+
+
+    
 #######################################################################################################
 ###--------------------------------------- AUDIO AUTOMATIONS ---------------------------------------###
 #######################################################################################################
 
-- alias: Toggle TV state
+- alias: TV toggle state
   trigger:
     platform: state
     entity_id:
@@ -156,7 +256,7 @@
     data:
       state: off
       
-- alias: Toggle TV audio on when TV turns on
+- alias: TV toggle audio on when TV turns on
   trigger:
     platform: state
     entity_id:
@@ -168,7 +268,7 @@
     entity_id:
       - switch.living_room_audio_source
 
-- alias: Toggle TV audio off when TV turns off
+- alias: TV toggle audio off when TV turns off
   trigger:
     platform: state
     entity_id:
@@ -180,7 +280,7 @@
     entity_id:
       - switch.living_room_audio_source
 
-- alias: Toggle TV audio on when Apple TV starts playing
+- alias: TV toggle audio on when Apple TV starts playing
   trigger:
     platform: state
     entity_id:
@@ -191,7 +291,7 @@
     entity_id:
     - switch.living_room_audio_source
 
-- alias: Switch to 3.5mm audio when Triple J starts
+- alias: Audio switch to 3.5mm when Triple J starts
   trigger:
     platform: state
     entity_id: switch.triplej
@@ -202,7 +302,7 @@
     entity_id: 
     - switch.living_room_audio_source
 
-- alias: Switch to 3.5mm audio when Living Room AirPlay turns on
+- alias: Audio switch to 3.5mm when Living Room AirPlay turns on
   trigger:
     platform: state
     entity_id: switch.airplay_living_room
@@ -213,11 +313,37 @@
     entity_id: 
     - switch.living_room_audio_source
 
+- alias: Shed Door Turn on Shed AirPlay
+  trigger:
+    platform: state
+    entity_id:
+      - binary_sensor.door_window_sensor_shed_door
+    from: 'off'
+    to: 'on'
+  action:
+    service: homeassistant.turn_on
+    entity_id:
+      - switch.airplay_shed
+
+- alias: Shed Door Turn off Shed AirPlay
+  trigger:
+    platform: state
+    entity_id:
+      - binary_sensor.door_window_sensor_shed_door
+    from: 'on'
+    to: 'off'
+  action:
+    service: homeassistant.turn_off
+    entity_id:
+      - switch.airplay_shed
+
+
+
 #######################################################################################################
 ###--------------------------------------- COVER AUTOMATIONS ---------------------------------------###
 #######################################################################################################
 
-- alias: Close the roller door
+- alias: iOS Roller Door Close
   trigger:
     platform: event
     event_type: ios.notification_action_fired
@@ -228,7 +354,7 @@
     entity_id:
       - cover.roller_door
 
-- alias: Open the roller door
+- alias: iOS Roller Door Open
   trigger:
     platform: event
     event_type: ios.notification_action_fired
@@ -332,7 +458,7 @@
           badge: 1
           category: "roller_door_alert"
 
-- alias: Prompt to open roller door when I arrive home
+- alias: Notify prompt to open roller door when I arrive home
   trigger:
     platform: state
     entity_id: sensor.location_daniel

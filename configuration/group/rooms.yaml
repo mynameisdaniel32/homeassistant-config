@@ -15,7 +15,7 @@ tile_room_living_room:
 room_ensuite:
   name: Ensuite
   entities:
-  - light.yeelight_rgb_7811dca21337
+  - light.ensuite
   - binary_sensor.motion_sensor_ensuite
   - sensor.temperature_158d0001f52bfc
   - sensor.humidity_158d0001f52bfc

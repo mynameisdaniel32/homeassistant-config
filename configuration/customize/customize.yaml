@@ -25,7 +25,7 @@ input_boolean.tile_lights:
         label: Wardrobe
         icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
         column_span: 4
-      - entity: light.yeelight_rgb_7811dca21337
+      - entity: light.ensuite
         label: Ensuite
         icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
         column_span: 4
@@ -102,7 +102,7 @@ input_boolean.tile_main_lights:
         icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
         column_span: 4
         row_span: 2
-      - entity: light.yeelight_rgb_7811dca21337
+      - entity: light.ensuite
         label: Ensuite
         icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
         column_span: 4
@@ -492,6 +492,16 @@ sensor.bom_rain_today:
 sensor.bom_wind_speed_kmh:
   friendly_name: Wind Speed
   icon: mdi:weather-windy
+
+######################################################################################################
+###-------------------------------------------- PLANTS --------------------------------------------###
+######################################################################################################
+
+plant.peace_lily:
+  friendly_name: Peace Lily (Living Room)
+  entity_picture: /local/plants/peace_lily.jpg
+
+
 ######################################################################################################
 ###-------------------------------------------- SERVER --------------------------------------------###
 ######################################################################################################
@@ -661,54 +671,54 @@ group.lights:
 ###-------------------------------------------- LIGHTS --------------------------------------------###
 ######################################################################################################
 light.bedroom:
-  homebridge_visible: true
+#  homebridge_visible: true
   google_assistant: true
   google_assistant_name: Bedroom Light
 light.wardrobe:
-  homebridge_visible: true
+#  homebridge_visible: true
   google_assistant: true
   google_assistant_name: Wardrobe Light
 light.study:
-  homebridge_visible: true
+#  homebridge_visible: true
   google_assistant: true
   google_assistant_name: Study Light
 light.kitchen:
-  homebridge_visible: true
+#  homebridge_visible: true
   google_assistant: true
   google_assistant_name: Kitchen Light
 light.living_room:
-  homebridge_visible: true
+#  homebridge_visible: true
   google_assistant: true
   google_assistant_name: Living Room Light
 light.lounge:
-  homebridge_visible: true
+#  homebridge_visible: true
   google_assistant: true
   google_assistant_name: Lounge Light
 light.front_door:
-  homebridge_visible: true
+#  homebridge_visible: true
   google_assistant: true
   google_assistant_name: Front Door Light
 light.laundry:
-  homebridge_visible: true
+#  homebridge_visible: true
   google_assistant: true
   google_assistant_name: Laundry Light
 light.back_door:
-  homebridge_visible: true
+#  homebridge_visible: true
   google_assistant: true
   google_assistant_name: Back Door Light
 light.pool_room_front:
-  homebridge_visible: true
+#  homebridge_visible: true
   google_assistant: true
   google_assistant_name: Pool Room Front Light
 light.pool_room_rear:
-  homebridge_visible: true
+#  homebridge_visible: true
   google_assistant: true
   google_assistant_name: Pool Room Rear Light
 light.gateway_light_34ce00fa664a:
   friendly_name: Gateway Light 1
 light.yeelight_rgb_7811dca21337:
-  friendly_name: Ensuite
-  homebridge_visible: true
+  friendly_name: Ensuite_OLD
+#  homebridge_visible: true
 light.yeelight_rgb_34ce008ce68b:
   friendly_name: Front 1
   homebridge_visible: true
@@ -716,7 +726,7 @@ light.yeelight_rgb_34ce009133a2:
   friendly_name: Front 2
   homebridge_visible: true
 light.carport:
-  homebridge_visible: true
+#  homebridge_visible: true
   google_assistant: true
   google_assistant_name: Carport Light
 

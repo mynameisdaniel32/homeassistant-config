@@ -3,7 +3,7 @@ lights:
   entities:
   - light.bedroom
   - light.wardrobe
-  - light.yeelight_rgb_7811dca21337
+  - light.ensuite
   - light.study
   - light.kitchen
   - light.living_room
@@ -22,6 +22,21 @@ lights:
   - light.yeelight_rgb_34ce009133a2
   - light.gateway_light_34ce00fa664a
 
+homekit_lights:
+  name: HomeKit Lights
+  entities:
+  - light.bedroom
+  - light.wardrobe
+  - light.ensuite
+  - light.study
+  - light.kitchen
+  - light.living_room
+  - light.lounge
+  - light.front_door
+  - light.laundry
+  - light.back_door
+  - light.carport
+
 main_lights:
   name: Lights
   entities:
@@ -30,7 +45,7 @@ main_lights:
   - input_number.light_temp
 #  - light.bedroom
 #  - light.wardrobe
-#  - light.yeelight_rgb_7811dca21337
+#  - light.ensuite
 #  - light.study
 #  - light.kitchen
 #  - light.living_room
@@ -54,7 +69,7 @@ welcome_control_lights:
   name: Welcome Control Lights
   entities:
   - light.bedroom
-  - light.yeelight_rgb_7811dca21337
+  - light.ensuite
   - light.kitchen
   - light.lounge
   - light.study

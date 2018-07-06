@@ -1,0 +1,29 @@
+title: My Awesome Home
+views:
+    # View tab title.
+  - title: Lovelace Test
+    icon: mdi:home-assistant
+    # Optional unique id for direct access /lovelace/${id}
+    id: lovelace
+    # The cards to show on this view.
+    cards:
+        # The entities card will take a list of entities and show their state.
+      - type: entities
+        title: Example
+        entities:
+          - media_player.living_room_tv
+
+        # The filter card will filter available entities for certain criteria
+        # and render it as type 'entities'.
+        
+      - type: entity-filter
+        filter:
+          - domain: light
+            state: 'on'
+          - domain: switch
+            state: 'on'
+        card_config:
+          title: Eating power
+
+      - type: plant-status
+        entity: plant.peace_lily

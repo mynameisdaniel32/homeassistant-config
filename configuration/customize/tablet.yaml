@@ -338,7 +338,7 @@ input_boolean.tile_tablet_panel_lights:
         icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
         column_span: 3
         row_span: 2
-      - entity: light.yeelight_rgb_7811dca21337
+      - entity: light.ensuite
         label_sec_template: "return attributes['friendly_name']"
         icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
         column_span: 3
@@ -436,8 +436,8 @@ input_boolean.tile_tablet_panel_lights_advanced:
         icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
         column_span: 3
         row_span: 2
-      - entity: light.yeelight_rgb_7811dca21337
-        more_info: light.yeelight_rgb_7811dca21337
+      - entity: light.ensuite
+        more_info: light.ensuite
         label_sec_template: "return attributes['friendly_name']"
         icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
         column_span: 3
