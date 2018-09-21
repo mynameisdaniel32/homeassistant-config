@@ -70,6 +70,22 @@
     data:
       transition: 90
 
+- alias: Lights - Study Sunset
+  trigger:
+    platform: state
+    entity_id: input_boolean.light_check
+    from: 'off'
+    to: 'on'
+  condition:
+    condition: state
+    entity_id: binary_sensor.motion_sensor_study
+    state: 'on'
+  action:
+  - service: homeassistant.turn_on
+    entity_id: light.study
+    data:
+      transition: 90
+
 - alias: Lights - Turn off Welcome Lights
   trigger:
     platform: state
@@ -94,11 +110,9 @@
     state: 'on'
   action:
   - service: homeassistant.turn_on
-    entity_id: light.back_door
+    entity_id: group.welcome_lights
     data:
-      transition: 2
-  - service: homeassistant.turn_on
-    entity_id: light.carport
+      transition: 5
 
 
 # LIGHT BRIGHTNESS #######################################################################################
@@ -113,7 +127,7 @@
       value: 100
  
 
-- alias: Lights Dynamic Brightness 10 PM
+- alias: Lights Dynamic Brightness 20:00
   trigger:
     platform: time
     at: '22:00:00'
@@ -123,7 +137,17 @@
       entity_id: input_number.dynamic_light_brightness
       value: 75
 
-- alias: Lights Dynamic Brightness 11 PM
+- alias: Lights Dynamic Brightness 20:30
+  trigger:
+    platform: time
+    at: '22:30:00'
+  action:
+    service: input_number.set_value
+    data:
+      entity_id: input_number.dynamic_light_brightness
+      value: 62
+
+- alias: Lights Dynamic Brightness 23:00
   trigger:
     platform: time
     at: '23:00:00'
@@ -133,7 +157,17 @@
       entity_id: input_number.dynamic_light_brightness
       value: 50
 
-- alias: Lights Dynamic Brightness 12 AM
+- alias: Lights Dynamic Brightness 23:30
+  trigger:
+    platform: time
+    at: '23:30:00'
+  action:
+    service: input_number.set_value
+    data:
+      entity_id: input_number.dynamic_light_brightness
+      value: 40
+
+- alias: Lights Dynamic Brightness 00:00
   trigger:
     platform: time
     at: '00:00:00'
@@ -143,7 +177,17 @@
       entity_id: input_number.dynamic_light_brightness
       value: 30
 
-- alias: Lights Dynamic Brightness 1 AM
+- alias: Lights Dynamic Brightness 00:30
+  trigger:
+    platform: time
+    at: '00:30:00'
+  action:
+    service: input_number.set_value
+    data:
+      entity_id: input_number.dynamic_light_brightness
+      value: 25
+
+- alias: Lights Dynamic Brightness 01:00
   trigger:
     platform: time
     at: '01:00:00'
@@ -153,32 +197,56 @@
       entity_id: input_number.dynamic_light_brightness
       value: 20
 
-- alias: Lights Dynamic Brightness 2 AM
+- alias: Lights Dynamic Brightness 01:30
   trigger:
     platform: time
-    at: '01:00:00'
+    at: '01:30:00'
+  action:
+    service: input_number.set_value
+    data:
+      entity_id: input_number.dynamic_light_brightness
+      value: 15
+
+- alias: Lights Dynamic Brightness 02:00
+  trigger:
+    platform: time
+    at: '02:00:00'
   action:
     service: input_number.set_value
     data:
       entity_id: input_number.dynamic_light_brightness
       value: 10
 
-# LIFX SET #######################################################################################
-- alias: Lights Set LIFX Colour and Brightness
+# LIFX SET BRIGHTNESS #######################################################################################
+- alias: Lights Set LIFX Brightness
   trigger:
-  - platform: state
-    entity_id: input_number.light_temp
   - platform: state
     entity_id: input_number.dynamic_light_brightness
   action:
     service: light.lifx_set_state
     data:
-      transition: 5
+      transition: 30
+    data_template:
+      brightness_pct: '{{states.input_number.dynamic_light_brightness.state}}'
+
+# LIFX SET COLOUR TEMP #######################################################################################
+- alias: Lights Set LIFX Colour Temp
+  trigger:
+  - platform: state
+    entity_id: input_number.light_temp
+  action:
+  - service: light.turn_on
+    data:
+      entity_id: light.flux
+      rgb_color: [255,255,255]
+  - service: light.lifx_set_state
+    data:
+      transition: 15
     data_template:
       kelvin: '{{states.input_number.light_temp.state | int}}'
-      brightness_pct: '{{states.input_number.dynamic_light_brightness.state}}'      
 
-# LIGHT COLOUR #######################################################################################
+
+# LIGHT COLOUR TEMP #######################################################################################
 - alias: Lights Set Light Colour Temp
   trigger:
     platform: state
@@ -189,3 +257,22 @@
       entity_id: input_number.light_temp
     data_template:
       value: '{{( 1000000 / states.light.flux.attributes.color_temp ) | int}}'
+
+
+# LIGHT RGB COLOUR #######################################################################################
+- alias: Lights Set LIFX RGB Colour
+  trigger:
+    platform: state
+    entity_id: light.flux
+  condition:
+    condition: template
+    value_template: "{{ states.light.flux.attributes.rgb_color != '(255,255,255)' }}"
+  action:
+    service: light.lifx_set_state
+    data:
+      transition: 5
+    data_template:
+      rgb_color:
+      - '{{ states.light.flux.attributes.rgb_color[0] }}'
+      - '{{ states.light.flux.attributes.rgb_color[1] }}'
+      - '{{ states.light.flux.attributes.rgb_color[2] }}'

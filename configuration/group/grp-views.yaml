@@ -9,9 +9,9 @@ default_view:
 #    - group.status
     - group.alarm_clock
     - group.main_lights
-    - group.tile_motion_sensors
-    - media_player.bedroom_chromecast
-    - media_player.living_room_tv
+    - media_player.living_room
+    - media_player.bedroom
+    - media_player.bedroom_sonos
     - group.ac_bedroom
     - plant.peace_lily
 
@@ -20,12 +20,15 @@ advanced_view:
   view: yes
   entities:
     - group.appliances
-    - group.lights
     - group.travel
     - group.status
     - group.controls
     - input_select.room_tracker
     - fan.xiaomi_miio_device
+    - fan.verandah
+    - group.tile_motion_sensors
+    - group.heater_living_room
+
     
 
 room_view:
@@ -46,7 +49,6 @@ light_view:
   icon: mdi:lightbulb
   view: yes
   entities:
-    - group.tile_lights
     - group.lights
 
 weather_view:
@@ -92,7 +94,7 @@ camera_view:
   icon: mdi:camera
   view: yes
   entities:
-  - camera.shed
+  - camera.carport
   - camera.front_yard
   - switch.dafang_left_right
 

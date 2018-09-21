@@ -4,72 +4,6 @@
 ###############################################################################################################################################
 ###############################################################################################################################################
 
-input_boolean.tile_lights:
-  custom_ui_state_card: state-card-tiles
-  config:
-    columns: 12
-    row_height: 60px
-    gap: 4px
-#    color: 'hsl(198, 97%, 48%)'    #blue
-    color: 'hsl(0, 0%, 80%)'    #grey
-    color_on: 'hsl(37, 96%, 48%)'  #orange
-    color_off: 'hsl(0, 0%, 80%)'    #grey
-#    icon_size: 18px
-    text_align: left
-    entities:
-      - entity: light.bedroom
-        label: Bedroom
-        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-        column_span: 4
-      - entity: light.wardrobe
-        label: Wardrobe
-        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-        column_span: 4
-      - entity: light.ensuite
-        label: Ensuite
-        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-        column_span: 4
-      - entity: light.study
-        label: Study
-        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-        column_span: 4
-      - entity: light.kitchen
-        label: Kitchen
-        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-        column_span: 4
-      - entity: light.living_room
-        label: Living Room
-        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-        column_span: 4
-      - entity: light.lounge
-        label: Lounge
-        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-        column_span: 4
-      - entity: light.front_door
-        label: Front Door
-        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-        column_span: 4
-      - entity: light.laundry
-        label: Laundry
-        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-        column_span: 4
-      - entity: light.carport
-        label: Carport
-        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-        column_span: 4
-      - entity: group.lights_pool_room
-        label: Pool Room
-        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-        column_span: 4
-      - entity: light.bathroom
-        label: Bathroom
-        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-        column_span: 4
-      - entity: light.bedroom_3
-        label: Bedroom 3
-        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-        column_span: 4
-
 input_boolean.tile_main_lights:
   custom_ui_state_card: state-card-tiles
   config:
@@ -142,6 +76,16 @@ input_boolean.tile_main_lights:
         icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
         column_span: 4
         row_span: 2
+      - entity: light.outside_front
+        label: Outside Front
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+        row_span: 2
+      - entity: light.verandah
+        label: Verandah
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 4
+        row_span: 2
 
 input_boolean.tile_media:
   custom_ui_state_card: state-card-tiles
@@ -157,18 +101,25 @@ input_boolean.tile_media:
         label: Triple J
         icon: mdi:radio
         column_span: 6
-      - entity: switch.airplay_living_room
-        label: Living Room
+      - entity: switch.airplay_appletv
+        label: ' '
         icon: mdi:airplay
+        label_sec: Living Room
+        column_span: 2
+      - entity: switch.airplay_bedroom
+        label: ' '
+        icon: mdi:airplay
+        label_sec: Bedroom
         column_span: 2
       - entity: switch.airplay_shed
-        label: Shed
+        label: ' '
         icon: mdi:airplay
+        label_sec: Shed
         column_span: 2
-      - entity: switch.airplay_appletv
-        label: Apple TV
-        icon: mdi:airplay
-        column_span: 2
+#      - entity: switch.airplay_living_room
+#        label: MusicPi
+#        icon: mdi:airplay
+#        column_span: 2
       - entity: script.living_room_volume_down
         label: Volume Down
         icon: mdi:volume-medium
@@ -500,6 +451,8 @@ sensor.bom_wind_speed_kmh:
 plant.peace_lily:
   friendly_name: Peace Lily (Living Room)
   entity_picture: /local/plants/peace_lily.jpg
+  battery_alert_disabled: true
+  battery_sensor_creation_disabled: true
 
 
 ######################################################################################################
@@ -521,9 +474,6 @@ sensor.server_wdc_wd20ezrx00dc0b0_temperatures_temperature:
   friendly_name: P:\ HDD Temp
 sensor.plex:
   icon: mdi:plex
-media_player.plex_web_chrome:
-  friendly_name: Plex
-  hidden: true
 sensor.radarr_disk_space:
   friendly_name: C:\ Disk Space
 sensor.sonarr_disk_space:
@@ -544,40 +494,32 @@ sensor.sonarr_queue:
 switch.flux:
   icon: mdi:lightbulb-on
 switch.ac_bedroom:
-  icon: mdi:nest-thermostat
-  homebridge_visible: true
+  icon: mdi:thermostat
 sensor.alarmclock_time:
   icon: mdi:clock
 switch.airplay_shed:
   icon: mdi:airplay
-  homebridge_visible: true
 switch.airplay_living_room:
   icon: mdi:airplay
-  homebridge_visible: true
 switch.airplay_appletv:
   icon: mdi:airplay
-  homebridge_visible: true
-input_boolean.homekit_location:
-  homebridge_visible: true
+switch.airplay_bedroom:
+  icon: mdi:airplay
 script.living_room_tv_on:
   icon: mdi:television
 script.living_room_volume_up:
   icon: mdi:volume-high
-#  custom_ui_state_card: state-card-custom_volume
 script.living_room_volume_down:
   icon: mdi:volume-medium
 cover.roller_door:
   device_class: garage
-  homebridge_visible: true
-  homebridge_cover_type: garage_door
 switch.triplej:
   icon: mdi:radio
-  homebridge_visible: true
 sensor.location_daniel:
   icon: mdi:account
-device_tracker.danielsiphone6splus:
-  friendly_name: Daniel
-  icon: mdi:account
+#device_tracker.danielsiphone6splus:
+#  friendly_name: Daniel
+#  icon: mdi:account
 sensor.battery_danielsiphone6splus:
   friendly_name: Daniel's iPhone Battery
   icon: mdi:battery-outline
@@ -606,7 +548,6 @@ vacuum.xiaomi_vacuum_cleaner:
   friendly_name: Vacuum Cleaner
 switch.vacuum:
   icon: mdi:robot-vacuum
-  homebridge_visible: true
   google_assistant: true
   google_assistant_name: Vacuum Cleaner
 switch.sprinkler_zone_1:
@@ -630,18 +571,20 @@ switch.sprinkler_zone_7:
 switch.sprinkler_zone_8:
   icon: mdi:water
 group.irrigation:
-  homebridge_visible: true
   google_assistant: true
   google_assistant_name: Sprinklers
 sensor.sprinkler_status:
   icon: mdi:water
 climate.ac_bedroom:
-  homebridge_visible: true
   friendly_name: Bedroom AC
 sensor.inside_temperature_bedroom_inside_temperature:
   friendly_name: Bedroom Temperature
 sensor.outside_temperature_bedroom_outside_temperature:
   friendly_name: Carport Temperature
+fan.verandah:
+  google_assistant: true
+  google_assistant_name: Verandah Fan
+
 
 ######################################################################################################
 ###-------------------------------------------- XIAOMI --------------------------------------------###
@@ -665,85 +608,63 @@ group.all_lights:
   hidden: false
 group.all_remotes:
   hidden: false
-group.lights:
-  homebridge_visible: true
+#group.lights:
+#  homebridge_visible: true
 ######################################################################################################
 ###-------------------------------------------- LIGHTS --------------------------------------------###
 ######################################################################################################
 light.bedroom:
-#  homebridge_visible: true
   google_assistant: true
   google_assistant_name: Bedroom Light
 light.wardrobe:
-#  homebridge_visible: true
   google_assistant: true
   google_assistant_name: Wardrobe Light
 light.study:
-#  homebridge_visible: true
   google_assistant: true
   google_assistant_name: Study Light
 light.kitchen:
-#  homebridge_visible: true
   google_assistant: true
   google_assistant_name: Kitchen Light
 light.living_room:
-#  homebridge_visible: true
   google_assistant: true
   google_assistant_name: Living Room Light
 light.lounge:
-#  homebridge_visible: true
   google_assistant: true
   google_assistant_name: Lounge Light
 light.front_door:
-#  homebridge_visible: true
   google_assistant: true
   google_assistant_name: Front Door Light
 light.laundry:
-#  homebridge_visible: true
   google_assistant: true
   google_assistant_name: Laundry Light
 light.back_door:
-#  homebridge_visible: true
   google_assistant: true
   google_assistant_name: Back Door Light
-light.pool_room_front:
-#  homebridge_visible: true
+light.pool_room:
   google_assistant: true
-  google_assistant_name: Pool Room Front Light
-light.pool_room_rear:
-#  homebridge_visible: true
-  google_assistant: true
-  google_assistant_name: Pool Room Rear Light
+  google_assistant_name: Pool Room Lights
 light.gateway_light_34ce00fa664a:
-  friendly_name: Gateway Light 1
-light.yeelight_rgb_7811dca21337:
-  friendly_name: Ensuite_OLD
-#  homebridge_visible: true
-light.yeelight_rgb_34ce008ce68b:
-  friendly_name: Front 1
-  homebridge_visible: true
-light.yeelight_rgb_34ce009133a2:
-  friendly_name: Front 2
-  homebridge_visible: true
+  friendly_name: Gateway Light
 light.carport:
-#  homebridge_visible: true
   google_assistant: true
   google_assistant_name: Carport Light
+light.outside_front:
+  google_assistant: true
+  google_assistant_name: Outside Front Lights
+light.verandah:
+  google_assistant: true
+  google_assistant_name: Verandah Lights
+
+
 
 ######################################################################################################
 ###-------------------------------------------- HIDDEN --------------------------------------------###
 ######################################################################################################
-media_player.plex_web_chrome_2:
-  hidden: true
-media_player.plex_web_chrome_3:
-  hidden: true
-media_player.daniels_iphone_6s_plus:
-  hidden: true
 automation.restart_hass:
   hidden: true
 device_tracker.living_room_tv:
   hidden: true
-media_player.living_room_chromecast:
+media_player.bedroom_chromecast:
   hidden: true
 sensor.time:
   hidden: true

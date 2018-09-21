@@ -2,10 +2,9 @@ tile_tablet_control:
   name: ' '
   entities:
   - input_boolean.tile_tablet_status
-  - input_boolean.tile_tablet_button_lights
-  - input_boolean.tile_tablet_button_media
-  - input_boolean.tile_tablet_button_cameras
+  - input_boolean.tile_tablet_button_large
   - input_boolean.tile_tablet_buttons
+  - input_boolean.tile_tablet_dummy
 
 
 tile_tablet_panel_lights:
@@ -20,18 +19,22 @@ tile_tablet_panel_lights_advanced:
   - input_number.dynamic_light_brightness
   - input_number.light_temp
   - switch.flux
+  - light.flux
+  - input_boolean.light_check
 
 tile_tablet_panel_media:
   name: ' '
   entities:
   - input_boolean.tile_tablet_panel_media
-  - media_player.bedroom_chromecast
-  - media_player.living_room_tv
+  - media_player.living_room
+  - media_player.bedroom_sonos
+  - media_player.bedroom
+
   
 tile_tablet_panel_cameras:
   name: ' '
   entities:
-  - camera.shed
+  - camera.carport
   - camera.front_yard
 
 tile_tablet_panel_sprinklers:
@@ -69,7 +72,7 @@ tile_tablet_panel_shed:
   name: ' '
   entities:
   - cover.roller_door
-  - camera.shed
+  - camera.carport
   - light.carport
 
 tile_tablet_panel_weather:

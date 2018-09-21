@@ -15,7 +15,9 @@ input_boolean.tile_tablet_buttons:
     color_off: 'hsl(0, 0%, 80%)'    #grey
     entities:
       - entity: input_boolean.tile_tablet_button_vacuum_cleaner
-        label_template: "return entities['vacuum.xiaomi_vacuum_cleaner'].attributes.status"
+#        label_template: "return entities['vacuum.xiaomi_vacuum_cleaner'].attributes.status"
+        label_template: "return entities['vacuum.xiaomi_vacuum_cleaner'].state"
+#        label_template: "return state"
         text_size: '0.9em'
         label_sec: Vacuum Cleaner
         text_sec_size: '0.78em'
@@ -33,7 +35,7 @@ input_boolean.tile_tablet_buttons:
           option: Vacuum Cleaner
 
       - entity: input_boolean.tile_tablet_button_alarm_clock
-        label_state: input_boolean.alarmclock_status
+        label_state: binary_sensor.alarmclock_tomorrow
         label_sec: Alarm Clock
         text_sec_size: '0.7em'
         icon: mdi:alarm
@@ -212,7 +214,7 @@ input_boolean.tile_tablet_status:
           option: Weather
       - entity: sensor.friendly_date
         label_template: "return state"
-        text_size: '2.0em'
+        text_size: '1.9em'
 #        icon: mdi:calendar
         column_span: 12
         row_span: 1
@@ -234,7 +236,7 @@ input_boolean.tile_tablet_status:
           entity_id: input_select.tablet_panel_detail
           option: Weather
 
-input_boolean.tile_tablet_button_lights:
+input_boolean.tile_tablet_button_large:
   custom_ui_state_card: state-card-tiles
   config:
     columns: 12
@@ -252,16 +254,6 @@ input_boolean.tile_tablet_button_lights:
         data:
           entity_id: input_select.tablet_panel_detail
           option: Lights
-
-input_boolean.tile_tablet_button_media:
-  custom_ui_state_card: state-card-tiles
-  config:
-    columns: 12
-    row_height: 30px
-    gap: 6px
-    color_on: 'hsl(198, 97%, 48%)'  #blue
-    color_off: 'hsl(0, 0%, 80%)'    #grey
-    entities:
       - entity: input_boolean.tile_tablet_button_media
         label: Media
         icon: mdi:music
@@ -271,16 +263,6 @@ input_boolean.tile_tablet_button_media:
         data:
           entity_id: input_select.tablet_panel_detail
           option: Media
-
-input_boolean.tile_tablet_button_cameras:
-  custom_ui_state_card: state-card-tiles
-  config:
-    columns: 12
-    row_height: 30px
-    gap: 6px
-    color_on: 'hsl(198, 97%, 48%)'  #blue
-    color_off: 'hsl(0, 0%, 80%)'    #grey
-    entities:
       - entity: input_boolean.tile_tablet_button_cameras
         label: Cameras
         icon: mdi:camera
@@ -290,6 +272,18 @@ input_boolean.tile_tablet_button_cameras:
         data:
           entity_id: input_select.tablet_panel_detail
           option: Cameras
+
+input_boolean.tile_tablet_dummy:
+  custom_ui_state_card: state-card-tiles
+  config:
+    columns: 12
+    row_height: 60px
+    gap: 6px
+    color: 'hsl(0, 0%, 80%)'        #grey
+    color_on: 'hsl(37, 96%, 48%)'   #orange
+    color_off: 'hsl(0, 0%, 80%)'    #grey
+    entities:
+# THIS IS A BLANK ENTITY TO FILL SPACE IN THE BACKEND FOR PANEL ARRANGEMENT
 
 
 ###############################################################################################################################################
@@ -383,12 +377,17 @@ input_boolean.tile_tablet_panel_lights:
         icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
         column_span: 3
         row_span: 2
-      - entity: light.pool_room_front
+      - entity: light.outside_front
         label_sec_template: "return attributes['friendly_name']"
         icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
         column_span: 3
         row_span: 2
-      - entity: light.pool_room_rear
+      - entity: light.pool_room
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+      - entity: light.verandah
         label_sec_template: "return attributes['friendly_name']"
         icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
         column_span: 3
@@ -407,7 +406,7 @@ input_boolean.tile_tablet_panel_lights_advanced:
     color_off: 'hsl(0, 0%, 80%)'    #grey
     text_align: center
     entities:
-      - entity: group.all_lights
+      - entity: group.lights
         label: All Lights
         text_align: center
         icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
@@ -490,14 +489,20 @@ input_boolean.tile_tablet_panel_lights_advanced:
         icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
         column_span: 3
         row_span: 2
-      - entity: light.pool_room_front
-        more_info: light.pool_room_front
+      - entity: light.outside_front
+        more_info: light.outside_front
         label_sec_template: "return attributes['friendly_name']"
         icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
         column_span: 3
         row_span: 2
-      - entity: light.pool_room_rear
-        more_info: light.pool_room_rear
+      - entity: light.pool_room
+        more_info: light.pool_room
+        label_sec_template: "return attributes['friendly_name']"
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
+      - entity: light.verandah
+        more_info: light.verandah
         label_sec_template: "return attributes['friendly_name']"
         icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
         column_span: 3
@@ -520,21 +525,29 @@ input_boolean.tile_tablet_panel_media:
         icon: mdi:radio
         column_span: 12
         row_span: 2
-      - entity: switch.airplay_living_room
-        label: Living Room
+      - entity: switch.airplay_bedroom
+        label: ' '
         icon: mdi:airplay
-        column_span: 4
-        row_span: 2
-      - entity: switch.airplay_shed
-        label: Shed
-        icon: mdi:airplay
+        label_sec: Bedroom
         column_span: 4
         row_span: 2
       - entity: switch.airplay_appletv
-        label: Apple TV
+        label: ' '
         icon: mdi:airplay
+        label_sec: Living Room
         column_span: 4
         row_span: 2
+      - entity: switch.airplay_shed
+        label: ' '
+        icon: mdi:airplay
+        label_sec: Shed
+        column_span: 4
+        row_span: 2
+#      - entity: switch.airplay_living_room
+#        label: MusicPi
+#        icon: mdi:airplay
+#        column_span: 6
+#        row_span: 2
       - entity: script.living_room_volume_down
         label: Volume Down
         icon: mdi:volume-medium
@@ -565,7 +578,7 @@ input_boolean.tile_tablet_panel_alarm_clock:
         icon: mdi:alarm
         column_span: 12
         row_span: 2
-        text_size: '2.0em'
+        text_size: '3.0em'
         icon_size: '1.0em'
         color: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
         text_color: 'hsl(0, 0%, 0%)'    #black
@@ -670,7 +683,7 @@ input_boolean.tile_tablet_panel_motion:
         label_sec_template: "return attributes['friendly_name']"
         text_size: '1.0em'
         icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
-        column_span: 4
+        column_span: 3
         row_span: 2
         color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
         color_on: 'hsl(37, 96%, 48%)'       #orange
@@ -681,7 +694,7 @@ input_boolean.tile_tablet_panel_motion:
         label_sec_template: "return attributes['friendly_name']"
         text_size: '1.0em'
         icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
-        column_span: 4
+        column_span: 3
         row_span: 2
         color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
         color_on: 'hsl(37, 96%, 48%)'       #orange
@@ -691,7 +704,7 @@ input_boolean.tile_tablet_panel_motion:
         label_sec_template: "return attributes['friendly_name']"
         text_size: '1.0em'
         icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
-        column_span: 4
+        column_span: 3
         row_span: 2
         color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
         color_on: 'hsl(37, 96%, 48%)'       #orange
@@ -701,7 +714,7 @@ input_boolean.tile_tablet_panel_motion:
         label_sec_template: "return attributes['friendly_name']"
         text_size: '1.0em'
         icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
-        column_span: 4
+        column_span: 3
         row_span: 2
         color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
         color_on: 'hsl(37, 96%, 48%)'       #orange
@@ -711,7 +724,7 @@ input_boolean.tile_tablet_panel_motion:
         label_sec_template: "return attributes['friendly_name']"
         text_size: '1.0em'
         icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
-        column_span: 4
+        column_span: 3
         row_span: 2
         color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
         color_on: 'hsl(37, 96%, 48%)'       #orange
@@ -721,7 +734,7 @@ input_boolean.tile_tablet_panel_motion:
         label_sec_template: "return attributes['friendly_name']"
         text_size: '1.0em'
         icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
-        column_span: 4
+        column_span: 3
         row_span: 2
         color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
         color_on: 'hsl(37, 96%, 48%)'       #orange
@@ -731,7 +744,7 @@ input_boolean.tile_tablet_panel_motion:
         label_sec_template: "return attributes['friendly_name']"
         text_size: '1.0em'
         icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
-        column_span: 4
+        column_span: 3
         row_span: 2
         color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
         color_on: 'hsl(37, 96%, 48%)'       #orange
@@ -741,7 +754,7 @@ input_boolean.tile_tablet_panel_motion:
         label_sec_template: "return attributes['friendly_name']"
         text_size: '1.0em'
         icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
-        column_span: 4
+        column_span: 3
         row_span: 2
         color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
         color_on: 'hsl(37, 96%, 48%)'       #orange
@@ -751,7 +764,7 @@ input_boolean.tile_tablet_panel_motion:
         label_sec_template: "return attributes['friendly_name']"
         text_size: '1.0em'
         icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
-        column_span: 4
+        column_span: 3
         row_span: 2
         color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
         color_on: 'hsl(37, 96%, 48%)'       #orange
@@ -761,7 +774,7 @@ input_boolean.tile_tablet_panel_motion:
         label_sec_template: "return attributes['friendly_name']"
         text_size: '1.0em'
         icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
-        column_span: 4
+        column_span: 3
         row_span: 2
         color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
         color_on: 'hsl(37, 96%, 48%)'       #orange
@@ -771,7 +784,17 @@ input_boolean.tile_tablet_panel_motion:
         label_sec_template: "return attributes['friendly_name']"
         text_size: '1.0em'
         icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
-        column_span: 4
+        column_span: 3
+        row_span: 2
+        color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
+        color_on: 'hsl(37, 96%, 48%)'       #orange
+        text_color_off: 'hsl(0, 0%, 0%)'    #black
+        text_color_on: 'hsl(0, 0%, 98%)'    #white
+      - entity: binary_sensor.motion_sensor_outside_front
+        label_sec_template: "return attributes['friendly_name']"
+        text_size: '1.0em'
+        icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
+        column_span: 3
         row_span: 2
         color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
         color_on: 'hsl(37, 96%, 48%)'       #orange
@@ -781,7 +804,7 @@ input_boolean.tile_tablet_panel_motion:
         label_sec_template: "return attributes['friendly_name']"
         text_size: '1.0em'
         icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
-        column_span: 4
+        column_span: 3
         row_span: 2
         color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
         color_on: 'hsl(37, 96%, 48%)'       #orange
@@ -791,17 +814,7 @@ input_boolean.tile_tablet_panel_motion:
         label_sec_template: "return attributes['friendly_name']"
         text_size: '1.0em'
         icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
-        column_span: 4
-        row_span: 2
-        color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
-        color_on: 'hsl(37, 96%, 48%)'       #orange
-        text_color_off: 'hsl(0, 0%, 0%)'    #black
-        text_color_on: 'hsl(0, 0%, 98%)'    #white
-      - entity: binary_sensor.motion_sensor_158d0001e5562e
-        label_sec_template: "return attributes['friendly_name']"
-        text_size: '1.0em'
-        icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
-        column_span: 4
+        column_span: 3
         row_span: 2
         color_off: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
         color_on: 'hsl(37, 96%, 48%)'       #orange

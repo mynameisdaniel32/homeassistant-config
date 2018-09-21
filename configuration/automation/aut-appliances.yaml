@@ -15,7 +15,7 @@
     - condition: template
       value_template: '{{ as_timestamp(now()) - as_timestamp(states.automation.run_vacuum_cleaner.attributes.last_triggered) | int > 129600 }}'
   action:
-  - service: homeassistant.turn_on
+  - service: vacuum.start
     entity_id: vacuum.xiaomi_vacuum_cleaner
     
 - alias: Stop Vacuum Cleaner
@@ -24,7 +24,7 @@
     entity_id: sensor.location_daniel
     to: 'Home'
   action:
-  - service: homeassistant.turn_off
+  - service: vacuum.return_to_base
     entity_id: vacuum.xiaomi_vacuum_cleaner
 
 

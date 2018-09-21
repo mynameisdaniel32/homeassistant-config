@@ -8,7 +8,7 @@ living_room_tv_on:
       data:
         entity_id:
           - switch.living_room_tv_power
-          - switch.living_room_audio_source
+#          - switch.living_room_audio_source
 
 living_room_tv_off:
   alias: Living Room TV Off
@@ -17,7 +17,7 @@ living_room_tv_off:
       data:
         entity_id:
           - switch.living_room_tv_power
-          - switch.living_room_audio_source           
+#          - switch.living_room_audio_source           
 
 living_room_volume_up:
   alias: Living Room Volume Up
@@ -55,7 +55,7 @@ sprinklers:
       data:
         entity_id:
         - switch.sprinkler_timer_4
-    - delay: '00:{{(states.input_number.sprinkler_timer_1.state | int)}}:00'
+    - delay: '00:{{(states.input_number.sprinkler_timer_4.state | int)}}:00'
     - service: homeassistant.turn_off
       data:
         entity_id:

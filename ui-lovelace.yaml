@@ -1,4 +1,8 @@
-title: My Awesome Home
+resources:
+  - url: /local/kiosk.js
+    type: js
+
+title: 43 Topaz (Lovelace)
 views:
     # View tab title.
   - title: Lovelace Test
@@ -8,22 +12,370 @@ views:
     # The cards to show on this view.
     cards:
         # The entities card will take a list of entities and show their state.
-      - type: entities
-        title: Example
-        entities:
-          - media_player.living_room_tv
-
-        # The filter card will filter available entities for certain criteria
-        # and render it as type 'entities'.
-        
       - type: entity-filter
-        filter:
-          - domain: light
-            state: 'on'
-          - domain: switch
-            state: 'on'
-        card_config:
-          title: Eating power
+        card:
+          type: media-control
+          entity: media_player.living_room
+        show_empty: false
+        entities:
+          - media_player.living_room
+        state_filter:
+          - "playing"
+          - "idle"
+          - "off"
+
+      - type: entity-filter
+        card:
+          type: media-control
+          entity: media_player.bedroom
+        show_empty: false
+        entities:
+          - media_player.bedroom
+        state_filter:
+          - "playing"
+          - "idle"
+          - "off"
+
+      - type: entity-filter
+        card:
+          type: media-control
+          entity: media_player.bedroom_sonos
+        show_empty: false
+        entities:
+          - media_player.bedroom_sonos
+        state_filter:
+          - "playing"
+          - "idle"
+          - "off"
+          - "paused"
+
+        
+
+      - type: entity-filter
+        card:
+          type: glance
+          show_state: false
+          column_width: 25%
+        show_empty: false
+        entities:
+          - entity: light.bedroom
+            tap_action: toggle
+          - entity: light.wardrobe
+            tap_action: toggle
+          - entity: light.ensuite
+            tap_action: toggle
+          - entity: light.study
+            tap_action: toggle
+          - entity: light.kitchen
+            tap_action: toggle
+          - entity: light.living_room
+            tap_action: toggle
+          - entity: light.lounge
+            tap_action: toggle
+          - entity: light.front_door
+            tap_action: toggle
+          - entity: light.laundry
+            tap_action: toggle
+          - entity: light.back_door
+            tap_action: toggle
+          - entity: light.carport
+            tap_action: toggle
+          - entity: light.pool_room
+            tap_action: toggle
+          - entity: light.outside_front
+            tap_action: toggle
+        state_filter:
+          - "off"
+          - "on"
+
+
+      - type: entity-filter
+        card:
+          title: On Lights
+          type: glance
+          show_state: false
+          column_width: 25%
+        show_empty: false
+        entities:
+          - entity: light.bedroom
+            tap_action: toggle
+          - entity: light.wardrobe
+            tap_action: toggle
+          - entity: light.ensuite
+            tap_action: toggle
+          - entity: light.study
+            tap_action: toggle
+          - entity: light.kitchen
+            tap_action: toggle
+          - entity: light.living_room
+            tap_action: toggle
+          - entity: light.lounge
+            tap_action: toggle
+          - entity: light.front_door
+            tap_action: toggle
+          - entity: light.laundry
+            tap_action: toggle
+          - entity: light.back_door
+            tap_action: toggle
+          - entity: light.carport
+            tap_action: toggle
+          - entity: light.pool_room
+            tap_action: toggle
+          - entity: light.outside_front
+            tap_action: toggle
+        state_filter:
+          - "on"
+
+
 
       - type: plant-status
         entity: plant.peace_lily
+
+
+      - type: picture-glance
+        title: Carport
+        entities:
+          - cover.roller_door
+          - binary_sensor.motion_sensor_carport
+          - light.carport
+        camera_image: camera.carport
+
+
+      - type: picture-glance
+        title: Front
+        entities:
+          - light.outside_front
+        camera_image: camera.front_yard
+
+
+      - type: vertical-stack
+        cards:
+        - type: horizontal-stack
+          cards:
+            - type: picture-entity
+              entity: light.bedroom
+              tap_action: more-info
+              image: /local/images/tracker/sam.png
+              state_filter:
+          #      'not_home': saturate(0.0) opacity(50%)
+              style:
+              'background-color': red
+              top: 50%
+              left: 86%
+              width: 22%
+              # padding: 50px 50px 100px 50px
+              border-radius: 5%
+            - type: glance
+              show_state: false
+              column_width: 100%
+              entities:
+                - entity: light.study
+                  tap_action: toggle
+              style:
+                background-color: red
+                top: 50%
+                left: 86%
+                width: 22%
+                # padding: 50px 50px 100px 50px
+                border-radius: 5%
+
+
+  - title: Lovelace Test
+    icon: mdi:tablet
+#    panel: true
+    # Optional unique id for direct access /lovelace/${id}
+    id: tablet
+    # The cards to show on this view.
+    cards:
+        # The entities card will take a list of entities and show their state.
+#      - type: horizontal-stack
+#        cards:
+
+### LEFT SIDE STACK
+          - type: vertical-stack
+            cards:
+
+
+              - type: picture-elements
+                image: /local/images/FFFFFF-0.png
+                elements:
+                  - type: image
+                    tap_action: toggle
+                    entity: light.wardrobe
+                    image: /local/images/FFFFFF-1.png
+                    state_filter:
+                      "on": brightness(100%) opacity(0%)
+                      "off": brightness(80%) opacity(100%)
+                    style:
+                      top: 9.5%
+                      left: 13.25%
+                      height: 15%
+                      width: 22.5%
+                      background-color: orange
+                      border-radius: 1%
+                  - type: state-icon
+                    entity: light.wardrobe
+                    style:
+                      top: 6.5%
+                      left: 13.25%
+
+                  - type: state-label
+                    entity: light.wardrobe
+                    tap_action: toggle
+                    style:
+                      text-align: center
+                      top: 12.5%
+                      left: 13.25%
+                      text-transform: uppercase
+
+
+
+                  - type: image
+                    tap_action: toggle
+                    entity: light.ensuite
+                    image: /local/images/FFFFFF-1.png
+                    state_filter:
+                      "on": brightness(100%) opacity(0%)
+                      "off": brightness(80%) opacity(100%)
+                    style:
+                       top: 9.5%
+                       left: 37.75%
+                       height: 15%
+                       width: 22.5%
+                       background-color: blue
+                       border-radius: 1%
+              
+                  - type: image
+                    tap_action: toggle
+                    entity: light.ensuite
+                    image: /local/images/FFFFFF-1.png
+                    state_filter:
+                      "on": brightness(100%) opacity(0%)
+                      "off": brightness(80%) opacity(100%)
+                    style:
+                       top: 9.5%
+                       left: 62.25%
+                       height: 15%
+                       width: 22.5%
+                       background-color: green
+                       border-radius: 1%
+              
+                  - type: image
+                    tap_action: toggle
+                    entity: light.ensuite
+                    image: /local/images/FFFFFF-1.png
+                    state_filter:
+                      "on": brightness(100%) opacity(0%)
+                      "off": brightness(80%) opacity(100%)
+                    style:
+                       top: 9.5%
+                       left: 86.75%
+                       height: 15%
+                       width: 22.5%
+                       background-color: yellow
+                       border-radius: 1%
+
+
+              - type: horizontal-stack
+                cards:
+
+                  - type: picture-elements
+                    image: /local/images/FFFFFF-0.png
+                    elements:
+                      - type: image
+                        tap_action: toggle
+                        entity: light.wardrobe
+                        image: /local/images/FFFFFF-1.png
+                        state_filter:
+                          "on": brightness(100%) opacity(0%)
+                          "off": brightness(80%) opacity(100%)
+                        style:
+                           background-color: orange
+                           border-radius: 1%
+
+
+                  - type: picture-elements
+                    image: /local/images/FFFFFF-0.png
+                    elements:
+                      - type: image
+                        tap_action: toggle
+                        entity: light.ensuite
+                        image: /local/images/FFFFFF-1.png
+                        state_filter:
+                          "on": brightness(100%) opacity(0%)
+                          "off": brightness(80%) opacity(100%)
+                        style:
+                           top: 50%
+                           left: 50%
+                           height: 100%
+                           width: 100%
+                           background-color: blue
+         
+
+              
+              
+              - type: picture-glance
+                title: Front
+                entities:
+                  - light.outside_front
+                camera_image: camera.front_yard
+              - type: picture-glance
+                title: Carport
+                entities:
+                  - light.carport
+                camera_image: camera.carport
+
+### RIGHT SIDE STACK
+          - type: vertical-stack
+            cards:
+              - type: horizontal-stack
+                cards:
+                  - type: picture-entity
+                    entity: light.bedroom
+                    tap_action: more-info
+                    image: /local/images/tracker/sam.png
+                    state_filter:
+                #      'not_home': saturate(0.0) opacity(50%)
+                  - type: glance
+                    show_state: false
+                    entities:
+                      - entity: light.bedroom
+                        tap_action: toggle
+              - type: conditional
+                conditions:
+                  - entity: light.bedroom
+                    state: "on"
+                card:
+                  type: glance
+                  show_state: false
+                  column_width: 20%
+                  show_empty: false
+                  entities:
+                    - entity: light.bedroom
+                      tap_action: toggle
+                    - entity: light.wardrobe
+                      tap_action: toggle
+                    - entity: light.ensuite
+                      tap_action: toggle
+                    - entity: light.study
+                      tap_action: toggle
+                    - entity: light.kitchen
+                      tap_action: toggle
+                    - entity: light.living_room
+                      tap_action: toggle
+                    - entity: light.lounge
+                      tap_action: toggle
+                    - entity: light.front_door
+                      tap_action: toggle
+                    - entity: light.laundry
+                      tap_action: toggle
+                    - entity: light.back_door
+                      tap_action: toggle
+                    - entity: light.carport
+                      tap_action: toggle
+                    - entity: light.pool_room
+                      tap_action: toggle
+                    - entity: light.outside_front
+                      tap_action: toggle
+          
+

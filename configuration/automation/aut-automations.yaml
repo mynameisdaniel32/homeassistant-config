@@ -34,11 +34,66 @@
     data:
       visible: False
 
+# Reset all input values if they've been forgotten by a database error/loss
+- alias: Home Assistant Value Reset
+  trigger:
+    platform: homeassistant
+    event: start
+  condition:
+  - condition: numeric_state
+    entity_id: input_number.battery_alert_threshold_max
+    below: '0'
+  action:
+  - service: persistent_notification.create
+    data:
+      title: Resetting Values
+      message: Input values were lost, all have been reset.
+  - service: input_number.set_value
+    data:
+      entity_id: input_number.battery_alert_threshold_max
+      value: 30
+  - service: input_number.set_value
+    data:
+      entity_id: input_number.input_number.alarmclock_hour
+      value: 6
+  - service: input_number.set_value
+    data:
+      entity_id: input_number.alarmclock_minutes
+      value: 45
+  - service: input_number.set_value
+    data:
+      entity_id: input_number.dynamic_light_brightness
+      value: 100
+  - service: input_number.set_value
+    data:
+      entity_id: input_number.sprinkler_temp
+      value: 40
+  - service: input_number.set_value
+    data:
+      entity_id: input_number.sprinkler_timer_1
+      value: 0
+  - service: input_number.set_value
+    data:
+      entity_id: input_number.sprinkler_timer_2
+      value: 0
+  - service: input_number.set_value
+    data:
+      entity_id: input_number.sprinkler_timer_3
+      value: 0
+  - service: input_number.set_value
+    data:
+      entity_id: input_number.sprinkler_timer_4
+      value: 0
+
 
 - alias: Homekit Start
   trigger:
-    platform: state
+  - platform: state
     entity_id: group.homekit_entities
+  - platform: state
+    entity_id: group.lights
+  - platform: time
+    minutes: '/1'
   condition:
     condition: and
     conditions:
@@ -56,8 +111,8 @@
   action:
   - service: persistent_notification.create
     data:
-      title: HomeKit Starting
-      message: This might actually work.
+      title: HomeKit Start
+      message: HomeKit is now running.
   - service: homekit.start
   - service: homeassistant.turn_on
     entity_id:
@@ -114,9 +169,13 @@
     event_type: click
     event_data:
       entity_id: binary_sensor.switch_158d0001e01080
+  condition:
+    condition: state
+    entity_id: device_tracker.deannabosiphone
+    state: 'not_home'
   action:
   - service: homeassistant.turn_off
-    entity_id: light.bedroom
+    entity_id: group.lights
   - service: timer.cancel
     entity_id: timer.sleep_bedroom
   - service: timer.start
@@ -124,6 +183,40 @@
     data_template:
       duration: '00:20:00'
 
+- alias: Button - Bedroom (Deanna)
+  trigger:
+    platform: event
+    event_type: click
+    event_data:
+      entity_id: binary_sensor.switch_158d0001e01080
+  condition:
+    condition: state
+    entity_id: device_tracker.deannabosiphone
+    state: 'home'
+  action:
+  - service: homeassistant.turn_off
+    entity_id:
+      - group.lights
+      - switch.heater_living_room_power
+      - automation.lights_dynamic_brightness_0000
+      - automation.lights_dynamic_brightness_0030
+      - automation.lights_dynamic_brightness_0100
+      - automation.lights_dynamic_brightness_0130
+      - automation.lights_dynamic_brightness_0200
+      - automation.lights_dynamic_brightness_2000
+      - automation.lights_dynamic_brightness_2030
+      - automation.lights_dynamic_brightness_2300
+      - automation.lights_dynamic_brightness_2330
+
+  - service: media_extractor.play_media
+    entity_id: media_player.bedroom_chromecast
+    data:
+      media_content_id: "https://www.youtube.com/watch?v=XrDUTpeGW0A"
+      media_content_type: video/youtube
+  - service: input_number.set_value
+    data:
+      entity_id: input_number.dynamic_light_brightness
+      value: 25
 
 
 
@@ -145,6 +238,48 @@
   - service: homeassistant.turn_off
     entity_id:
       - switch.triplej
+
+
+
+- alias: Set stuff when Deanna arrives
+  trigger:
+    platform: state
+    entity_id: device_tracker.deannabosiphone
+    to: 'home'
+  action:
+  - service: homeassistant.turn_off
+    entity_id:
+      - automation.motion_detect__bedroom
+      - automation.motion_detect__living_room
+      - automation.motion_detect__lounge
+  - service: input_number.set_value
+    data:
+      entity_id: input_number.dynamic_light_brightness
+      value: 75
+
+- alias: Set stuff when Deanna leaves
+  trigger:
+    platform: state
+    entity_id: device_tracker.deannabosiphone
+    to: 'not_home'
+    for:
+      minutes: 30
+  action:
+  - service: homeassistant.turn_on
+    entity_id:
+      - automation.motion_detect__bedroom
+      - automation.motion_detect__living_room
+      - automation.motion_detect__lounge
+      - automation.lights_dynamic_brightness_0000
+      - automation.lights_dynamic_brightness_0030
+      - automation.lights_dynamic_brightness_0100
+      - automation.lights_dynamic_brightness_0130
+      - automation.lights_dynamic_brightness_0200
+      - automation.lights_dynamic_brightness_2000
+      - automation.lights_dynamic_brightness_2030
+      - automation.lights_dynamic_brightness_2300
+      - automation.lights_dynamic_brightness_2330
+
 
 - alias: Alarm Clock
   trigger:
@@ -178,30 +313,20 @@
   - service: homeassistant.turn_off
     entity_id:
       - switch.airplay_shed
-      - switch.airplay_appletv
   - service: homeassistant.turn_on
     entity_id:
-      - switch.airplay_living_room
+      - switch.airplay_appletv
+      - switch.airplay_bedroom
       - switch.triplej
-
-- alias: SC Tiles update info
-  trigger:
-    platform: state
-    entity_id: sensor.sc_tiles_latest_version
-  action:
-    service: persistent_notification.create
-    data:
-      title: Update available
-      message: A new version for [Tiles custom state card](https://github.com/c727/home-assistant-tiles#changelog) is available.
 
 - alias: Turn off Bedroom TV with Chromecast
   trigger:
     platform: state
     entity_id:
-    - media_player.bedroom_chromecast
+    - media_player.bedroom
     to: 'off'
     for:
-      seconds: 5
+      seconds: 8
   action:
     service: homeassistant.turn_off
     entity_id:
@@ -215,11 +340,11 @@
       entity_id: timer.sleep_bedroom
   condition:
     condition: template
-    value_template: "{% if not is_state('media_player.bedroom_chromecast', 'off') %}true{% endif %}"
+    value_template: "{% if not is_state('media_player.bedroom', 'off') %}true{% endif %}"
   action:
     service: media_player.turn_off
     entity_id:
-    - media_player.bedroom_chromecast
+    - media_player.bedroom
 
 
 - alias: Nofify Sonarr Queue
@@ -239,79 +364,79 @@
 
     
 #######################################################################################################
-###--------------------------------------- AUDIO AUTOMATIONS ---------------------------------------###
+###----------------------------------------- AV AUTOMATIONS ----------------------------------------###
 #######################################################################################################
 
-- alias: TV toggle state
-  trigger:
-    platform: state
-    entity_id:
-      - switch.living_room_tv
-    from: 'on'
-    to: 'off'
-  action:
-    service: homeassistant.state
-    entity_id:
-      - sensor.living_room_tv
-    data:
-      state: off
+#- alias: TV toggle state
+#  trigger:
+#    platform: state
+#    entity_id:
+#      - switch.living_room_tv
+#    from: 'on'
+#    to: 'off'
+#  action:
+#    service: homeassistant.state
+#    entity_id:
+#      - sensor.living_room_tv
+#    data:
+#      state: off
       
-- alias: TV toggle audio on when TV turns on
-  trigger:
-    platform: state
-    entity_id:
-      - media_player.living_room_tv
-    from: 'off'
-    to: 'on'
-  action:
-    service: homeassistant.turn_on
-    entity_id:
-      - switch.living_room_audio_source
+#- alias: TV toggle audio on when TV turns on
+#  trigger:
+#    platform: state
+#    entity_id:
+#      - media_player.living_room
+#    from: 'off'
+#    to: 'on'
+#  action:
+#    service: homeassistant.turn_on
+#    entity_id:
+#      - switch.living_room_audio_source
 
-- alias: TV toggle audio off when TV turns off
-  trigger:
-    platform: state
-    entity_id:
-      - media_player.living_room_tv
-    from: 'on'
-    to: 'off'
-  action:
-    service: homeassistant.turn_off
-    entity_id:
-      - switch.living_room_audio_source
+#- alias: TV toggle audio off when TV turns off
+#  trigger:
+#    platform: state
+#    entity_id:
+#      - media_player.living_room
+#    from: 'on'
+#    to: 'off'
+#  action:
+#    service: homeassistant.turn_off
+#    entity_id:
+#      - switch.living_room_audio_source
 
-- alias: TV toggle audio on when Apple TV starts playing
-  trigger:
-    platform: state
-    entity_id:
-    - media_player.apple_tv
-    to: 'playing'
-  action:
-    service: homeassistant.turn_on
-    entity_id:
-    - switch.living_room_audio_source
+#- alias: TV toggle audio on when Apple TV starts playing
+#  trigger:
+#    platform: state
+#    entity_id:
+#    - media_player.apple_tv
+#    to: 'playing'
+#  action:
+#    service: homeassistant.turn_on
+#    entity_id:
+#    - switch.living_room_audio_source
 
-- alias: Audio switch to 3.5mm when Triple J starts
-  trigger:
-    platform: state
-    entity_id: switch.triplej
-    from: 'off'
-    to: 'on'
-  action:
-    service: homeassistant.turn_off
-    entity_id: 
-    - switch.living_room_audio_source
+#- alias: Audio switch to 3.5mm when Triple J starts
+#  trigger:
+#    platform: state
+#    entity_id: switch.triplej
+#    from: 'off'
+#    to: 'on'
+#  action:
+#    service: homeassistant.turn_off
+#    entity_id: 
+#    - switch.living_room_audio_source
 
-- alias: Audio switch to 3.5mm when Living Room AirPlay turns on
-  trigger:
-    platform: state
-    entity_id: switch.airplay_living_room
-    from: 'off'
-    to: 'on'
-  action:
-    service: homeassistant.turn_off
-    entity_id: 
-    - switch.living_room_audio_source
+#- alias: Audio switch to 3.5mm when Living Room AirPlay turns on
+#  trigger:
+#    platform: state
+#    entity_id: switch.airplay_living_room
+#    from: 'off'
+#    to: 'on'
+#  action:
+#    service: homeassistant.turn_off
+#    entity_id: 
+#    - switch.living_room_audio_source
 
 - alias: Shed Door Turn on Shed AirPlay
   trigger:
