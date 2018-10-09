@@ -78,7 +78,7 @@
     to: 'on'
   condition:
     condition: state
-    entity_id: binary_sensor.motion_sensor_study
+    entity_id: binary_sensor.motion_study
     state: 'on'
   action:
   - service: homeassistant.turn_on
@@ -227,7 +227,7 @@
     data:
       transition: 30
     data_template:
-      brightness_pct: '{{states.input_number.dynamic_light_brightness.state}}'
+      brightness_pct: '{{states.input_number.dynamic_light_brightness.state | int}}'
 
 # LIFX SET COLOUR TEMP #######################################################################################
 - alias: Lights Set LIFX Colour Temp

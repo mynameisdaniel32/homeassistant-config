@@ -16,18 +16,18 @@ room_ensuite:
   name: Ensuite
   entities:
   - light.ensuite
-  - binary_sensor.motion_sensor_ensuite
-  - sensor.temperature_158d0001f52bfc
-  - sensor.humidity_158d0001f52bfc
+  - binary_sensor.motion_ensuite
+  - sensor.temperature_ensuite
+  - sensor.humidity_ensuite
 
 room_bedroom:
   name: Bedroom
   entities:
   - light.bedroom
-  - binary_sensor.motion_sensor_bedroom
+  - binary_sensor.motion_bedroom
   - sensor.inside_temperature_bedroom_inside_temperature
-  - sensor.temperature_158d000227b875
-  - sensor.humidity_158d000227b875
+  - sensor.temperature_bedroom
+  - sensor.humidity_bedroom
 
 room_outside:
   name: Outside
@@ -42,17 +42,17 @@ room_living_room:
   - light.kitchen
   - light.lounge
   - light.living_room
-  - binary_sensor.motion_sensor_kitchen
-  - binary_sensor.motion_sensor_living_room
-  - sensor.illumination_158d0001660dc0
-  - sensor.illumination_158d00022507d2
-  - sensor.temperature_158d000227094f
-  - sensor.humidity_158d000227094f
+  - binary_sensor.motion_kitchen
+  - binary_sensor.motion_living_room
+  - sensor.illumination_kitchen
+  - sensor.illumination_living_room
+  - sensor.temperature_living_room
+  - sensor.humidity_living_room
 
 room_study:
   name: Study
   entities:
   - light.study
-  - binary_sensor.motion_sensor_study
-  - sensor.temperature_158d0002272833
-  - sensor.humidity_158d0002272833
+  - binary_sensor.motion_study
+  - sensor.temperature_study
+  - sensor.humidity_study

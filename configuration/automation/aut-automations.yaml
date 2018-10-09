@@ -54,7 +54,7 @@
       value: 30
   - service: input_number.set_value
     data:
-      entity_id: input_number.input_number.alarmclock_hour
+      entity_id: input_number.alarmclock_hour
       value: 6
   - service: input_number.set_value
     data:
@@ -119,6 +119,22 @@
     - input_boolean.homekit_control
 
 
+- alias: Home Assistant Release Check
+  trigger:
+  - platform: state
+    entity_id: sensor.home_assistant_release
+  - platform: homeassistant
+    event: start
+  condition:
+    condition: template
+    value_template:  "{{ states('sensor.home_assistant_release') != states('sensor.current_version') }}"
+  action:
+  - service: persistent_notification.create
+    data:
+      title: Home Assistant Release
+      message: A new version of Home Assistant is available. Currently on {{ states('sensor.current_version') }}, the latest version is {{ states('sensor.home_assistant_release') }}.
+
+
 #######################################################################################################
 ###--------------------------------------- BUTTON AUTOMATIONS --------------------------------------###
 #######################################################################################################
@@ -128,7 +144,7 @@
     platform: event
     event_type: click
     event_data:
-      entity_id: binary_sensor.switch_158d00016c131e
+      entity_id: binary_sensor.switch_door_bell
   action:
   - service: script.door_bell
   - service: notify.ios_danielsiphone6splus
@@ -323,7 +339,7 @@
   trigger:
     platform: state
     entity_id:
-    - media_player.bedroom
+    - media_player.bedroom_tv
     to: 'off'
     for:
       seconds: 8
@@ -340,7 +356,7 @@
       entity_id: timer.sleep_bedroom
   condition:
     condition: template
-    value_template: "{% if not is_state('media_player.bedroom', 'off') %}true{% endif %}"
+    value_template: "{% if not is_state('media_player.bedroom_tv', 'off') %}true{% endif %}"
   action:
     service: media_player.turn_off
     entity_id:
@@ -385,7 +401,7 @@
 #  trigger:
 #    platform: state
 #    entity_id:
-#      - media_player.living_room
+#      - media_player.living_room_tv
 #    from: 'off'
 #    to: 'on'
 #  action:
@@ -397,7 +413,7 @@
 #  trigger:
 #    platform: state
 #    entity_id:
-#      - media_player.living_room
+#      - media_player.living_room_tv
 #    from: 'on'
 #    to: 'off'
 #  action:
@@ -442,7 +458,7 @@
   trigger:
     platform: state
     entity_id:
-      - binary_sensor.door_window_sensor_shed_door
+      - binary_sensor.door_window_shed_door
     from: 'off'
     to: 'on'
   action:
@@ -454,7 +470,7 @@
   trigger:
     platform: state
     entity_id:
-      - binary_sensor.door_window_sensor_shed_door
+      - binary_sensor.door_window_shed_door
     from: 'on'
     to: 'off'
   action:

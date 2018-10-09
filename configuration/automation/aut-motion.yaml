@@ -6,7 +6,7 @@
 - alias: Motion Detect - Wardrobe
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_wardrobe
+    entity_id: binary_sensor.motion_wardrobe
     to: 'on'
   action:
   - service: homeassistant.turn_on
@@ -18,7 +18,7 @@
 - alias: Motion Clear - Wardrobe
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_wardrobe
+    entity_id: binary_sensor.motion_wardrobe
     to: 'off'
   action:
     service: homeassistant.turn_off
@@ -30,7 +30,7 @@
 - alias: Motion Detect - Laundry
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_laundry
+    entity_id: binary_sensor.motion_laundry
     to: 'on'
   condition:
     condition: state
@@ -50,7 +50,7 @@
 - alias: Motion Clear - Laundry
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_laundry
+    entity_id: binary_sensor.motion_laundry
     to: 'off'
   condition:
     condition: state
@@ -66,7 +66,7 @@
 - alias: Motion Detect - Bedroom
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_bedroom
+    entity_id: binary_sensor.motion_bedroom
     to: 'on'
   condition:
     condition: state
@@ -82,7 +82,7 @@
 - alias: Motion Clear - Bedroom
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_bedroom
+    entity_id: binary_sensor.motion_bedroom
     to: 'off'
     for:
       minutes: 5
@@ -100,7 +100,7 @@
 - alias: Motion Detect - Ensuite
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_ensuite
+    entity_id: binary_sensor.motion_ensuite
     from: 'off'
     to: 'on'
   action:
@@ -113,13 +113,13 @@
 - alias: Motion Clear - Ensuite (No Shower)
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_ensuite
+    entity_id: binary_sensor.motion_ensuite
     to: 'off'
     for:
       minutes: 2
   condition:
     condition: numeric_state
-    entity_id: sensor.humidity_158d0001f52bfc
+    entity_id: sensor.humidity_ensuite
     below: 75
   action:
     service: homeassistant.turn_off
@@ -130,13 +130,13 @@
 - alias: Motion Clear - Ensuite (Shower)
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_ensuite
+    entity_id: binary_sensor.motion_ensuite
     to: 'off'
     for:
       minutes: 20
   condition:
     condition: numeric_state
-    entity_id: sensor.humidity_158d0001f52bfc
+    entity_id: sensor.humidity_ensuite
     above: 75
   action:
     service: homeassistant.turn_off
@@ -148,7 +148,7 @@
 - alias: Motion Detect - Study
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_study
+    entity_id: binary_sensor.motion_study
     to: 'on'
   condition:
     condition: state
@@ -163,7 +163,7 @@
 - alias: Motion Clear - Study
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_study
+    entity_id: binary_sensor.motion_study
     to: 'off'
     for:
       minutes: 10
@@ -181,7 +181,7 @@
 - alias: Motion Detect - Living Room
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_living_room
+    entity_id: binary_sensor.motion_living_room
     to: 'on'
   condition:
     condition: state
@@ -196,7 +196,7 @@
 - alias: Motion Clear - Living Room
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_living_room
+    entity_id: binary_sensor.motion_living_room
     to: 'off'
     for:
       minutes: 30
@@ -215,7 +215,7 @@
 - alias: Motion Detect - Kitchen
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_kitchen
+    entity_id: binary_sensor.motion_kitchen
     to: 'on'
   condition:
     condition: state
@@ -231,7 +231,7 @@
 - alias: Motion Clear - Kitchen
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_kitchen
+    entity_id: binary_sensor.motion_kitchen
     to: 'off'
     for:
       minutes: 5
@@ -249,7 +249,7 @@
 - alias: Motion Detect - Lounge
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_lounge
+    entity_id: binary_sensor.motion_lounge
     to: 'on'
   condition:
     condition: state
@@ -265,7 +265,7 @@
 - alias: Motion Clear - Lounge
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_lounge
+    entity_id: binary_sensor.motion_lounge
     to: 'off'
     for:
       minutes: 5
@@ -283,7 +283,7 @@
 - alias: Motion Detect - Back Door
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_back_door
+    entity_id: binary_sensor.motion_back_door
     to: 'on'
   condition:
     condition: state
@@ -299,7 +299,7 @@
 - alias: Motion Clear - Back Door
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_back_door
+    entity_id: binary_sensor.motion_back_door
     to: 'off'
     for:
       minutes: 0
@@ -317,7 +317,7 @@
 - alias: Motion Detect - Carport
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_carport
+    entity_id: binary_sensor.motion_carport
     to: 'on'
   condition:
     condition: state
@@ -333,7 +333,7 @@
 - alias: Motion Clear - Carport
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_carport
+    entity_id: binary_sensor.motion_carport
     to: 'off'
     for:
       minutes: 0
@@ -351,7 +351,7 @@
 - alias: Motion Detect - Front Door
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_front_door
+    entity_id: binary_sensor.motion_front_door
     to: 'on'
   condition:
     condition: state
@@ -367,7 +367,7 @@
 - alias: Motion Clear - Front Door
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_front_door
+    entity_id: binary_sensor.motion_front_door
     to: 'off'
     for:
       minutes: 0
@@ -385,7 +385,7 @@
 - alias: Motion Detect - Front Door - Tablet
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_front_door
+    entity_id: binary_sensor.motion_front_door
     to: 'on'
   action:
   - service: mqtt.publish
@@ -396,7 +396,7 @@
 - alias: Motion Clear - Front Door - Tablet
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_front_door
+    entity_id: binary_sensor.motion_front_door
     from: 'on'
     to: 'off'
   action:
@@ -409,7 +409,7 @@
 - alias: Motion Detect - Outside Front
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_outside_front
+    entity_id: binary_sensor.motion_outside_front
     to: 'on'
   condition:
     condition: state
@@ -425,7 +425,7 @@
 - alias: Motion Clear - Outside Front
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_outside_front
+    entity_id: binary_sensor.motion_outside_front
     to: 'off'
     for:
       minutes: 0
@@ -475,7 +475,7 @@
 #      minutes: 0
   condition:
     condition: state
-    entity_id: binary_sensor.motion_sensor_study
+    entity_id: binary_sensor.motion_study
     state: 'off'
   action:
   - service: homeassistant.turn_off
@@ -513,7 +513,7 @@
 #      minutes: 0
   condition:
     condition: state
-    entity_id: binary_sensor.motion_sensor_laundry
+    entity_id: binary_sensor.motion_laundry
     state: 'off'
   action:
   - service: homeassistant.turn_off
@@ -531,7 +531,7 @@
 #      minutes: 0
   condition:
     condition: state
-    entity_id: binary_sensor.motion_sensor_carport
+    entity_id: binary_sensor.motion_carport
     state: 'off'
   action:
   - service: homeassistant.turn_off
@@ -629,11 +629,11 @@
       option: >-
         {% if is_state('group.room_tracker_motion_living_room_all', 'on') %}
           Living Room
-        {% elif is_state('binary_sensor.motion_sensor_study', 'on') %}
+        {% elif is_state('binary_sensor.motion_study', 'on') %}
           Study
-        {% elif is_state('binary_sensor.motion_sensor_laundry', 'on') %}
+        {% elif is_state('binary_sensor.motion_laundry', 'on') %}
           Laundry
-        {% elif is_state('binary_sensor.motion_sensor_carport', 'on') %}
+        {% elif is_state('binary_sensor.motion_carport', 'on') %}
           Carport
         {% elif is_state('group.room_tracker_motion_bedroom_all', 'on') %}
           Bedroom
@@ -645,7 +645,7 @@
 - alias: Room Tracker Motion Detect - Study
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_study
+    entity_id: binary_sensor.motion_study
     to: 'on'
   action:
   - service: input_select.select_option
@@ -656,7 +656,7 @@
 - alias: Room Tracker Motion Clear - Study
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_sensor_study
+    entity_id: binary_sensor.motion_study
     to: 'off'
   condition:
     condition: state
@@ -669,11 +669,11 @@
       option: >-
         {% if is_state('group.room_tracker_motion_living_room_all', 'on') %}
           Living Room
-        {% elif is_state('binary_sensor.motion_sensor_study', 'on') %}
+        {% elif is_state('binary_sensor.motion_study', 'on') %}
           Study
-        {% elif is_state('binary_sensor.motion_sensor_laundry', 'on') %}
+        {% elif is_state('binary_sensor.motion_laundry', 'on') %}
           Laundry
-        {% elif is_state('binary_sensor.motion_sensor_carport', 'on') %}
+        {% elif is_state('binary_sensor.motion_carport', 'on') %}
           Carport
         {% elif is_state('group.room_tracker_motion_bedroom_all', 'on') %}
           Bedroom
@@ -708,11 +708,11 @@
       option: >-
         {% if is_state('group.room_tracker_motion_living_room_all', 'on') %}
           Living Room
-        {% elif is_state('binary_sensor.motion_sensor_study', 'on') %}
+        {% elif is_state('binary_sensor.motion_study', 'on') %}
           Study
-        {% elif is_state('binary_sensor.motion_sensor_laundry', 'on') %}
+        {% elif is_state('binary_sensor.motion_laundry', 'on') %}
           Laundry
-        {% elif is_state('binary_sensor.motion_sensor_carport', 'on') %}
+        {% elif is_state('binary_sensor.motion_carport', 'on') %}
           Carport
         {% elif is_state('group.room_tracker_motion_bedroom_all', 'on') %}
           Bedroom

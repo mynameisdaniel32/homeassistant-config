@@ -1,6 +1,10 @@
 resources:
   - url: /local/kiosk.js
     type: js
+  - url: /local/tracker-card.js?v=0.1.5
+    type: js
+  - url: /local/button-card.js
+    type: module
 
 title: 43 Topaz (Lovelace)
 views:
@@ -136,7 +140,7 @@ views:
         title: Carport
         entities:
           - cover.roller_door
-          - binary_sensor.motion_sensor_carport
+          - binary_sensor.motion_carport
           - light.carport
         camera_image: camera.carport
 
@@ -178,6 +182,26 @@ views:
                 width: 22%
                 # padding: 50px 50px 100px 50px
                 border-radius: 5%
+
+            - type: "custom:button-card"
+              entity: light.study
+              icon: mdi:lightbulb
+              color: auto
+              color_type: card
+              default_color: rgb(255, 233, 155)
+              action: toggle
+              name: Study
+              size: 20%
+#              show_state: true
+              style:
+#                - font-size: 12px
+
+
+      - type: custom:tracker-card
+        title:
+        trackers:
+          - sensor.custom_card_tracker
+          - sensor.custom_component_tracker
 
 
   - title: Lovelace Test

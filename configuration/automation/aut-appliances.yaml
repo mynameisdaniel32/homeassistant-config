@@ -36,7 +36,7 @@
   trigger:
     - platform: numeric_state
       entity_id: sensor.washing_machine_power
-      above: 20
+      above: 10
   condition:
     condition: or
     conditions:
@@ -60,7 +60,7 @@
   trigger:
     - platform: numeric_state
       entity_id: sensor.washing_machine_power
-      below: 1
+      below: 2
   condition:
     condition: and
     conditions:
@@ -80,7 +80,7 @@
       entity_id: sensor.washing_machine_status
       to: Finishing
       for:
-        minutes: 2
+        minutes: 5
   condition:
     condition: and
     conditions:
@@ -96,7 +96,7 @@
 - alias: Set washing machine dirty when door opens and turn it off
   trigger:
     - platform: state
-      entity_id: binary_sensor.door_window_sensor_158d0001aac0f9
+      entity_id: binary_sensor.door_window_washing_machine
       to: 'on'
   condition:
     condition: and
@@ -111,13 +111,13 @@
         option: Idle 
     - service: homeassistant.turn_off
       data:
-        entity_id: switch.plug_158d0001db1baf
+        entity_id: switch.plug_washing_machine
 
 
 - alias: Turn washing machine on when door opens
   trigger:
     - platform: state
-      entity_id: binary_sensor.door_window_sensor_158d0001aac0f9
+      entity_id: binary_sensor.door_window_washing_machine
       to: 'on'
   condition:
     condition: and
@@ -126,12 +126,12 @@
         entity_id: sensor.washing_machine_status
         state: Idle
       - condition: state
-        entity_id: switch.plug_158d0001db1baf
+        entity_id: switch.plug_washing_machine
         state: 'off'
   action:
     - service: homeassistant.turn_on
       data:
-        entity_id: switch.plug_158d0001db1baf
+        entity_id: switch.plug_washing_machine
 
 - alias: Washing Machine Notification
   trigger:
@@ -228,7 +228,7 @@
         option: Idle 
     - service: homeassistant.turn_off
       data:
-        entity_id: switch.plug_158d0001dc90d1
+        entity_id: switch.plug_dishwasher
 
 
 - alias: Turn dishwasher on when door opens
@@ -243,12 +243,12 @@
         entity_id: sensor.dishwasher_status
         state: Idle
       - condition: state
-        entity_id: switch.plug_158d0001dc90d1
+        entity_id: switch.plug_dishwasher
         state: 'off'
   action:
     - service: homeassistant.turn_on
       data:
-        entity_id: switch.plug_158d0001dc90d1
+        entity_id: switch.plug_dishwasher
 
 - alias: Dishwasher Notification
   trigger:

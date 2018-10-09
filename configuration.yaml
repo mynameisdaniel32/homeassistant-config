@@ -46,9 +46,19 @@ frontend:
 updater:
   include_used_components: true
 
+custom_updater:
+  show_installable: true
+  track:
+    - components
+    - cards
+    - python_scripts
+  card_urls: 
+    - https://raw.githubusercontent.com/kuuji/button-card/0.0.2/tracker.json
+
 discovery:
   ignore:
   - yeelight
+  - daikin
 
 conversation:
 
@@ -91,6 +101,7 @@ light:
 
   - platform: mqtt
     name: Carport
+    unique_id: light_mqtt_carport
     command_topic: cmnd/sonoff/carport-lights/POWER
     payload_on: 'ON'
     payload_off: 'OFF'
@@ -102,11 +113,11 @@ light:
     color_temp_command_topic: "light/flux/color_temp"
     rgb_command_topic: "light/flux/color_rgb"
 
-  - platform: xiaomi_miio
-    name: Down Light
-    host: 10.10.1.143
-    token: !secret xiaomi_miio_token_light
-    model: philips.light.bulb
+#  - platform: xiaomi_miio
+#    name: Down Light
+#    host: 10.10.1.143
+#    token: !secret xiaomi_miio_token_light
+#    model: philips.light.bulb
 
   - platform: yeelight
     devices:
@@ -131,11 +142,12 @@ light:
     name: Verandah
     command_topic: "node/003/command"
     state_topic: "node/003/state"
+    availability_topic: "node/003/availability"
     payload_on: "light_on"
     payload_off: "light_off"
 
-light_controller:
-  topic: node/light_switch/
+#light_controller:
+#  topic: node/light_switch/
   
 climate:
   - platform: daikin
@@ -152,6 +164,7 @@ fan:
     command_topic: "node/003/command"
     state_topic: "node/003/state"
     speed_command_topic: "node/003/command"
+    availability_topic: "node/003/availability"
     payload_on: "fan_on"
     payload_off: "fan_off"
     payload_low_speed: "fan_low"
@@ -184,7 +197,7 @@ alexa:
       - light.verandah
       - switch.heater_living_room_power
       - switch.triplej
-      - input_boolean.sprinkler_control
+      - switch.sprinkler_control
       - switch.heater_living_room_power
       - switch.vacuum
       - switch.airplay_shed
@@ -203,7 +216,7 @@ alexa:
       switch.vacuum:
         name: Vacuum Cleaner
         display_categories: SMARTPLUG
-      input_boolean.sprinkler_control:
+      switch.sprinkler_control:
         name: Sprinklers
         display_categories: SWITCH
       switch.airplay_shed:
@@ -222,9 +235,11 @@ alexa:
 
 media_player:
   - platform: plex
+    entity_namespace: 'plex'
+    use_custom_entity_ids: true
   
   - platform: universal
-    name: Living Room
+    name: Living Room TV
     children:
       - media_player.living_room_apple_tv
     commands:
@@ -249,7 +264,7 @@ media_player:
       state: binary_sensor.living_room_tv_power_status
 
   - platform: universal
-    name: Bedroom
+    name: Bedroom TV
     children:
     - media_player.bedroom_chromecast
     commands:
@@ -307,8 +322,8 @@ http:
 
 google_assistant:
   project_id: home-assistant-144414
-  client_id: !secret google_client_id
-  access_token: !secret google_access_token
+#  client_id: !secret google_client_id
+#  access_token: !secret google_access_token
   api_key: !secret google_homegraph_api_key
   exposed_domains:
     - switch
@@ -355,7 +370,7 @@ device_tracker:
       hide_if_away: False
 
 mqtt:
-  broker: 127.0.0.1
+  broker: 10.1.0.8
   port: 1883
   username: !secret mqtt_username
   password: !secret mqtt_password
@@ -363,10 +378,6 @@ mqtt:
   discovery_prefix: homeassistant
 
 panel_iframe:
-  router:
-    title: Router
-    url: http://10.0.0.1/
-    icon: mdi:access-point-network
   unifi:
     title: UniFi
     url: !secret dns_unifi
@@ -434,7 +445,7 @@ homekit:
     - light.carport
     - light.outside_front
     - light.verandah
-    - input_boolean.sprinkler_control
+    - switch.sprinkler_control
     - input_boolean.homekit_location
     - media_player.living_room
     - media_player.bedroom
@@ -469,6 +480,9 @@ homekit:
       name: Living Room AirPlay
     switch.airplay_bedroom:
       name: Bedroom AirPlay
+    switch.sprinkler_control:
+      name: Sprinklers
+      type: sprinkler
 
 
 
@@ -694,57 +708,73 @@ switch:
 
   - platform: mqtt
     name: Sprinkler Zone 1
+    icon: mdi:water
     state_topic: "node/sprinkler/006/state"
     command_topic: "node/sprinkler/006/command"
+    availability_topic: "node/sprinkler/006/availability"
     payload_on: "1_on"
     payload_off: "1_off"
 
   - platform: mqtt
     name: Sprinkler Zone 2
+    icon: mdi:water
     state_topic: "node/sprinkler/006/state"
     command_topic: "node/sprinkler/006/command"
+    availability_topic: "node/sprinkler/006/availability"
     payload_on: "2_on"
     payload_off: "2_off"
 
   - platform: mqtt
     name: Sprinkler Zone 3
+    icon: mdi:water
     state_topic: "node/sprinkler/006/state"
     command_topic: "node/sprinkler/006/command"
+    availability_topic: "node/sprinkler/006/availability"
     payload_on: "3_on"
     payload_off: "3_off"
 
   - platform: mqtt
     name: Sprinkler Zone 4
+    icon: mdi:water
     state_topic: "node/sprinkler/006/state"
     command_topic: "node/sprinkler/006/command"
+    availability_topic: "node/sprinkler/006/availability"
     payload_on: "4_on"
     payload_off: "4_off"
 
   - platform: mqtt
     name: Sprinkler Zone 5
+    icon: mdi:water
     state_topic: "node/sprinkler/006/state"
     command_topic: "node/sprinkler/006/command"
+    availability_topic: "node/sprinkler/006/availability"
     payload_on: "5_on"
     payload_off: "5_off"
 
   - platform: mqtt
     name: Sprinkler Zone 6
+    icon: mdi:water
     state_topic: "node/sprinkler/006/state"
     command_topic: "node/sprinkler/006/command"
+    availability_topic: "node/sprinkler/006/availability"
     payload_on: "6_on"
     payload_off: "6_off"
 
   - platform: mqtt
     name: Sprinkler Zone 7
+    icon: mdi:water
     state_topic: "node/sprinkler/006/state"
     command_topic: "node/sprinkler/006/command"
+    availability_topic: "node/sprinkler/006/availability"
     payload_on: "7_on"
     payload_off: "7_off"
 
   - platform: mqtt
     name: Sprinkler Zone 8
+    icon: mdi:water
     state_topic: "node/sprinkler/006/state"
     command_topic: "node/sprinkler/006/command"
+    availability_topic: "node/sprinkler/006/availability"
     payload_on: "8_on"
     payload_off: "8_off"
 
@@ -755,8 +785,21 @@ switch:
     payload_on: "motor_right"
     optimistic: false
 
+#### SPRINKLERS
   - platform: template
     switches:
+      sprinkler_control:
+        friendly_name: Sprinkler Control
+        value_template: "{{ is_state('input_boolean.sprinkler_control', 'on') }}"
+        turn_on:
+          service: homeassistant.turn_on
+          data:
+            entity_id: input_boolean.sprinkler_control
+        turn_off:
+          service: homeassistant.turn_off
+          data:
+            entity_id: input_boolean.sprinkler_control
+
       sprinkler_timer_1:
         friendly_name: Sprinkler Zone 1 Timer
         value_template: "{{ is_state('timer.sprinkler_zone_1', 'active') }}"
@@ -1270,16 +1313,16 @@ sensor:
 #            {%- endif %}
       
       washing_machine_power:
-        friendly_name: Washing Machine Power Usage
-#        entity_id: switch.plug_158d0001db1baf
+        friendly_name: Washing Machine Power Draw
+#        entity_id: switch.plug_washing_machine
         unit_of_measurement: 'watts'
-        value_template: "{{ states.switch.plug_158d0001db1baf.attributes.load_power }}"
+        value_template: "{{ states.switch.plug_washing_machine.attributes.load_power }}"
       
       dishwasher_power:
-        friendly_name: Dishwasher Power Usage
-#        entity_id: switch.plug_158d0001dc90d1
+        friendly_name: Dishwasher Power Draw
+#        entity_id: switch.plug_dishwasher
         unit_of_measurement: 'watts'
-        value_template: "{{ states.switch.plug_158d0001dc90d1.attributes.load_power }}"
+        value_template: "{{ states.switch.plug_dishwasher.attributes.load_power }}"
       
 #      living_room_tv:
 #        value_template: >-
@@ -1293,7 +1336,12 @@ sensor:
     sensors:
       friendly_date:
         friendly_name: Current Date
-        value_template: "{{ now().strftime('%d %B') }}"
+        value_template: "{{ now().strftime('%-d %B') }}"
+
+      friendly_time:
+        friendly_name: Current Time
+        value_template: "{{ now().strftime('%-I:%M %p') }}"
+
 
   - platform: bom
     zone_id: !secret bom_zone_id
@@ -1360,6 +1408,7 @@ sensor:
       sprinkler_status:
         value_template: '{{ states.group.irrigation.state}}'
         friendly_name: 'Sprinklers'
+        icon_template: mdi:water
 
 #  - platform: rest
 #    name: SC Tiles latest version
@@ -1389,6 +1438,31 @@ sensor:
     state_topic: /plant/plant_1/
     value_template: '{{ value_json.brightness }}'
     unit_of_measurement: 'lux'
+
+  - platform: rest
+    name: Home Assistant Release
+    resource: https://api.github.com/repos/home-assistant/home-assistant/releases
+    username: !secret github_username
+    password: !secret github_access_token
+    authentication: basic
+    value_template: '{{ value_json[0].tag_name }}'
+    headers:
+      Accept: application/vnd.github.v3+json
+      Content-Type: application/json
+      User-Agent: Home Assistant REST sensor
+
+  - platform: version
+
+  - platform: unifigateway
+    host: 10.1.0.154
+    username: !secret unifi_username
+    password: !secret unifi_password
+    monitored_conditions:
+      - www
+      - lan
+      - wlan
+      - alerts
+      - firmware
 
 ######################################################################################################
 ###--------------------------------------------- OTHER --------------------------------------------###
