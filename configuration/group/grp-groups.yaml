@@ -2,6 +2,7 @@ homekit_entities:
   name: HomeKit Entities
   entities:
     - light.bedroom
+    - light.wardrobe
     - light.ensuite
     - light.study
     - light.kitchen
@@ -22,7 +23,7 @@ homekit_entities:
     - switch.vacuum
     - switch.triplej
     - switch.airplay_shed
-    - switch.airplay_appletv
+    - switch.airplay_living_room
     - switch.airplay_bedroom
     - switch.lights
     - cover.roller_door
@@ -39,6 +40,10 @@ tile_media:
   entities:
   - input_boolean.tile_media
 #  - switch.living_room_audio_source
+  - input_number.forked_daapd_volume_bedroom
+  - input_number.forked_daapd_volume_living_room
+  - input_number.forked_daapd_volume_shed
+
 
 tile_weather:
   name: Weather
@@ -159,6 +164,8 @@ appliances:
   - sensor.dishwasher_status
   - switch.plug_dishwasher
   - sensor.dishwasher_power
+  - switch.plug_bedroom_tv
+  - sensor.bedroom_tv_power
 
 controls:
   name: Controls
@@ -217,10 +224,10 @@ irrigation:
   - switch.sprinkler_zone_2
   - switch.sprinkler_zone_3
   - switch.sprinkler_zone_4
-  - switch.sprinkler_zone_5
-  - switch.sprinkler_zone_6
-  - switch.sprinkler_zone_7
-  - switch.sprinkler_zone_8
+#  - switch.sprinkler_zone_5
+#  - switch.sprinkler_zone_6
+#  - switch.sprinkler_zone_7
+#  - switch.sprinkler_zone_8
 
 irrigation_control:
   name: Irrigation Control
@@ -247,7 +254,7 @@ motion_sensors:
   - binary_sensor.motion_back_door
   - binary_sensor.motion_lounge
   - binary_sensor.motion_outside_front
-  - binary_sensor.motion_158d0001e55776
+  - binary_sensor.motion_bedroom_2
   - binary_sensor.motion_158d0001e5441a
 
 tile_motion_sensors:

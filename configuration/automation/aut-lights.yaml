@@ -114,6 +114,30 @@
     data:
       transition: 5
 
+- alias: Lights - Check if on
+  trigger:
+    platform: time
+    minutes: '/5'
+    seconds: 00
+  condition:
+    condition: and
+    conditions:
+    - condition: template
+      value_template: "{{ states.sensor.location_daniel.state != 'Home' }}"
+    - condition: state
+      entity_id: group.lights
+      state: 'on'
+  action:
+  - service: notify.ios_danielsiphone6splus
+    data_template:
+      title: "Lights"
+      message: "Left on for {{ relative_time(states.group.lights.last_updated) }}!"
+      data:
+        push:
+          badge: 100
+          thread-id: "lights"
+          category: "lights_alert"
+
 
 # LIGHT BRIGHTNESS #######################################################################################
 - alias: Lights Dynamic Brightness Reset
@@ -235,28 +259,29 @@
   - platform: state
     entity_id: input_number.light_temp
   action:
-  - service: light.turn_on
-    data:
-      entity_id: light.flux
-      rgb_color: [255,255,255]
+#  - service: light.turn_on
+#    data:
+#      entity_id: light.flux
+#      rgb_color: [255,255,255]
   - service: light.lifx_set_state
     data:
       transition: 15
     data_template:
-      kelvin: '{{states.input_number.light_temp.state | int}}'
+      kelvin: '{{  states.input_number.light_temp.state | int}}'
 
 
 # LIGHT COLOUR TEMP #######################################################################################
 - alias: Lights Set Light Colour Temp
   trigger:
     platform: state
-    entity_id: light.flux
+    entity_id: sensor.light_flux_color_temp
   action:
     service: input_number.set_value
     data:
       entity_id: input_number.light_temp
     data_template:
-      value: '{{( 1000000 / states.light.flux.attributes.color_temp ) | int}}'
+#      value: '{{ ( 1000000 / states.light.flux.attributes.color_temp ) | int}}'
+      value: '{{ states.sensor.light_flux_color_temp.state }}'
 
 
 # LIGHT RGB COLOUR #######################################################################################
@@ -276,3 +301,60 @@
       - '{{ states.light.flux.attributes.rgb_color[0] }}'
       - '{{ states.light.flux.attributes.rgb_color[1] }}'
       - '{{ states.light.flux.attributes.rgb_color[2] }}'
+
+
+# CHRISTMAS LIGHTS ######################################################################################
+- alias: Lights - Christmas 1
+  trigger:
+    platform: time
+    seconds: '/2'
+  condition:
+    condition: state
+    entity_id: input_boolean.holiday_mode_christmas
+    state: 'on'
+  action:
+    - service: light.turn_on
+      entity_id: light.front_east
+      data:
+        transition: 1
+      data_template: 
+        color_name: >-
+          {{ [
+            "red",
+            "green",
+            "gold"
+          ] | random }}
+
+- alias: Lights - Christmas 2
+  trigger:
+    platform: time
+    seconds: '/3'
+  condition:
+    condition: state
+    entity_id: input_boolean.holiday_mode_christmas
+    state: 'on'
+  action:
+    - service: light.turn_on
+      entity_id: light.front_west
+      data:
+        transition: 1
+      data_template: 
+        color_name: >-
+          {{ [
+            "red",
+            "green",
+            "gold"
+          ] | random }}
+
+- alias: Lights - Christmas Off
+  trigger:
+    platform: state
+    entity_id: input_boolean.holiday_mode_christmas
+    to: 'off'
+  action:
+    - service: light.turn_off
+      entity_id:
+        - light.front_west
+        - light.front_easst
+      data:
+        transition: 5

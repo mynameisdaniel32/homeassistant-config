@@ -101,7 +101,7 @@ input_boolean.tile_media:
         label: Triple J
         icon: mdi:radio
         column_span: 6
-      - entity: switch.airplay_appletv
+      - entity: switch.airplay_living_room
         label: ' '
         icon: mdi:airplay
         label_sec: Living Room
@@ -151,7 +151,7 @@ input_boolean.tile_home:
         column_span: 6
         row_span: 2
         color: 'hsl(198, 97%, 48%)'        #blue
-      - entity: vacuum.xiaomi_vacuum_cleaner
+      - entity: switch.vacuum
         label: Vacuum Cleaner
         icon: mdi:robot-vacuum
         column_span: 6
@@ -175,7 +175,7 @@ input_boolean.tile_home:
         label_template: "return state"
         label_sec: Dishwasher
         text_sec_size: '0.7em'
-        icon: mdi:cup-water
+        icon: mdi:dishwasher
         column_span: 2
         color: 'hsla(0, 0%, 98%, 0)'    #whitetransparent
         text_color: 'hsl(0, 0%, 0%)'    #black
@@ -539,29 +539,26 @@ sensor.washing_machine_status:
 sensor.washing_machine_power:
   icon: mdi:washing-machine
 input_select.dishwasher_status:
-  icon: mdi:cup-water
+  icon: mdi:dishwasher
 sensor.dishwasher_status:
-  icon: mdi:cup-water
+  icon: mdi:dishwasher
 sensor.dishwasher_power:
-  icon: mdi:cup-water
+  icon: mdi:dishwasher
 vacuum.xiaomi_vacuum_cleaner:
   friendly_name: Vacuum Cleaner
 switch.vacuum:
   icon: mdi:robot-vacuum
   google_assistant: true
   google_assistant_name: Vacuum Cleaner
+
 switch.sprinkler_zone_1:
-#  icon: mdi:water
-  friendly_name: Back Lawn
+  friendly_name: Back Lawn Top Sprinklers
 switch.sprinkler_zone_2:
-#  icon: mdi:water
-  friendly_name: Back Lawn
+  friendly_name: Back Lawn Bottom Sprinklers
 switch.sprinkler_zone_3:
-#  icon: mdi:water
-  friendly_name: Back Drippers
+  friendly_name: Back Garden Drippers
 switch.sprinkler_zone_4:
-#  icon: mdi:water
-  friendly_name: Front Lawn
+  friendly_name: Front Lawn Sprinklers
 #switch.sprinkler_zone_5:
 #  icon: mdi:water
 #switch.sprinkler_zone_6:
@@ -623,9 +620,6 @@ light.wardrobe:
 light.study:
   google_assistant: true
 #  google_assistant_name: Study Light
-light.kitchen:
-  google_assistant: true
-#  google_assistant_name: Kitchen Light
 light.living_room:
   google_assistant: true
 #  google_assistant_name: Living Room Light
@@ -658,6 +652,9 @@ light.verandah:
   friendly_name: Verandah Lights
   google_assistant: true
 #  google_assistant_name: Verandah Lights
+light.kitchen:
+  friendly_name: Kitchen Lights
+  google_assistant: true
 
 
 

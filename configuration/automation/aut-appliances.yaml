@@ -60,7 +60,7 @@
   trigger:
     - platform: numeric_state
       entity_id: sensor.washing_machine_power
-      below: 2
+      below: 3
   condition:
     condition: and
     conditions:
@@ -80,7 +80,7 @@
       entity_id: sensor.washing_machine_status
       to: Finishing
       for:
-        minutes: 5
+        seconds: 30
   condition:
     condition: and
     conditions:
@@ -93,25 +93,35 @@
         entity_id: input_select.washing_machine_status
         option: Clean
 
-- alias: Set washing machine dirty when door opens and turn it off
+- alias: Turn washing machine off when door opens
   trigger:
     - platform: state
       entity_id: binary_sensor.door_window_washing_machine
       to: 'on'
   condition:
-    condition: and
+    condition: or
     conditions:
       - condition: state
         entity_id: sensor.washing_machine_status
+        state: Finishing
+      - condition: state
+        entity_id: sensor.washing_machine_status
         state: Clean
+  action:
+    - service: homeassistant.turn_off
+      data:
+        entity_id: switch.plug_washing_machine
+
+- alias: Set washing machine dirty when door opens
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.door_window_washing_machine
+      to: 'on'
   action:
     - service: input_select.select_option
       data:
         entity_id: input_select.washing_machine_status
         option: Idle 
-    - service: homeassistant.turn_off
-      data:
-        entity_id: switch.plug_washing_machine
 
 
 - alias: Turn washing machine on when door opens
@@ -133,7 +143,7 @@
       data:
         entity_id: switch.plug_washing_machine
 
-- alias: Washing Machine Notification
+- alias: Washing Machine Finished Notification
   trigger:
     platform: state
     entity_id: sensor.washing_machine_status
@@ -141,10 +151,74 @@
   action:
   - service: notify.ios_danielsiphone6splus
     data:
-      message: "Washing Machine Finished!"
+      title: "Washing Machine"
+      message: "Finished!"
       data:
         push:
           badge: 7
+          thread-id: "washing-machine"
+          category: "washing_machine_alert"
+
+- alias: Washing Machine Recurring Notification
+  trigger:
+    - platform: state
+      entity_id: sensor.washing_machine_status
+      to: Clean
+      for:
+        minutes: 15
+    - platform: state
+      entity_id: sensor.washing_machine_status
+      to: Clean
+      for:
+        minutes: 30
+    - platform: state
+      entity_id: sensor.washing_machine_status
+      to: Clean
+      for:
+        minutes: 60
+    - platform: state
+      entity_id: sensor.washing_machine_status
+      to: Clean
+      for:
+        minutes: 90
+    - platform: state
+      entity_id: sensor.washing_machine_status
+      to: Clean
+      for:
+        minutes: 120
+    - platform: state
+      entity_id: sensor.washing_machine_status
+      to: Clean
+      for:
+        minutes: 150
+    - platform: state
+      entity_id: sensor.washing_machine_status
+      to: Clean
+      for:
+        minutes: 180
+    - platform: state
+      entity_id: sensor.washing_machine_status
+      to: Clean
+      for:
+        minutes: 210
+    - platform: state
+      entity_id: sensor.washing_machine_status
+      to: Clean
+      for:
+        minutes: 240
+  condition:
+    condition: state
+    entity_id: sensor.location_daniel
+    state: 'Home'
+  action:
+    service: notify.ios_danielsiphone6splus
+    data_template:
+      title: "Washing Machine"
+      message: "Finished {{ relative_time(states.sensor.washing_machine_status.last_updated) }} ago!"
+      data:
+        push:
+          badge: 7
+          thread-id: "washing-machine"
           category: "washing_machine_alert"
 
 #######################################################################################################

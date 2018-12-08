@@ -20,7 +20,7 @@ lights:
   - light.outside_front
   - light.verandah
   - light.gateway_light_34ce00fa664a
-  - light.down_light
+
 
 main_lights:
   name: Lights

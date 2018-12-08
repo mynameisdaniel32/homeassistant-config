@@ -126,8 +126,12 @@
   - platform: homeassistant
     event: start
   condition:
-    condition: template
-    value_template:  "{{ states('sensor.home_assistant_release') != states('sensor.current_version') }}"
+    condition: and
+    conditions:
+      - condition: template
+        value_template:  "{{ states('sensor.home_assistant_release') != states('sensor.current_version') }}"
+      - condition: template
+        value_template: "{% if not is_state('sensor.home_assistant_release', 'unavailable') %}true{% endif %}"
   action:
   - service: persistent_notification.create
     data:
@@ -142,28 +146,30 @@
 - alias: Button - Door Bell
   trigger:
     platform: event
-    event_type: click
+    event_type: xiaomi_aqara.click
     event_data:
       entity_id: binary_sensor.switch_door_bell
   action:
-  - service: script.door_bell
-  - service: notify.ios_danielsiphone6splus
-    data:
-      message: "Door Bell Pressed!"
+    - service: script.door_bell
+    - service: notify.ios_danielsiphone6splus
       data:
-        push:
-          badge: 2
-          category: "door_bell_alert"
-#  - service: script.sprinkler_burst
+        message: "Door Bell Pressed!"
+        data:
+          push:
+            badge: 2
+            category: "door_bell_alert"
+#    - service: script.sprinkler_burst
+    - service: homeassistant.turn_on
+      entity_id: input_boolean.holiday_mode_christmas
 
 - alias: Button - Roller Door
   trigger:
   - platform: event
-    event_type: click
+    event_type: xiaomi_aqara.click
     event_data:
       entity_id: binary_sensor.switch_158d00016be070
   - platform: event
-    event_type: click
+    event_type: xiaomi_aqara.click
     event_data:
       entity_id: binary_sensor.switch_158d0001b12757
   action:
@@ -172,7 +178,7 @@
 - alias: Button - Carport Light
   trigger:
     platform: event
-    event_type: click
+    event_type: xiaomi_aqara.click
     event_data:
       entity_id: binary_sensor.switch_158d0001e41a2c
   action:
@@ -182,7 +188,7 @@
 - alias: Button - Bedroom
   trigger:
     platform: event
-    event_type: click
+    event_type: xiaomi_aqara.click
     event_data:
       entity_id: binary_sensor.switch_158d0001e01080
   condition:
@@ -202,7 +208,7 @@
 - alias: Button - Bedroom (Deanna)
   trigger:
     platform: event
-    event_type: click
+    event_type: xiaomi_aqara.click
     event_data:
       entity_id: binary_sensor.switch_158d0001e01080
   condition:
@@ -254,8 +260,21 @@
   - service: homeassistant.turn_off
     entity_id:
       - switch.triplej
-
-
+      - switch.airplay_living_room
+      - media_player.bedroom_tv
+#      - media_player.living_room_tv
+#  - service: climate.set_temperature
+#    data:
+#      entity_id: climate.ac_bedroom
+#      operation_mode: Off
+#      temperature: 22
+  - service_template:  >
+      {% if is_state('binary_sensor.living_room_tv_power_status', 'on') %}
+        homeassistant.turn_off
+      {% else %}
+        script.dummy
+      {% endif %}
+    entity_id: media_player.living_room_tv
 
 - alias: Set stuff when Deanna arrives
   trigger:
@@ -279,7 +298,7 @@
     entity_id: device_tracker.deannabosiphone
     to: 'not_home'
     for:
-      minutes: 30
+      minutes: 60
   action:
   - service: homeassistant.turn_on
     entity_id:
@@ -331,7 +350,7 @@
       - switch.airplay_shed
   - service: homeassistant.turn_on
     entity_id:
-      - switch.airplay_appletv
+      - switch.airplay_living_room
       - switch.airplay_bedroom
       - switch.triplej
 
@@ -377,7 +396,41 @@
       title: Sonarr Queue
       message: Sonarr Queue has exceeded 2
 
+############ CHRISTMAS MODE ############
 
+- alias: Holiday Mode Christmas On
+  trigger:
+    platform: sun
+    event: sunset
+#    offset: "00:30:00"
+  condition:
+    condition: and
+    conditions:
+      - condition: template
+        value_template: '{{ now().strftime("%m-%d") >= "12-01" }}'
+      - condition: template
+        value_template: '{{ now().strftime("%m-%d") <= "12-31" }}'
+  action:
+    service: homeassistant.turn_on
+    entity_id: input_boolean.holiday_mode_christmas
+
+- alias: Holiday Mode Christmas Off
+  trigger:
+    platform: time
+    at: '02:00:00'
+  condition:
+    condition: and
+    conditions:
+      - condition: template
+        value_template: '{{ now().strftime("%m-%d") >= "12-01" }}'
+      - condition: template
+        value_template: '{{ now().strftime("%m-%d") <= "12-31" }}'
+  action: 
+    service: homeassistant.turn_off
+    entity_id: input_boolean.holiday_mode_christmas
+
+    
+    
     
 #######################################################################################################
 ###----------------------------------------- AV AUTOMATIONS ----------------------------------------###
@@ -443,16 +496,96 @@
 #    entity_id: 
 #    - switch.living_room_audio_source
 
-#- alias: Audio switch to 3.5mm when Living Room AirPlay turns on
-#  trigger:
-#    platform: state
-#    entity_id: switch.airplay_living_room
-#    from: 'off'
-#    to: 'on'
-#  action:
-#    service: homeassistant.turn_off
-#    entity_id: 
-#    - switch.living_room_audio_source
+- alias: Audio switch to 3.5mm when Living Room AirPlay turns on
+  trigger:
+    platform: state
+    entity_id: switch.airplay_living_room
+    from: 'off'
+    to: 'on'
+  action:
+    - service: homeassistant.turn_off
+      entity_id: 
+        - switch.living_room_audio_source
+    - service: input_number.set_value
+      data:
+        entity_id: input_number.forked_daapd_volume_living_room
+        value: '100'
+
+- alias: Audio Reset Shed AirPlay Volume to Max
+  trigger:
+    platform: state
+    entity_id: switch.airplay_shed
+    from: 'off'
+    to: 'on'
+  action:
+    - service: input_number.set_value
+      data:
+        entity_id: input_number.forked_daapd_volume_shed
+        value: '100'
+
+- alias: Audio switch to optical when Living Room AirPlay turns off
+  trigger:
+    platform: state
+    entity_id: switch.airplay_living_room
+    from: 'on'
+    to: 'off'
+  action:
+    service: homeassistant.turn_on
+    entity_id: 
+    - switch.living_room_audio_source
+
+- alias: Forked Daapd Set Volume Bedroom
+  trigger:
+    platform: state
+    entity_id: input_number.forked_daapd_volume_bedroom
+  action:
+    - service: shell_command.forked_daapd_volume_bedroom
+#    - service: homeassistant.update_entity
+#      entity_id: sensor.forked_daapd_volume_bedroom
+
+- alias: Forked Daapd Get Volume Bedroom
+  trigger:
+    platform: state
+    entity_id: sensor.forked_daapd_volume_bedroom
+  action:
+    - service: input_number.set_value
+      data_template:
+        entity_id: input_number.forked_daapd_volume_bedroom
+        value: '{{ states.sensor.forked_daapd_volume_bedroom.state }}'
+
+- alias: Forked Daapd Set Volume Living Room
+  trigger:
+    platform: state
+    entity_id: input_number.forked_daapd_volume_living_room
+  action:
+    - service: shell_command.forked_daapd_volume_living_room
+
+- alias: Forked Daapd Get Volume Living Room
+  trigger:
+    platform: state
+    entity_id: sensor.forked_daapd_volume_living_room
+  action:
+    - service: input_number.set_value
+      data_template:
+        entity_id: input_number.forked_daapd_volume_living_room
+        value: '{{ states.sensor.forked_daapd_volume_living_room.state }}'
+
+- alias: Forked Daapd Set Volume Shed
+  trigger:
+    platform: state
+    entity_id: input_number.forked_daapd_volume_shed
+  action:
+    - service: shell_command.forked_daapd_volume_shed
+
+- alias: Forked Daapd Get Volume Shed
+  trigger:
+    platform: state
+    entity_id: sensor.forked_daapd_volume_shed
+  action:
+    - service: input_number.set_value
+      data_template:
+        entity_id: input_number.forked_daapd_volume_shed
+        value: '{{ states.sensor.forked_daapd_volume_shed.state }}'
 
 - alias: Shed Door Turn on Shed AirPlay
   trigger:
@@ -519,12 +652,14 @@
   action:
     service: notify.ios_danielsiphone6splus
     data:
-      message: "Roller Door Opened!"
+      title: "Roller Door"
+      message: "Opened!"
       data:
         attachment:
           content-type: jpeg
         push:
           badge: 5
+          thread-id: "roller-door"
           category: camera
         entity_id: camera.shed
 
@@ -542,10 +677,12 @@
   action:
     service: notify.ios_danielsiphone6splus
     data:
-      message: "Roller Door Left Open!"
+      title: "Roller Door"
+      message: "Left Open!"
       data:
         push:
           badge: 5
+          thread-id: "roller-door"
           category: "roller_door_alert"
 
 - alias: Notify if roller door is left open
@@ -592,11 +729,13 @@
         hours: 6
   action:
     service: notify.ios_danielsiphone6splus
-    data:
-      message: "Roller Door Left Open!"
+    data_template:
+      title: "Roller Door"
+      message: "Left open for {{ relative_time(states.cover.roller_door.last_updated) }}!"
       data:
         push:
           badge: 1
+          thread-id: "roller-door"
           category: "roller_door_alert"
 
 - alias: Notify prompt to open roller door when I arrive home
@@ -611,7 +750,9 @@
   action:
     service: notify.ios_danielsiphone6splus
     data:
-      message: "Open the Roller Door?"
+      title: "Roller Door"
+      message: "Open?"
       data:
         push:
+          thread-id: "roller-door"
           category: "roller_door_prompt"

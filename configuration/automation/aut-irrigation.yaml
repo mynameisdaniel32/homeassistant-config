@@ -17,9 +17,14 @@
     event_type: timer.finished
     event_data:
       entity_id: timer.sprinkler_zone_1
+  - platform: state
+    entity_id: switch.sprinkler_zone_1
+    to: 'off'
   action:
   - service: homeassistant.turn_off
     entity_id: switch.sprinkler_zone_1
+  - service: timer.finish
+    entity_id: timer.sprinkler_zone_1
 
 - alias: Sprinkler Zone 2 On
   trigger:
@@ -78,13 +83,8 @@
   - service: homeassistant.turn_off
     entity_id: switch.sprinkler_zone_4
 
-- alias: Sprinkler Warning
+- alias: Notify Sprinkler Warning
   trigger:
-    - platform: state
-      entity_id: group.irrigation
-      to: 'on'
-      for:
-        seconds: 20
     - platform: state
       entity_id: group.irrigation
       to: 'on'
@@ -103,12 +103,30 @@
   action:
     service: notify.ios_danielsiphone6splus
     data:
-      message: "Sprinklers Left On!"
+      title: "Sprinklers"
+      message: "Running for {{ relative_time(states.group.irrigation.last_updated) }}!"
       data:
         push:
           badge: 1
+          thread-id: "sprinklers"
           category: "sprinkler_alert"
-    
+
+- alias: Notify Sprinkler Started
+  trigger:
+    - platform: state
+      entity_id: group.irrigation
+      to: 'on'
+  action:
+    service: notify.ios_danielsiphone6splus
+    data:
+      title: "Sprinklers"
+      message: "Turned on!"
+      data:
+        push:
+          thread-id: "sprinklers"
+          category: "sprinkler_alert"
+        
+
 - alias: Turn off sprinklers
   trigger:
     platform: event

@@ -89,7 +89,7 @@ input_boolean.tile_tablet_buttons:
         label_template: "return state"
         label_sec: Dishwasher
         text_sec_size: '0.7em'
-        icon: mdi:cup-water
+        icon: mdi:dishwasher
         column_span: 3
         color: 'hsla(0, 0%, 98%, 0)'        #whitetransparent
         color_on: 'hsl(198, 97%, 48%)'      #blue
@@ -347,6 +347,11 @@ input_boolean.tile_tablet_panel_lights:
         icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
         column_span: 3
         row_span: 2
+      - entity: light.kitchen_sink
+        label_sec: Kitchen Sink
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
       - entity: light.living_room
         label_sec: Living Room
         icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
@@ -453,6 +458,12 @@ input_boolean.tile_tablet_panel_lights_advanced:
         icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
         column_span: 3
         row_span: 2
+      - entity: light.kitchen_sink
+        more_info: light.kitchen
+        label_sec: Kitchen Sink
+        icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+        column_span: 3
+        row_span: 2
       - entity: light.living_room
         more_info: light.living_room
         label_sec: Living Room
@@ -531,7 +542,7 @@ input_boolean.tile_tablet_panel_media:
         label_sec: Bedroom
         column_span: 4
         row_span: 2
-      - entity: switch.airplay_appletv
+      - entity: switch.airplay_living_room
         label: ' '
         icon: mdi:airplay
         label_sec: Living Room
@@ -810,8 +821,8 @@ input_boolean.tile_tablet_panel_motion:
         color_on: 'hsl(37, 96%, 48%)'       #orange
         text_color_off: 'hsl(0, 0%, 0%)'    #black
         text_color_on: 'hsl(0, 0%, 98%)'    #white
-      - entity: binary_sensor.motion_sensor_158d0001e55776
-        label_sec: RENAMEME
+      - entity: binary_sensor.motion_bedroom_2
+        label_sec: Bedroom 2
         text_size: '1.0em'
         icon_template: "if (state === 'on') return 'mdi:run-fast'; else return 'mdi:walk'"
         column_span: 3
