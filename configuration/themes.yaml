@@ -1,4 +1,4 @@
-dark_theme:
+dark:
   # Main colors
   primary-color: '#5294E2'                                                        # Header
   accent-color: '#E45E65'                                                         # Accent color
@@ -54,3 +54,134 @@ dark_theme:
   # Google colors
   google-red-500: '#E45E65'
   google-green-500: '#39E949'
+
+tablet:
+#  primary-color: 'yellow'                                               
+#  tiles-background-active-color: '#00acc1'                                         
+  tiles-background-active-color: '#0069c0'                                         
+#  tiles-background-inactive-color: 'hsl(0, 0%, 80%)'
+  tiles-background-inactive-color: '#ffffff'
+  
+  tiles-text-active-color: '#ffffff'                                         
+  tiles-text-inactive-color: '#000000' 
+  
+tablet2:
+  tiles-background-active-color: '#0069c0'                                         
+  tiles-background-inactive-color: 'black'
+  
+  tiles-text-active-color: 'white'                                         
+  tiles-text-inactive-color: 'white'
+  
+  
+  
+  
+  
+  
+  
+tablet3:
+  tiles-background-active-color: 'white'                                         
+  tiles-background-inactive-color: 'black'
+  tiles-text-active-color: 'black'                                         
+  tiles-text-inactive-color: 'white'
+  tiles-border-active-color: 'var(--tiles-background-active-color)'                                        
+  tiles-border-inactive-color: '#2d2d2d'    #dark grey
+    
+  tiles-corner-radius: '0px'
+    
+  tiles-material-red: '#ff1744'
+  tiles-material-pink: '#f50057'
+  tiles-material-purple: '#d500f9'
+  tiles-material-deeppurple: '#651fff'
+  tiles-material-indigo: '#3d5afe'
+  tiles-material-blue: '#2979ff'
+  tiles-material-lightblue: '#00b0ff'
+  tiles-material-cyan: '#00e5ff'
+  tiles-material-teal: '#1de9b6'
+  tiles-material-green: '#00e676'
+  tiles-material-lightgreen: '#76ff03'
+  tiles-material-lime: '#c6ff00'
+  tiles-material-yellow: '#ffea00'
+  tiles-material-amber: '#ffc400'
+  tiles-material-orange: '#ff9100'
+  tiles-material-deeporange: '#ff3d00'
+    
+    
+  accent-color: 'var(--tiles-background-active-color)' 
+                                     
+  primary-text-color: 'white'                                                   # Primary text colour, here is referencing dark-primary-color
+  text-primary-color: 'var(--primary-text-color)'                                 # Primary text colour
+  secondary-text-color: '#9e9e9e'                                                 # For secondary titles in more info boxes etc.
+  disabled-text-color: '#7F848E' 
+                                                 # Disabled text colour
+  paper-card-background-color: 'black'                                          # Card background colour
+  paper-item-icon-color: 'var(--secondary-text-color)'                               # Icon color
+  paper-item-icon-active-color: 'var(--tiles-background-active-color)'                                     # Icon color active
+  # Sliders
+  paper-slider-knob-color: 'var(--accent-color)'
+  paper-slider-knob-start-color: 'var(--accent-color)'
+  paper-slider-pin-color: 'var(--accent-color)'
+  paper-slider-active-color: 'var(--accent-color)'
+  paper-slider-secondary-color: 'var(--secondary-background-color)'
+  paper-slider-disabled-active-color: 'var(--disabled-text-color)'
+  paper-slider-disabled-secondary-color: 'var(--disabled-text-color)'
+  # Switches
+  paper-toggle-button-checked-button-color: 'var(--accent-color)'
+  paper-toggle-button-checked-bar-color: 'var(--accent-color)'
+  paper-toggle-button-checked-ink-color: 'var(--accent-color)'
+  paper-toggle-button-unchecked-button-color: 'var(--disabled-text-color)'
+  paper-toggle-button-unchecked-bar-color: 'var(--disabled-text-color)'
+  paper-toggle-button-unchecked-ink-color: 'var(--disabled-text-color)'  
+
+tablet4:
+  tiles-background-active-color: '#2979ff'                                         
+  tiles-background-inactive-color: 'white'
+  tiles-text-active-color: 'black'                                         
+  tiles-text-inactive-color: 'black'
+  tiles-border-active-color: 'var(--tiles-background-active-color)'                                        
+  tiles-border-inactive-color: 'white'
+    
+  tiles-corner-radius: '5px'
+    
+  tiles-material-red: '#ff1744'
+  tiles-material-pink: '#f50057'
+  tiles-material-purple: '#d500f9'
+  tiles-material-deeppurple: '#651fff'
+  tiles-material-indigo: '#3d5afe'
+  tiles-material-blue: '#2979ff'
+  tiles-material-lightblue: '#00b0ff'
+  tiles-material-cyan: '#00e5ff'
+  tiles-material-teal: '#1de9b6'
+  tiles-material-green: '#00e676'
+  tiles-material-lightgreen: '#76ff03'
+  tiles-material-lime: '#c6ff00'
+  tiles-material-yellow: '#ffea00'
+  tiles-material-amber: '#ffc400'
+  tiles-material-orange: '#ff9100'
+  tiles-material-deeporange: '#ff3d00'
+    
+    
+  accent-color: 'var(--tiles-background-active-color)' 
+                                     
+  primary-text-color: 'white'                                                   # Primary text colour, here is referencing dark-primary-color
+  text-primary-color: 'var(--primary-text-color)'                                 # Primary text colour
+  secondary-text-color: '#9e9e9e'                                                 # For secondary titles in more info boxes etc.
+  disabled-text-color: '#7F848E' 
+                                                 # Disabled text colour
+  paper-card-background-color: 'black'                                          # Card background colour
+  paper-item-icon-color: 'var(--secondary-text-color)'                               # Icon color
+  paper-item-icon-active-color: 'var(--tiles-background-active-color)'                                     # Icon color active
+  # Sliders
+  paper-slider-knob-color: 'var(--accent-color)'
+  paper-slider-knob-start-color: 'var(--accent-color)'
+  paper-slider-pin-color: 'var(--accent-color)'
+  paper-slider-active-color: 'var(--accent-color)'
+  paper-slider-secondary-color: 'var(--secondary-background-color)'
+  paper-slider-disabled-active-color: 'var(--disabled-text-color)'
+  paper-slider-disabled-secondary-color: 'var(--disabled-text-color)'
+  # Switches
+  paper-toggle-button-checked-button-color: 'var(--accent-color)'
+  paper-toggle-button-checked-bar-color: 'var(--accent-color)'
+  paper-toggle-button-checked-ink-color: 'var(--accent-color)'
+  paper-toggle-button-unchecked-button-color: 'var(--disabled-text-color)'
+  paper-toggle-button-unchecked-bar-color: 'var(--disabled-text-color)'
+  paper-toggle-button-unchecked-ink-color: 'var(--disabled-text-color)'

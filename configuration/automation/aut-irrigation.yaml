@@ -101,7 +101,7 @@
       for:
         hours: 2
   action:
-    service: notify.ios_danielsiphone6splus
+    service: notify.ios_daniel_iphone
     data:
       title: "Sprinklers"
       message: "Running for {{ relative_time(states.group.irrigation.last_updated) }}!"
@@ -117,7 +117,7 @@
       entity_id: group.irrigation
       to: 'on'
   action:
-    service: notify.ios_danielsiphone6splus
+    service: notify.ios_daniel_iphone
     data:
       title: "Sprinklers"
       message: "Turned on!"

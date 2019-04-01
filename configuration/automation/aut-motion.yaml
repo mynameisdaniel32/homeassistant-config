@@ -422,6 +422,105 @@
     data:
       transition: 5
 
+# BATHROOM #############################################################################################
+- alias: Motion Detect - Bathroom
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_bathroom
+    to: 'on'
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+  - service: homeassistant.turn_on
+    entity_id: light.bathroom
+    data_template:
+      transition: 2
+
+- alias: Motion Clear - Bathroom
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_bathroom
+    to: 'off'
+    for:
+      minutes: 0
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+    service: homeassistant.turn_off
+    entity_id: light.bathroom
+    data:
+      transition: 5
+
+# TOILET #############################################################################################
+- alias: Motion Detect - Toilet
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_toilet
+    to: 'on'
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+  - service: homeassistant.turn_on
+    entity_id: light.toilet
+    data_template:
+      transition: 2
+
+- alias: Motion Clear - Toilet
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_toilet
+    to: 'off'
+    for:
+      minutes: 0
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+    service: homeassistant.turn_off
+    entity_id: light.toilet
+    data:
+      transition: 5
+
+# POOL ROOM #############################################################################################
+- alias: Motion Detect - Pool Room
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_pool_room
+    to: 'on'
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+  - service: homeassistant.turn_on
+    entity_id: light.pool_room
+    data_template:
+      transition: 2
+
+- alias: Motion Clear - Pool Room
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_pool_room
+    to: 'off'
+    for:
+      minutes: 0
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+    service: homeassistant.turn_off
+    entity_id: light.pool_room
+    data:
+      transition: 5
+
 # FRONT DOOR TABLET #############################################################################################
 - alias: Motion Detect - Front Door - Tablet
   trigger:
@@ -486,41 +585,41 @@
 ###----------------------------------- ROOM TRACKER AUTOMATIONS ------------------------------------###
 #######################################################################################################
 
-- alias: Room Tracker Leave Switch - Bedroom
-  trigger:
-    platform: state
-    entity_id: input_select.room_tracker
-    from: "Bedroom"
-  action:
-  - service: homeassistant.turn_off
-    entity_id:
-    - input_boolean.room_tracker_bedroom
-
-- alias: Room Tracker Enter Switch - Bedroom
-  trigger:
-    platform: state
-    entity_id: input_select.room_tracker
-    to: "Bedroom"
-  action:
-  - service: homeassistant.turn_on
-    entity_id:
-    - input_boolean.room_tracker_bedroom
-
-- alias: Room Tracker Leave - Bedroom
-  trigger:
-    platform: state
-    entity_id: input_boolean.room_tracker_bedroom
-    to: "off"
-    for:
-      minutes: 3
-  action:
-  - service: homeassistant.turn_off
-    entity_id:
-    - light.bedroom
-    - light.ensuite
-    - light.wardrobe
-    data:
-      transition: 4
+#- alias: Room Tracker Leave Switch - Bedroom
+#  trigger:
+#    platform: state
+#    entity_id: input_select.room_tracker
+#    from: "Bedroom"
+#  action:
+#  - service: homeassistant.turn_off
+#    entity_id:
+#    - input_boolean.room_tracker_bedroom
+#
+#- alias: Room Tracker Enter Switch - Bedroom
+#  trigger:
+#    platform: state
+#    entity_id: input_select.room_tracker
+#    to: "Bedroom"
+#  action:
+#  - service: homeassistant.turn_on
+#    entity_id:
+#    - input_boolean.room_tracker_bedroom
+#
+#- alias: Room Tracker Leave - Bedroom
+#  trigger:
+#    platform: state
+#    entity_id: input_boolean.room_tracker_bedroom
+#    to: "off"
+#    for:
+#      minutes: 3
+#  action:
+#  - service: homeassistant.turn_off
+#    entity_id:
+#    - light.bedroom
+#    - light.ensuite
+#    - light.wardrobe
+#    data:
+#      transition: 4
 
 - alias: Room Tracker Leave - Study
   trigger:

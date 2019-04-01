@@ -491,6 +491,8 @@ sensor.sonarr_queue:
 ######################################################################################################
 ###-------------------------------------------- OTHERS --------------------------------------------###
 ######################################################################################################
+sensor.temperature_inside_average:
+  icon: mdi:thermometer
 switch.flux:
   icon: mdi:lightbulb-on
 switch.ac_bedroom:
@@ -517,12 +519,6 @@ switch.triplej:
   icon: mdi:radio
 sensor.location_daniel:
   icon: mdi:account
-#device_tracker.danielsiphone6splus:
-#  friendly_name: Daniel
-#  icon: mdi:account
-sensor.battery_danielsiphone6splus:
-  friendly_name: Daniel's iPhone Battery
-  icon: mdi:battery-outline
 sensor.travel_city:
   friendly_name: Home to City
   icon: mdi:car
@@ -572,12 +568,6 @@ group.irrigation:
   google_assistant_name: Sprinklers
 #sensor.sprinkler_status:
 #  icon: mdi:water
-climate.ac_bedroom:
-  friendly_name: Bedroom AC
-sensor.inside_temperature_bedroom_inside_temperature:
-  friendly_name: Bedroom Temperature
-sensor.outside_temperature_bedroom_outside_temperature:
-  friendly_name: Carport Temperature
 fan.verandah:
   friendly_name: Verandah Fan
   google_assistant: true
@@ -668,16 +658,16 @@ device_tracker.living_room_tv:
   hidden: true
 media_player.bedroom_chromecast:
   hidden: true
-sensor.time:
-  hidden: true
-sensor.time__date:
-  hidden: true
-sensor.time_utc:
-  hidden: true
-sensor.date:
-  hidden: true
-sensor.date__time:
-  hidden: true
+#sensor.time:
+#  hidden: true
+#sensor.time__date:
+#  hidden: true
+#sensor.time_utc:
+#  hidden: true
+#sensor.date:
+#  hidden: true
+#sensor.date__time:
+#  hidden: true
 sensor.internet_time:
   hidden: true
 sensor.daniels_iphone_6s_plus_battery_level:

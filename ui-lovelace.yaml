@@ -1,491 +1,118 @@
 resources:
-  - url: /local/kiosk.js
+#  - url: /local/kiosk.js
+#    type: js
+  - url: /local/tracker-card.js?v=1.0.0
     type: js
-  - url: /local/tracker-card.js?v=0.1.5
-    type: js
-  - url: /local/button-card.js?v=0.0.2
-    type: module
-  - url: /local/forked-daapd-card.js?v=0.0.1e
-    type: module
+#  - url: /local/button-card.js?v=0.0.2
+#    type: module
+#  - url: /local/forked-daapd-card.js?v=0.0.1e
+#    type: module
   - url: /local/custom_ui/weather-card.js
     type: js
-  - url: /local/tiles-card.js?v=0.1
+  - url: /local/tiles-card.js?v=0.1c
     type: js
-  - url: /local/monster-card.js?v=1
+  - url: /local/tiles-card-legacy.js?v=0.1
+    type: js
+  - url: /local/monster-card.js?v=0.2.3
     type: js
   - url: /local/group-card.js?v=0.0.2
     type: js
+  - url: /local/vertical-stack-in-card.js?v=v0.1.1
+    type: js
+  - url: /local/custom-lovelace/compact-custom-header/compact-custom-header.js?v=1.0.0b7
+    type: module
+  - url: /local/custom-lovelace/upcoming-media-card/upcoming-media-card.js?v=0.3.4
+    type: js
+  - url: /local/mini-media-player-bundle.js?v=1.0.2
+    type: module
+  - url: /local/dark-sky-weather-card.js?v=0.10.2
+    type: module
 
 
-title: 43 Topaz (Lovelace)
+title: !secret address
 views:
-  - title: Home
-    icon: mdi:home-assistant
-    id: home
+  - !include 'configuration/ui/lovelace/home.yaml'
+  - !include 'configuration/ui/lovelace/lights.yaml'
+  - !include 'configuration/ui/lovelace/appliances.yaml'
+  - !include 'configuration/ui/lovelace/sprinklers.yaml'
+  - !include 'configuration/ui/lovelace/sensors.yaml'
+  - !include 'configuration/ui/lovelace/room_bedroom.yaml'
+  - !include 'configuration/ui/lovelace/tablet.yaml'
+  - !include 'configuration/ui/lovelace/tablet2.yaml'
+
+  - title: Test
+    #theme: dark
     cards:
-      - id: 1
-        type: vertical-stack
-        cards:
-          - type: conditional
-            conditions:
-              - entity: input_select.tablet_panel_detail
-                state: "Lights"
-            card:
-              type: custom:tiles-card
-              legacy_config:
-                columns: 12
-                row_height: 30px
-                gap: 7px
-                color: 'hsl(0, 0%, 98%)'        #white
-                color_on: 'hsl(37, 96%, 48%)'   #orange
-                color_off: 'hsl(0, 0%, 80%)'    #grey
-                text_align: center
-                entities:
-                  - entity: group.lights
-                    label: All Lights
-                    text_align: center
-                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-                    column_span: 12
-                    color_on: 'hsl(5, 96%, 48%)'  #red
-                    row_span: 1
-                  - entity: light.bedroom
-                    label_sec: Bedroom
-                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-                    column_span: 3
-                    row_span: 2
-                    style_template: "return '--tiles-common-label-sec-transform: uppercase';"
-                  - entity: light.wardrobe
-                    label_sec: WARDROBE
-                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-                    column_span: 3
-                    row_span: 2
-                  - entity: light.ensuite
-                    label_sec: ENSUITE
-                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-                    column_span: 3
-                    row_span: 2
-                  - entity: light.study
-                    label_sec: STUDY
-                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-                    column_span: 3
-                    row_span: 2
-                  - entity: light.kitchen
-                    label_sec: KITCHEN
-                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-                    column_span: 3
-                    row_span: 2
-                  - entity: light.living_room
-                    label_sec: LIVING ROOM
-                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-                    column_span: 3
-                    row_span: 2
-                  - entity: light.lounge
-                    label_sec: LOUNGE
-                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-                    column_span: 3
-                    row_span: 2
-                  - entity: light.front_door
-                    label_sec: FRONT DOOR
-                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-                    column_span: 3
-                    row_span: 2
-                  - entity: light.laundry
-                    label_sec: LAUNDRY
-                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-                    column_span: 3
-                    row_span: 2
-                  - entity: light.back_door
-                    label_sec: BACK DOOR
-                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-                    column_span: 3
-                    row_span: 2
-                  - entity: light.carport
-                    label_sec: CARPORT
-                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-                    column_span: 3
-                    row_span: 2
-                  - entity: light.outside_front
-                    label_sec: OUTSIDE FRONT
-                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-                    column_span: 3
-                    row_span: 2
-                  - entity: light.pool_room
-                    label_sec: POOL ROOM
-                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-                    column_span: 3
-                    row_span: 2
-                  - entity: light.verandah
-                    label_sec: VERANDAH
-                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-                    column_span: 3
-                    row_span: 2
+    - type: vertical-stack
+      cards:
+      - !include 'configuration/ui/lovelace/cards/tile-lights.yaml'
+
+ #     - type: "custom:weather-card"
+ #       entity_weather: weather.yweather
+ #       entity_sun: sun.sun
+      
+    - type: custom:tracker-card
+      trackers:
+        - sensor.custom_card_tracker
+        - sensor.custom_component_tracker
+  
+    - type: custom:upcoming-media-card
+      entity: sensor.plex_recently_added
+      title: Recently Downloaded
+      image_style: fanart
+      all_shadows: false
+      icon: none
+      date: ddmm
+      line2_text: $number
+      line3_text: $aired
+      line4_text: $rating
+  
+    - type: custom:mini-media-player
+      entity: media_player.living_room_tv
+      icon: mdi:television
+      volume_stateless: true
+      hide_mute: true
+      hide_controls: true
+      power_color: true
+
+    - type: 'custom:dark-sky-weather-card'
+      entity_current_conditions: sensor.dark_sky_icon
+      entity_temperature: sensor.dark_sky_temperature
+      entity_forecast_high_temp_1: sensor.dark_sky_daytime_high_temperature_1
+      entity_forecast_high_temp_2: sensor.dark_sky_daytime_high_temperature_2
+      entity_forecast_high_temp_3: sensor.dark_sky_daytime_high_temperature_3
+      entity_forecast_high_temp_4: sensor.dark_sky_daytime_high_temperature_4
+      entity_forecast_high_temp_5: sensor.dark_sky_daytime_high_temperature_5
+      entity_forecast_icon_1: sensor.dark_sky_icon_1
+      entity_forecast_icon_2: sensor.dark_sky_icon_2
+      entity_forecast_icon_3: sensor.dark_sky_icon_3
+      entity_forecast_icon_4: sensor.dark_sky_icon_4
+      entity_forecast_icon_5: sensor.dark_sky_icon_5
+      entity_forecast_low_temp_1: sensor.dark_sky_overnight_low_temperature_0
+      entity_forecast_low_temp_2: sensor.dark_sky_overnight_low_temperature_1
+      entity_forecast_low_temp_3: sensor.dark_sky_overnight_low_temperature_2
+      entity_forecast_low_temp_4: sensor.dark_sky_overnight_low_temperature_3
+      entity_forecast_low_temp_5: sensor.dark_sky_overnight_low_temperature_4
+      entity_summary_1: sensor.dark_sky_summary_1
+      entity_summary_2: sensor.dark_sky_summary_2
+      entity_summary_3: sensor.dark_sky_summary_3
+      entity_summary_4: sensor.dark_sky_summary_4
+      entity_summary_5: sensor.dark_sky_summary_5
+      entity_pop: sensor.dark_sky_precip_probability_0
+      entity_pop_1: sensor.dark_sky_precip_probability_1
+      entity_pop_2: sensor.dark_sky_precip_probability_2
+      entity_pop_3: sensor.dark_sky_precip_probability_3
+      entity_pop_4: sensor.dark_sky_precip_probability_4
+      entity_pop_5: sensor.dark_sky_precip_probability_5
+      entity_daytime_high: sensor.dark_sky_daytime_high_temperature_0
+      entity_wind_bearing: sensor.dark_sky_wind_bearing
+      entity_wind_speed: sensor.dark_sky_wind_speed
+      entity_humidity: sensor.dark_sky_humidity
+      entity_daily_summary: sensor.dark_sky_daily_summary
 
 
-      - id: 2
-        type: thermostat
-        entity: climate.ac_bedroom
-
-      - id: 3
-        type: plant-status
-        entity: plant.peace_lily
-
-      - id: 4
-        type: horizontal-stack
-        cards:
-          - type: picture-glance
-            title: Carport
-            entities:
-            - cover.roller_door
-            - binary_sensor.motion_carport
-            - light.carport
-            camera_image: camera.carport
-
-          - type: picture-glance
-            title: Front
-            entities:
-            - light.outside_front
-            camera_image: camera.front_yard
 
 
-  - title: Lights
-    icon: mdi:lightbulb
-    id: lights
-    cards:
-      - id: 5
-        type: custom:monster-card
-        card:
-          type: glance
-          title: On Lights
-          show_state: false
-        show_empty: false
-        filter:
-          include:
-            - domain: light
-#              options:
-#                tap_action: toggle
-          exclude:
-            - state: off
-            - state: unavailable
-            - entity_id: light.flux
-
-      - id: 6
-        type: custom:group-card
-        card:
-          type: entities
-          title: Lights
-        group: group.lights
-
-  - title: Bedroom
-    icon: mdi:bed-empty
-    id: room_bedroom
-    cards:
-#      - type: horizontal-stack
-#        cards:
-      - id: 7
-        type: light
-        entity: light.bedroom
-      - id: 8
-        type: light
-        entity: light.wardrobe
-      - id: 9
-        type: light
-        entity: light.ensuite
-        
-      - id: 10
-        type: thermostat
-        entity: climate.ac_bedroom
-
-      - id: 11
-        type: sensor
-        entity: sensor.temperature_bedroom
-        name: Temperature
-        graph: line
-        height: 50
-        
-      - id: 12
-        type: entity-button
-        entity: binary_sensor.motion_bedroom
-
-#  - title: Lovelace Test
-#    icon: mdi:home-assistant
-#    # Optional unique id for direct access /lovelace/${id}
-#    id: lovelace
-#    # The cards to show on this view.
-#    cards:
-#        # The entities card will take a list of entities and show their state.
-#      - type: entity-filter
-#        card:
-#          type: media-control
-#          entity: media_player.living_room
-#        show_empty: false
-#        entities:
-#          - media_player.living_room
-#        state_filter:
-#          - playing
-#          - idle
-#          - off
-#
-#      - type: entity-filter
-#        card:
-#          type: media-control
-#          entity: media_player.bedroom
-#        show_empty: false
-#        entities:
-#          - media_player.bedroom
-#        state_filter:
-#          - playing
-#          - idle
-#          - off
-#
-#      - type: entity-filter
-#        card:
-#          type: media-control
-#          entity: media_player.bedroom_sonos
-#        show_empty: false
-#        entities:
-#          - media_player.bedroom_sonos
-#        state_filter:
-#          - playing
-#          - idle
-#          - off
-#          - paused
-#
-#
-#
-##      - type: "custom:weather-card"
-##        entity_weather: weather.yweather
-##        entity_sun: sun.sun
-#
-#      - type: entity-filter
-#        card:
-#          type: glance
-#          show_state: false
-#          column_width: 25%
-#        show_empty: false
-#        entities:
-#          - entity: light.bedroom
-#            tap_action: toggle
-#          - entity: light.wardrobe
-#            tap_action: toggle
-#          - entity: light.ensuite
-#            tap_action: toggle
-#          - entity: light.study
-#            tap_action: toggle
-#          - entity: light.kitchen
-#            tap_action: toggle
-#          - entity: light.living_room
-#            tap_action: toggle
-#          - entity: light.lounge
-#            tap_action: toggle
-#          - entity: light.front_door
-#            tap_action: toggle
-#          - entity: light.laundry
-#            tap_action: toggle
-#          - entity: light.back_door
-#            tap_action: toggle
-#          - entity: light.carport
-#            tap_action: toggle
-#          - entity: light.pool_room
-#            tap_action: toggle
-#          - entity: light.outside_front
-#            tap_action: toggle
-#        state_filter:
-#          - off
-#          - on
-#
-#
-#      - type: entity-filter
-#        card:
-#          title: On Lights
-#          type: glance
-#          show_state: false
-#          column_width: 25%
-#        show_empty: false
-#        entities:
-#          - entity: light.bedroom
-#            tap_action: toggle
-#          - entity: light.wardrobe
-#            tap_action: toggle
-#          - entity: light.ensuite
-#            tap_action: toggle
-#          - entity: light.study
-#            tap_action: toggle
-#          - entity: light.kitchen
-#            tap_action: toggle
-#          - entity: light.living_room
-#            tap_action: toggle
-#          - entity: light.lounge
-#            tap_action: toggle
-#          - entity: light.front_door
-#            tap_action: toggle
-#          - entity: light.laundry
-#            tap_action: toggle
-#          - entity: light.back_door
-#            tap_action: toggle
-#          - entity: light.carport
-#            tap_action: toggle
-#          - entity: light.pool_room
-#            tap_action: toggle
-#          - entity: light.outside_front
-#            tap_action: toggle
-#        state_filter:
-#          - on
-#
-#
-#
-#      - type: plant-status
-#        entity: plant.peace_lily
-#
-#
-#      - type: picture-glance
-#        title: Carport
-#        entities:
-#          - cover.roller_door
-#          - binary_sensor.motion_carport
-#          - light.carport
-#        camera_image: camera.carport
-#
-#
-#      - type: picture-glance
-#        title: Front
-#        entities:
-#          - light.outside_front
-#        camera_image: camera.front_yard
-#
-#
-#      - type: vertical-stack
-#        cards:
-#          - type: horizontal-stack
-#            cards:
-##            - type: picture-entity
-##              entity: light.bedroom
-##              tap_action: more-info
-##              image: /local/images/tracker/sam.png
-##              state_filter:
-#          #      'not_home': saturate(0.0) opacity(50%)
-##              style:
-##              'background-color': red
-##              top: 50%
-##              left: 86%
-##              width: 22%
-#              # padding: 50px 50px 100px 50px
-##              border-radius: 5%
-#              - type: glance
-#                show_state: false
-#                column_width: 100%
-#                entities:
-#                  - entity: light.study
-#                    tap_action: toggle
-#                style:
-#                  background-color: red
-#                  top: 50%
-#                  left: 86%
-#                  width: 22%
-#                # padding: 50px 50px 100px 50px
-#                  border-radius: 5%
-#
-#              - type: custom:button-card
-#                entity: light.study
-#                icon: mdi:lightbulb
-#                color: auto
-#                color_type: card
-#                default_color: rgb(255, 233, 155)
-#                action: toggle
-#                name: Study
-#                size: 20%
-##              show_state: true
-#                style:
-##                - font-size: 12px
-#
-###########################TESTCARDS###########
-#      - type: custom:tracker-card
-#        title:
-#        trackers:
-#          - sensor.custom_card_tracker
-#          - sensor.custom_component_tracker
-#
-#      - type: custom:forked-daapd-card
-#        entity: media_player.mpd
-#        ip: 10.1.0.5
-#        name: Multiroom
-#
-#
-##############################################
-#
-#
-#  - title: Test Entities
-#    icon: mdi:play
-#    id: tablet-2
-#    cards:
-#      - type: vertical-stack
-#        cards:
-#          - type: horizontal-stack
-#            cards:
-#             - type: light
-#               entity: light.bedroom
-#               name: Bedroom
-#             - type: light
-#               entity: light.wardrobe
-#             - type: light
-#               entity: light.ensuite
-#          - type: horizontal-stack
-#            cards:
-#             - type: entity-button
-#               entity: light.bedroom
-#               name: Bedroom
-#               tap_action: toggle
-#               hold_action: more-info
-#             - type: entity-button
-#               entity: light.wardrobe
-#               name: Wardrobe
-#               tap_action: toggle
-#               hold_action: more-info
-#             - type: entity-button
-#               entity: light.ensuite
-#               name: Ensuite
-#               tap_action: toggle
-#               hold_action: more-info
-#             - type: entity-button
-#               entity: light.wardrobe
-#               name: Wardrobe
-#               tap_action: toggle
-#               hold_action: more-info
-#
-#
-#      - type: vertical-stack
-#        cards:
-#          - type: horizontal-stack
-#            cards:
-#             - type: custom:button-card
-#               entity: light.bedroom
-#               name: Bedroom
-#               tap_action: toggle
-#               hold_action: more-info
-#             - type: custom:button-card
-#               entity: light.study
-#               icon: mdi:lightbulb
-#               color: auto
-#               color_type: card
-#               default_color: rgb(255, 233, 155)
-#               action: toggle
-#               name: Study
-#               size: 25%
-#               style:
-##               - font-size: 12px
-#             - type: entity-button
-#               entity: light.wardrobe
-#               name: Wardrobe
-#               tap_action: toggle
-#               hold_action: more-info
-#               size: 10%
-#             - type: entity-button
-#               entity: light.ensuite
-#               name: Ensuite
-#               tap_action: toggle
-#               hold_action: more-info
-#
-################################################
-#
 #  - title: Tablet
 #    icon: mdi:tablet
 #    id: tablet
@@ -498,8 +125,8 @@ views:
 #              - entity: input_select.tablet_panel_detail
 #                state_not: "Off"
 #            card:
-#              type: custom:tiles-card
-#              legacy_config:
+#              type: custom:tiles-card-legacy
+#              config:
 #                columns: 12
 #                row_height: 30px
 #                gap: 6px
@@ -761,8 +388,8 @@ views:
 #              - entity: input_select.tablet_panel_detail
 #                state: "Off"
 #            card:
-#              type: custom:tiles-card
-#              legacy_config:
+#              type: custom:tiles-card-legacy
+#              config:
 #                entities:
 #                  - entity: input_boolean.tile_tablet_button_rooms
 #
@@ -777,103 +404,131 @@ views:
 #                state: "Lights"
 #            card:
 #              type: custom:tiles-card
-#              legacy_config:
+#              card_settings:
 #                columns: 12
 #                row_height: 30px
-#                gap: 7px
-#                color: 'hsl(0, 0%, 98%)'        #white
-#                color_on: 'hsl(37, 96%, 48%)'   #orange
-#                color_off: 'hsl(0, 0%, 80%)'    #grey
-#                text_align: center
-#                entities:
-#                  - entity: group.lights
-#                    label: All Lights
-#                    text_align: center
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 10
-#                    color_on: 'hsl(5, 96%, 48%)'  #red
-#                    row_span: 2
-#                  - entity: input_boolean.tile_tablet_button_lights_advanced
-#                    label: ' '
-#                    text_align: center
-#                    icon: mdi:settings
-#                    column_span: 2
-#                    row_span: 2
-#                    service: input_select.select_option
-#                    data:
-#                      entity_id: input_select.tablet_panel_detail
-#                      option: Lights Advanced
-#                  - entity: light.bedroom
-#                    label_sec: BEDROOM
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#                  - entity: light.wardrobe
-#                    label_sec: WARDROBE
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#                  - entity: light.ensuite
-#                    label_sec: ENSUITE
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#                  - entity: light.study
-#                    label_sec: STUDY
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#                  - entity: light.kitchen
-#                    label_sec: KITCHEN
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#                  - entity: light.living_room
-#                    label_sec: LIVING ROOM
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#                  - entity: light.lounge
-#                    label_sec: LOUNGE
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#                  - entity: light.front_door
-#                    label_sec: FRONT DOOR
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#                  - entity: light.laundry
-#                    label_sec: LAUNDRY
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#                  - entity: light.back_door
-#                    label_sec: BACK DOOR
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#                  - entity: light.carport
-#                    label_sec: CARPORT
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#                  - entity: light.outside_front
-#                    label_sec: OUTSIDE FRONT
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#                  - entity: light.pool_room
-#                    label_sec: POOL ROOM
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#                  - entity: light.verandah
-#                    label_sec: VERANDAH
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#    
+#                gap: 5px
+#                align: center           
+#              global_settings:
+#                label:
+#                  transform: uppercase
+#                  color:
+#                    value: white
+#                    value_on: white
+#                    value_off: white
+#                label_sec:
+#                  transform: uppercase
+#                  align: 'center'
+#                  color:
+#                    value: white
+#                    value_on: white
+#                    value_off: white
+#                icon:
+#                  color:
+#                    value: white
+#                    value_on: white
+#                    value_off: white
+#                  value_on: mdi:lightbulb
+#                  value_off: mdi:lightbulb-outline
+#                  value_disabled: mdi:lightbulb-outline
+#                background:
+#                  value: 'hsl(0, 0%, 80%)' #grey
+#                  value_on: 'hsl(37, 96%, 48%)' #orange
+#                  value_off: 'hsl(0, 0%, 80%)' #grey
+#              entities:
+#                - entity: group.lights
+#                  row_span: 2
+#                  column_span: 10
+#                  orientation: horizontal
+#                  label:
+#                    value: All Lights
+#                  background:
+#                    value_on: red
+##                   templates:
+##                     icon: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+#                - entity: input_boolean.tile_tablet_button_lights_advanced
+#                  row_span: 2
+#                  column_span: 2
+#                  orientation: horizontal
+#                  icon:
+#                    value: mdi:settings
+#                  background:
+#                    value_on: red
+#                  service: input_select.select_option
+#                  data:
+#                    entity_id: input_select.tablet_panel_detail
+#                    option: Lights Advanced
+#                - entity: light.bedroom
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Bedroom
+#                - entity: light.wardrobe
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Wardrobe
+#                - entity: light.ensuite
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Ensuite
+#                - entity: light.study
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Study
+#                - entity: light.kitchen
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Kitchen
+#                - entity: light.living_room
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Living Room
+#                - entity: light.lounge
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Lounge
+#                - entity: light.front_door
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Front Door
+#                - entity: light.laundry
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Laundry
+#                - entity: light.back_door
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Back Door
+#                - entity: light.carport
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Carport
+#                - entity: light.outside_front
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Outside Front
+#                - entity: light.pool_room
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Pool Room
+#                - entity: light.verandah
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Verandah
+#      
 #
 #          - type: conditional
 #            conditions:
@@ -881,124 +536,162 @@ views:
 #                state: "Lights Advanced"
 #            card:
 #              type: custom:tiles-card
-#              legacy_config:
+#              card_settings:
 #                columns: 12
 #                row_height: 30px
-#                gap: 7px
-#                color: 'hsl(0, 0%, 98%)'        #white
-#                color_on: 'hsl(37, 96%, 48%)'   #orange
-#                color_off: 'hsl(0, 0%, 80%)'    #grey
-#                text_align: center
-#                entities:
-#                  - entity: group.lights
-#                    label: All LIGHTS
-#                    text_align: center
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 10
-#                    color_on: 'hsl(5, 96%, 48%)'  #red
-#                    row_span: 2
-#                  - entity: input_boolean.tile_tablet_button_lights_advanced
-#                    label: ' '
-#                    icon: mdi:settings
-#                    column_span: 2
-#                    row_span: 2
-#                    service: input_select.select_option
-#                    data:
-#                      entity_id: input_select.tablet_panel_detail
-#                      option: Lights
-#                  - entity: light.bedroom
-#                    more_info: light.bedroom
-#                    label_sec: BEDROOM
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#                  - entity: light.wardrobe
-#                    more_info: light.wardrobe
-#                    label_sec: WARDROBE
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#                  - entity: light.ensuite
-#                    more_info: light.ensuite
-#                    label_sec: ENSUITE
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#                  - entity: light.study
-#                    more_info: light.study
-#                    label_sec: STUDY
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#                  - entity: light.kitchen
-#                    more_info: light.kitchen
-#                    label_sec: KITCHEN
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#                  - entity: light.living_room
-#                    more_info: light.living_room
-#                    label_sec: LIVING ROOM
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#                  - entity: light.lounge
-#                    more_info: light.lounge
-#                    label_sec: LOUNGE
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#                  - entity: light.front_door
-#                    more_info: light.front_door
-#                    label_sec: FRONT DOOR
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#                  - entity: light.laundry
-#                    more_info: light.laundry
-#                    label_sec: LAUNDRY
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#                  - entity: light.back_door
-#                    more_info: light.back_door
-#                    label_sec: BACK DOOR
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#                  - entity: light.carport
-#                    more_info: light.carport
-#                    label_sec: CARPORT
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#                  - entity: light.outside_front
-#                    more_info: light.outside_front
-#                    label_sec: OUTSIDE FRONT
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#                  - entity: light.pool_room
-#                    more_info: light.pool_room
-#                    label_sec: POOL ROOM
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#                  - entity: light.verandah
-#                    more_info: light.verandah
-#                    label_sec: VERANDAH
-#                    icon_template: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
-#                    column_span: 3
-#                    row_span: 2
-#
+#                gap: 5px
+#                align: center           
+#              global_settings:
+#                label:
+#                  transform: uppercase
+#                  color:
+#                    value: white
+#                    value_on: white
+#                    value_off: white
+#                label_sec:
+#                  transform: uppercase
+#                  align: 'center'
+#                  color:
+#                    value: white
+#                    value_on: white
+#                    value_off: white
+#                icon:
+#                  color:
+#                    value: white
+#                    value_on: white
+#                    value_off: white
+#                  value_on: mdi:lightbulb
+#                  value_off: mdi:lightbulb-outline
+#                  value_disabled: mdi:lightbulb-outline
+#                background:
+#                  value: 'hsl(0, 0%, 80%)' #grey
+#                  value_on: 'hsl(37, 96%, 48%)' #orange
+#                  value_off: 'hsl(0, 0%, 80%)' #grey
+#              entities:
+#                - entity: group.lights
+#                  row_span: 2
+#                  column_span: 10
+#                  orientation: horizontal
+#                  label:
+#                    value: All Lights
+#                  background:
+#                    value_on: red
+##                   templates:
+##                     icon: "if (state === 'on') return 'mdi:lightbulb'; else return 'mdi:lightbulb-outline'"
+#                - entity: input_boolean.tile_tablet_button_lights_advanced
+#                  row_span: 2
+#                  column_span: 2
+#                  orientation: horizontal
+#                  icon:
+#                    value: mdi:settings
+#                  background:
+#                    value_on: red
+#                  service: input_select.select_option
+#                  data:
+#                    entity_id: input_select.tablet_panel_detail
+#                    option: Lights
+#                - entity: light.bedroom
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Bedroom
+#                  more_info: light.bedroom
+#                - entity: light.wardrobe
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Wardrobe
+#                  more_info: light.wardrobe
+#                - entity: light.ensuite
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Ensuite
+#                  more_info: light.ensuite
+#                - entity: light.study
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Study
+#                  more_info: light.study
+#                - entity: light.kitchen
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Kitchen
+#                  more_info: light.kitchen
+#                - entity: light.living_room
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Living Room
+#                  more_info: light.living_room
+#                - entity: light.lounge
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Lounge
+#                  more_info: light.lounge
+#                - entity: light.front_door
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Front Door
+#                  more_info: light.front_door
+#                - entity: light.laundry
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Laundry
+#                  more_info: light.laundry
+#                - entity: light.back_door
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Back Door
+#                  more_info: light.back_door
+#                - entity: light.carport
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Carport
+#                  more_info: light.carport
+#                - entity: light.outside_front
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Outside Front
+#                  more_info: light.outside_front
+#                - entity: light.pool_room
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Pool Room
+#                  more_info: light.pool_room
+#                - entity: light.verandah
+#                  row_span: 2
+#                  column_span: 3
+#                  label_sec:
+#                    value: Verandah
+#                  more_info: light.verandah
+#          - type: conditional
+#            conditions:
+#              - entity: input_select.tablet_panel_detail
+#                state: "Lights Advanced"
+#            card:
+#              type: entities
+#              entities:
+#                - input_number.dynamic_light_brightness
+#                - input_number.light_temp
+#                - light.flux
 #
 #          - type: conditional
 #            conditions:
 #              - entity: input_select.tablet_panel_detail
 #                state: "Media"
 #            card:
-#              type: custom:tiles-card
-#              legacy_config:
+#              type: custom:tiles-card-legacy
+#              config:
 #                columns: 12
 #                row_height: 30px
 #                gap: 7px
@@ -1043,206 +736,6 @@ views:
 #                    row_span: 2
 #                    color: 'hsl(198, 97%, 48%)'     #blue
 #
-#
-##############################################
-#
-#  - title: Lovelace Test
-#    icon: mdi:stop
-##    panel: true
-#    # Optional unique id for direct access /lovelace/${id}
-#    id: tablet-3
-#    # The cards to show on this view.
-#    cards:
-#        # The entities card will take a list of entities and show their state.
-##      - type: horizontal-stack
-##        cards:
-#
-#### LEFT SIDE STACK
-#      - type: vertical-stack
-#        cards:
-#
-#
-#          - type: picture-elements
-#            image: /local/images/FFFFFF-0.png
-#            elements:
-#              - type: image
-#                tap_action: toggle
-#                entity: light.wardrobe
-#                image: /local/images/FFFFFF-1.png
-#                state_filter:
-#                  on: brightness(100%) opacity(0%)
-#                  off: brightness(80%) opacity(100%)
-#                style:
-#                  top: 9.5%
-#                  left: 13.25%
-#                  height: 15%
-#                  width: 22.5%
-#                  background-color: orange
-#                  border-radius: 1%
-#              - type: state-icon
-#                entity: light.wardrobe
-#                style:
-#                  top: 6.5%
-#                  left: 13.25%
-#
-#              - type: state-label
-#                entity: light.wardrobe
-#                tap_action: toggle
-#                style:
-#                  text-align: center
-#                  top: 12.5%
-#                  left: 13.25%
-#                  text-transform: uppercase
-#
-#
-#
-#              - type: image
-#                tap_action: toggle
-#                entity: light.ensuite
-#                image: /local/images/FFFFFF-1.png
-#                state_filter:
-#                  on: brightness(100%) opacity(0%)
-#                  off: brightness(80%) opacity(100%)
-#                style:
-#                  top: 9.5%
-#                  left: 37.75%
-#                  height: 15%
-#                  width: 22.5%
-#                  background-color: blue
-#                  border-radius: 1%
-#
-#              - type: image
-#                tap_action: toggle
-#                entity: light.ensuite
-#                image: /local/images/FFFFFF-1.png
-#                state_filter:
-#                  on: brightness(100%) opacity(0%)
-#                  off: brightness(80%) opacity(100%)
-#                style:
-#                  top: 9.5%
-#                  left: 62.25%
-#                  height: 15%
-#                  width: 22.5%
-#                  background-color: green
-#                  border-radius: 1%
-#
-#              - type: image
-#                tap_action: toggle
-#                entity: light.ensuite
-#                image: /local/images/FFFFFF-1.png
-#                state_filter:
-#                  on: brightness(100%) opacity(0%)
-#                  off: brightness(80%) opacity(100%)
-#                style:
-#                  top: 9.5%
-#                  left: 86.75%
-#                  height: 15%
-#                  width: 22.5%
-#                  background-color: yellow
-#                  border-radius: 1%
-#
-#
-#          - type: horizontal-stack
-#            cards:
-#
-#              - type: picture-elements
-#                image: /local/images/FFFFFF-0.png
-#                elements:
-#                  - type: image
-#                    tap_action: toggle
-#                    entity: light.wardrobe
-#                    image: /local/images/FFFFFF-1.png
-#                    state_filter:
-#                      on: brightness(100%) opacity(0%)
-#                      off: brightness(80%) opacity(100%)
-#                    style:
-#                      background-color: orange
-#                      border-radius: 1%
-#
-#
-#              - type: picture-elements
-#                image: /local/images/FFFFFF-0.png
-#                elements:
-#                  - type: image
-#                    tap_action: toggle
-#                    entity: light.ensuite
-#                    image: /local/images/FFFFFF-1.png
-#                    state_filter:
-#                      on: brightness(100%) opacity(0%)
-#                      off: brightness(80%) opacity(100%)
-#                    style:
-#                      top: 50%
-#                      left: 50%
-#                      height: 100%
-#                      width: 100%
-#                      background-color: blue
-#
-#
-#
-#
-#          - type: picture-glance
-#            title: Front
-#            entities:
-#              - light.outside_front
-#            camera_image: camera.front_yard
-#          - type: picture-glance
-#            title: Carport
-#            entities:
-#              - light.carport
-#            camera_image: camera.carport
-#
-#### RIGHT SIDE STACK
-#      - type: vertical-stack
-#        cards:
-#          - type: horizontal-stack
-#            cards:
-##                  - type: picture-entity
-##                    entity: light.bedroom
-##                    tap_action: more-info
-##                    image: /local/images/tracker/sam.png
-##                    state_filter:
-#                #      'not_home': saturate(0.0) opacity(50%)
-#              - type: glance
-#                show_state: false
-#                entities:
-#                  - entity: light.bedroom
-#                    tap_action: toggle
-#          - type: conditional
-#            conditions:
-#              - entity: light.bedroom
-#                state: on
-#            card:
-#              type: glance
-#              show_state: false
-#              column_width: 20%
-#              show_empty: false
-#              entities:
-#                - entity: light.bedroom
-#                  tap_action: toggle
-#                - entity: light.wardrobe
-#                  tap_action: toggle
-#                - entity: light.ensuite
-#                  tap_action: toggle
-#                - entity: light.study
-#                  tap_action: toggle
-#                - entity: light.kitchen
-#                  tap_action: toggle
-#                - entity: light.living_room
-#                  tap_action: toggle
-#                - entity: light.lounge
-#                  tap_action: toggle
-#                - entity: light.front_door
-#                  tap_action: toggle
-#                - entity: light.laundry
-#                  tap_action: toggle
-#                - entity: light.back_door
-#                  tap_action: toggle
-#                - entity: light.carport
-#                  tap_action: toggle
-#                - entity: light.pool_room
-#                  tap_action: toggle
-#                - entity: light.outside_front
-#                  tap_action: toggle
 #
 #
 #

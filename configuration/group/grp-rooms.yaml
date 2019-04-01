@@ -25,7 +25,7 @@ room_bedroom:
   entities:
   - light.bedroom
   - binary_sensor.motion_bedroom
-  - sensor.inside_temperature_bedroom_inside_temperature
+  - sensor.temperature_ac_bedroom_inside
   - sensor.temperature_bedroom
   - sensor.humidity_bedroom
 
@@ -33,7 +33,7 @@ room_outside:
   name: Outside
   entities:
   - light.carport
-  - sensor.outside_temperature_bedroom_outside_temperature
+  - sensor.temperature_ac_bedroom_outside
   - sensor.sprinkler_status
 
 room_living_room:

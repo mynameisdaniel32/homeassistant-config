@@ -204,7 +204,7 @@ class TilesCard extends HTMLElement {
   }
 
   _createPaperButton(entity) {
-    var paperButton = document.createElement('paper-button');
+    var paperButton = document.createElement('mwc-button');
     paperButton.raised = true;
     paperButton.animate = true;
     paperButton.tabIndex = 0;
@@ -839,7 +839,7 @@ class TilesCard extends HTMLElement {
           text-transform: var(--tiles-listbox-itens-transform, var(--tiles-default-listbox-itens-transform));
       }
       
-      paper-button {
+      mwc-button {
           height: 100%;
           width: 100%;
           grid-area: var(--tiles-grid-area, var(--tiles-default-grid-area));
@@ -873,7 +873,7 @@ class TilesCard extends HTMLElement {
           --iron-icon-width: var(--tiles-icon-size, var(--tiles-default-icon-size));
       }
       
-      paper-button.on {
+      mwc-button.on {
           background: var(--tiles-background-on, var(--tiles-background, var(--google-green-500)));
           background-repeat: no-repeat;
           background-position: 50% 50%;
@@ -888,7 +888,7 @@ class TilesCard extends HTMLElement {
           filter: grayscale(var(--tiles-grayscale-on, var(--tiles-grayscale, var(--tiles-default-grayscale)))); /* Microsoft Edge and Firefox 35+ */
       }
       
-      paper-button.off {
+      mwc-button.off {
           background: var(--tiles-background-off, var(--tiles-background, var(--google-red-500)));
           background-repeat: no-repeat;
           background-position: 50% 50%;
@@ -904,7 +904,7 @@ class TilesCard extends HTMLElement {
       
       }
       
-      paper-button.disabled {
+      mwc-button.disabled {
           background: var(--tiles-background-disabled, var(--tiles-background, var(--primary-color)));
           background-repeat: no-repeat;
           background-position: 50% 50%;
@@ -919,45 +919,45 @@ class TilesCard extends HTMLElement {
           filter: grayscale(var(--tiles-grayscale-disabled, var(--tiles-grayscale, var(--tiles-default-grayscale-disabled)))); /* Microsoft Edge and Firefox 35+ */
       }
       
-      paper-button .icon {
+      mwc-button .icon {
           padding: var(--tiles-icon-padding, var(--tiles-default-icon-padding));
       }
       
-      paper-button .label {
+      mwc-button .label {
           color: var(--tiles-label-color, var(--tiles-default-contents-color));
           font-size: var(--tiles-label-size, var(--tiles-default-labels-size));
           text-transform: var(--tiles-label-transform, none);
           padding: var(--tiles-label-padding, var(--tiles-default-labels-padding));
       }
       
-      paper-button.on .label {
+      mwc-button.on .label {
           color: var(--tiles-label-color-on, var(--tiles-label-color, var(--tiles-default-contents-color)));
       }
       
-      paper-button.off .label {
+      mwc-button.off .label {
           color: var(--tiles-label-color-off, var(--tiles-label-color, var(--tiles-default-contents-color)));
       }
       
-      paper-button.disabled .label {
+      mwc-button.disabled .label {
           color: var(--tiles-label-color-disabled, var(--tiles-label-color, var(--tiles-default-contents-color)));
       }
       
-      paper-button .labelSec {
+      mwc-button .labelSec {
           color: var(--tiles-label-sec-color, var(--tiles-default-contents-color));
           font-size: var(--tiles-label-sec-size, var(--tiles-default-labels-size));
           text-transform: var(--tiles-label-sec-transform, none);
           padding: var(--tiles-label-sec-padding, var(--tiles-default-labels-padding));
       }
       
-      paper-button.on .labelSec {
+      mwc-button.on .labelSec {
           color: var(--tiles-label-sec-color-on, var(--tiles-label-sec-color, var(--tiles-default-contents-color)));
       }
       
-      paper-button.off .labelSec {
+      mwc-button.off .labelSec {
           color: var(--tiles-label-sec-color-off, var(--tiles-label-sec-color, var(--tiles-default-contents-color)));
       }
       
-      paper-button.disabled .labelSec {
+      mwc-button.disabled .labelSec {
           color: var(--tiles-label-sec-color-disabled, var(--tiles-label-sec-color, var(--tiles-default-contents-color)));
       }
   `;

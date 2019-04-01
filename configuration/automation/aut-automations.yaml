@@ -48,10 +48,10 @@
     data:
       title: Resetting Values
       message: Input values were lost, all have been reset.
-  - service: input_number.set_value
-    data:
-      entity_id: input_number.battery_alert_threshold_max
-      value: 30
+#  - service: input_number.set_value
+#    data:
+#      entity_id: input_number.battery_alert_threshold_max
+#      value: 30
   - service: input_number.set_value
     data:
       entity_id: input_number.alarmclock_hour
@@ -92,7 +92,7 @@
     entity_id: group.homekit_entities
   - platform: state
     entity_id: group.lights
-  - platform: time
+  - platform: time_pattern
     minutes: '/1'
   condition:
     condition: and
@@ -151,7 +151,7 @@
       entity_id: binary_sensor.switch_door_bell
   action:
     - service: script.door_bell
-    - service: notify.ios_danielsiphone6splus
+    - service: notify.ios_daniel_iphone
       data:
         message: "Door Bell Pressed!"
         data:
@@ -159,8 +159,8 @@
             badge: 2
             category: "door_bell_alert"
 #    - service: script.sprinkler_burst
-    - service: homeassistant.turn_on
-      entity_id: input_boolean.holiday_mode_christmas
+#    - service: homeassistant.turn_on
+#      entity_id: input_boolean.holiday_mode_christmas
 
 - alias: Button - Roller Door
   trigger:
@@ -181,9 +181,32 @@
     event_type: xiaomi_aqara.click
     event_data:
       entity_id: binary_sensor.switch_158d0001e41a2c
+      click_type: single
   action:
     service: homeassistant.toggle
     entity_id: light.carport
+
+- alias: Button - Carport Light Hold
+  trigger:
+    platform: event
+    event_type: xiaomi_aqara.click
+    event_data:
+      entity_id: binary_sensor.switch_158d0001e41a2c
+      click_type: long_click_press
+  action:
+    - service: homeassistant.toggle
+      entity_id: automation.motion_clear_carport
+
+- alias: Motion Enable - Carport
+  trigger:
+    platform: state
+    entity_id: light.carport
+    to: 'off'
+  action:
+    - service: homeassistant.turn_on
+      entity_id: automation.motion_clear_carport
+
+
 
 - alias: Button - Bedroom
   trigger:
@@ -193,7 +216,7 @@
       entity_id: binary_sensor.switch_158d0001e01080
   condition:
     condition: state
-    entity_id: device_tracker.deannabosiphone
+    entity_id: person.deanna
     state: 'not_home'
   action:
   - service: homeassistant.turn_off
@@ -213,7 +236,7 @@
       entity_id: binary_sensor.switch_158d0001e01080
   condition:
     condition: state
-    entity_id: device_tracker.deannabosiphone
+    entity_id: person.deanna
     state: 'home'
   action:
   - service: homeassistant.turn_off
@@ -263,11 +286,10 @@
       - switch.airplay_living_room
       - media_player.bedroom_tv
 #      - media_player.living_room_tv
-#  - service: climate.set_temperature
-#    data:
-#      entity_id: climate.ac_bedroom
-#      operation_mode: Off
-#      temperature: 22
+  - service: climate.set_operation_mode
+    data:
+      entity_id: climate.ac_bedroom
+      operation_mode: "off"
   - service_template:  >
       {% if is_state('binary_sensor.living_room_tv_power_status', 'on') %}
         homeassistant.turn_off
@@ -279,14 +301,14 @@
 - alias: Set stuff when Deanna arrives
   trigger:
     platform: state
-    entity_id: device_tracker.deannabosiphone
+    entity_id: person.deanna
     to: 'home'
   action:
   - service: homeassistant.turn_off
     entity_id:
-      - automation.motion_detect__bedroom
-      - automation.motion_detect__living_room
-      - automation.motion_detect__lounge
+      - automation.motion_detect_bedroom
+      - automation.motion_detect_living_room
+      - automation.motion_detect_lounge
   - service: input_number.set_value
     data:
       entity_id: input_number.dynamic_light_brightness
@@ -295,16 +317,16 @@
 - alias: Set stuff when Deanna leaves
   trigger:
     platform: state
-    entity_id: device_tracker.deannabosiphone
+    entity_id: person.deanna
     to: 'not_home'
     for:
       minutes: 60
   action:
   - service: homeassistant.turn_on
     entity_id:
-      - automation.motion_detect__bedroom
-      - automation.motion_detect__living_room
-      - automation.motion_detect__lounge
+      - automation.motion_detect_bedroom
+      - automation.motion_detect_living_room
+      - automation.motion_detect_lounge
       - automation.lights_dynamic_brightness_0000
       - automation.lights_dynamic_brightness_0030
       - automation.lights_dynamic_brightness_0100
@@ -321,19 +343,24 @@
     platform: template
     value_template: '{{ states.sensor.time.state == states.sensor.alarmclock_time.state }}'
   condition:
-    condition: or
+    condition: and
     conditions:
-    - condition: and
-      conditions:
       - condition: state
-        entity_id: input_boolean.alarmclock_workday
+        entity_id: input_boolean.alarmclock_status
         state: 'on'
-      - condition: state
-        entity_id: binary_sensor.workday_sensor
-        state: 'on'
-    - condition: state
-      entity_id: input_boolean.alarmclock_workday
-      state: 'off'
+      - condition: or
+        conditions:
+          - condition: and
+            conditions:
+              - condition: state
+                entity_id: input_boolean.alarmclock_workday
+                state: 'on'
+              - condition: state
+                entity_id: binary_sensor.workday_sensor
+                state: 'on'
+          - condition: state
+            entity_id: input_boolean.alarmclock_workday
+            state: 'off'
   action:
   - service: input_number.set_value
     data:
@@ -409,7 +436,7 @@
       - condition: template
         value_template: '{{ now().strftime("%m-%d") >= "12-01" }}'
       - condition: template
-        value_template: '{{ now().strftime("%m-%d") <= "12-31" }}'
+        value_template: '{{ now().strftime("%m-%d") <= "12-26" }}'
   action:
     service: homeassistant.turn_on
     entity_id: input_boolean.holiday_mode_christmas
@@ -424,7 +451,7 @@
       - condition: template
         value_template: '{{ now().strftime("%m-%d") >= "12-01" }}'
       - condition: template
-        value_template: '{{ now().strftime("%m-%d") <= "12-31" }}'
+        value_template: '{{ now().strftime("%m-%d") <= "12-27" }}'
   action: 
     service: homeassistant.turn_off
     entity_id: input_boolean.holiday_mode_christmas
@@ -495,7 +522,51 @@
 #    service: homeassistant.turn_off
 #    entity_id: 
 #    - switch.living_room_audio_source
+##### TV
+- alias: Living Room TV - Turn off motion detection when TV starts playing
+  trigger:
+    platform: state
+    entity_id: media_player.living_room_apple_tv
+    to: 'playing'
+  action:
+    - service: homeassistant.turn_off
+      entity_id: 
+        - automation.motion_detect_lounge
+        - automation.motion_detect_living_room
 
+- alias: Living Room TV - Turn on motion detection when TV stops playing
+  trigger:
+    platform: state
+    entity_id: media_player.living_room_apple_tv
+    from: 'playing'
+  condition:
+    condition: state
+    entity_id: person.deanna
+    state: 'not_home'
+  action:
+    - service: homeassistant.turn_on
+      entity_id: 
+        - automation.motion_detect_lounge
+        - automation.motion_detect_living_room
+
+### RADIO
+- alias: Radio - Turn on when I get home during the day
+  trigger:
+    platform: state
+    entity_id: sensor.location_daniel
+    to: 'Home'
+  condition:
+    condition: time
+    after: '8:00:00'
+    before: '19:00:00'
+  action:
+    service: homeassistant.turn_on
+    entity_id:
+      - switch.triplej
+      - switch.airplay_living_room
+
+
+##### AUDIO
 - alias: Audio switch to 3.5mm when Living Room AirPlay turns on
   trigger:
     platform: state
@@ -569,6 +640,10 @@
       data_template:
         entity_id: input_number.forked_daapd_volume_living_room
         value: '{{ states.sensor.forked_daapd_volume_living_room.state }}'
+    - service: input_number.set_value
+      data:
+        entity_id: input_number.forked_daapd_volume_living_room
+        value: '100'
 
 - alias: Forked Daapd Set Volume Shed
   trigger:
@@ -650,7 +725,7 @@
     entity_id: sensor.location_daniel
     state: 'Away'
   action:
-    service: notify.ios_danielsiphone6splus
+    service: notify.ios_daniel_iphone
     data:
       title: "Roller Door"
       message: "Opened!"
@@ -661,7 +736,7 @@
           badge: 5
           thread-id: "roller-door"
           category: camera
-        entity_id: camera.shed
+        entity_id: camera.carport
 
 
 - alias: Notify if roller door is open when I leave home
@@ -675,7 +750,7 @@
     entity_id: cover.roller_door
     state: 'open'
   action:
-    service: notify.ios_danielsiphone6splus
+    service: notify.ios_daniel_iphone
     data:
       title: "Roller Door"
       message: "Left Open!"
@@ -728,7 +803,7 @@
       for:
         hours: 6
   action:
-    service: notify.ios_danielsiphone6splus
+    service: notify.ios_daniel_iphone
     data_template:
       title: "Roller Door"
       message: "Left open for {{ relative_time(states.cover.roller_door.last_updated) }}!"
@@ -748,7 +823,7 @@
     entity_id: cover.roller_door
     state: 'closed'
   action:
-    service: notify.ios_danielsiphone6splus
+    service: notify.ios_daniel_iphone
     data:
       title: "Roller Door"
       message: "Open?"

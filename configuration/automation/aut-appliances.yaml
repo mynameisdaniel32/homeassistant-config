@@ -149,7 +149,7 @@
     entity_id: sensor.washing_machine_status
     to: Clean
   action:
-  - service: notify.ios_danielsiphone6splus
+  - service: notify.ios_daniel_iphone
     data:
       title: "Washing Machine"
       message: "Finished!"
@@ -211,7 +211,7 @@
     entity_id: sensor.location_daniel
     state: 'Home'
   action:
-    service: notify.ios_danielsiphone6splus
+    service: notify.ios_daniel_iphone
     data_template:
       title: "Washing Machine"
       message: "Finished {{ relative_time(states.sensor.washing_machine_status.last_updated) }} ago!"
@@ -330,7 +330,7 @@
     entity_id: sensor.dishwasher_status
     to: Clean
   action:
-  - service: notify.ios_danielsiphone6splus
+  - service: notify.ios_daniel_iphone
     data:
       message: "Dishwasher Finished!"
       data:

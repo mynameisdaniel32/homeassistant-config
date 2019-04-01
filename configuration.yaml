@@ -8,7 +8,7 @@ homeassistant:
   customize: !include_dir_merge_named configuration/customize/
   whitelist_external_dirs:
   - '/tmp'
-  packages: !include_dir_named packages
+#  packages: !include_dir_named packages
 
 zone:
   - name: Home
@@ -17,14 +17,15 @@ zone:
     radius: 50
 
   - name: Mawson Lakes
-    latitude: -34.809511
-    longitude: 138.620297
+    latitude: !secret mlk_latitude
+    longitude: !secret mlk_longitude
     radius: 500
 
 logger:
   default: warn
   logs:
-    homeassistant.components.switch.command_line: fatal
+    homeassistant.components.command_line.switch: fatal
+    haffmpeg.tools: error
     
 
 ######################################################################################################
@@ -45,7 +46,6 @@ conversation:
 discovery:
   ignore:
   - yeelight
-  - daikin
 
 frontend:
   javascript_version: latest
@@ -60,8 +60,8 @@ frontend:
 history:
 
 http:
-  api_password: !secret api_password
-  trusted_networks:
+#  api_password: !secret api_password
+#  trusted_networks:
   ip_ban_enabled: true
   login_attempts_threshold: 3
   use_x_forwarded_for: true
@@ -86,11 +86,13 @@ logbook:
 #    - automation.lights_set_lifx_brightness
 #    - automation.lights_set_lifx_colour_temp
     - sensor.time
-    - sensor.time_2
-    - sensor.time__date
+    - sensor.time_date
     - sensor.time_utc
     domains:
     - group
+
+lovelace:
+  mode: yaml
 
 map:
 
@@ -99,14 +101,18 @@ mqtt:
   port: 1883
   username: !secret mqtt_username
   password: !secret mqtt_password
-  discovery: true
-  discovery_prefix: homeassistant
+#  discovery: true
+#  discovery_prefix: homeassistant
 
 notify:
   - platform: html5
     name: html5
-    gcm_api_key: !secret gcm_api_key
-    gcm_sender_id: !secret gcm_sender_id
+    vapid_pub_key: !secret vapid_pub_key
+    vapid_prv_key: !secret vapid_prv_key
+    vapid_email: !secret vapid_email
+
+
+person:
 
 updater:
   include_used_components: true
@@ -119,18 +125,20 @@ shopping_list:
 
 sun:
 
+system_health:
 
 ######################################################################################################
 ###------------------------------------------ COMPONENTS ------------------------------------------###
 ######################################################################################################
 custom_updater:
-  show_installable: true
+  show_installable: false
   track:
     - components
     - cards
     - python_scripts
   card_urls: 
-    - https://raw.githubusercontent.com/kuuji/button-card/0.0.2/tracker.json
+    - https://raw.githubusercontent.com/kalkih/mini-media-player/master/tracker.json
+    - https://raw.githubusercontent.com/iammexx/home-assistant-config/master/ui/darksky/version.json
 
 ifttt:
   key: !secret ifttt_key
@@ -214,12 +222,14 @@ alexa:
         name: All Lights
         display_categories: LIGHT
 
-daikin:
-  hosts:
-    - 10.10.3.163
-  monitored_conditions:
-    - inside_temperature
-    - outside_temperature
+#disabled the next 3 lines 2/4/19
+#daikin:
+#  hosts:
+#    - 10.10.3.163
+
+#  monitored_conditions:
+#    - inside_temperature
+#    - outside_temperature
 
 google_assistant:
   project_id: home-assistant-144414
@@ -298,10 +308,10 @@ xiaomi_aqara:
 ###------------------------------------------ DEVICES ---------------------------------------------###
 ######################################################################################################
 
-climate:
-  - platform: daikin
-    name: ac_bedroom
-    host: 10.10.3.163
+#climate:
+#  - platform: daikin
+#    name: ac_bedroom
+#    host: 10.10.3.163
 
 camera:
   - platform: ffmpeg
@@ -313,6 +323,11 @@ camera:
     input: -rtsp_transport tcp -i rtsp://10.10.3.148:8554/unicast
     name: Front Yard
     extra_arguments: -pred 1 -q:v 2
+
+#  - platform: generic
+#    still_image_url: http://www.bom.gov.au/radar/IDR643.gif?{{ now().strftime("%Y%m%d%H%M") }}00
+#    name: bom_rain_radar
+#    limit_refetch_to_url_change: true
 
 cover:
   - platform: mqtt
@@ -358,7 +373,7 @@ light:
     command_topic: cmnd/sonoff/carport-lights/POWER
     payload_on: 'ON'
     payload_off: 'OFF'
-    state_topic: stat/sonoff/carport-lights/POWER
+    state_topic: stat/sonoff/carport-lights/POWER1
 
   - platform: mqtt
     name: Flux
@@ -366,18 +381,12 @@ light:
     color_temp_command_topic: "light/flux/color_temp"
     rgb_command_topic: "light/flux/color_rgb"
 
-  - platform: xiaomi_miio
-    name: Kitchen Sink
-    host: 10.10.1.143
-    token: !secret xiaomi_miio_token_light
-    model: philips.light.bulb
+#  - platform: xiaomi_miio
+#    name: Kitchen Sink
+#    host: 10.10.1.143
+#    token: !secret xiaomi_miio_token_light
+#    model: philips.light.bulb
 
-  - platform: yeelight
-    devices:
-      10.10.1.141:
-        name: Front West
-      10.10.1.142:
-        name: Front East
 
   - platform: group
     name: Outside Front
@@ -390,7 +399,8 @@ light:
     entities:
       - light.kitchen_main
       - light.kitchen_1
-      - light.kitchen_sink
+      - light.kitchen_2
+      - light.kitchen_3
 
   - platform: group
     name: Pool Room
@@ -408,6 +418,13 @@ light:
 
 #light_controller:
 #  topic: node/light_switch/
+
+yeelight:
+  devices:
+    10.10.1.141:
+      name: Front West
+    10.10.1.142:
+      name: Front East
 
 plant:
   peace_lily:
@@ -436,17 +453,24 @@ device_tracker:
       track_new_devices: False
       hide_if_away: False
 
+speedtestdotnet:
+  monitored_conditions:
+    - ping
+    - download
+    - upload
+
 vacuum:
   - platform: xiaomi_miio
     host: 10.10.3.140
     token: !secret xiaomi_miio_token_vacuum
 
 weather:
-  - platform: yweather
-
-# DON'T ENABLE. TOO MANY API CALLS
-#  - platform: darksky
-#    api_key: !secret darksky_api_key
+# RISK OF TOO MANY API CALLS - check combined calls with the Dark Sky Sensor
+  - platform: darksky
+    api_key: !secret darksky_api_key
+    mode: daily
+    scan_interval:
+      minutes: 5
 
   - platform: bom
     station: 'IDS60901.95677'
@@ -731,14 +755,14 @@ switch:
         command_on: "/usr/bin/mpc -h server-music.local enable 43023"
         command_off: "/usr/bin/mpc -h server-music.local disable 43023"
         command_state: "/usr/bin/mpc -h server-music.local outputs | grep 43023"
-        value_template: '{{ value == "Output 43023 (Bedroom) is enabled" }}'
+        value_template: '{{ value == "Output 43023 (Bedroom HomePod) is enabled" }}'
       
       airplay_sonos:
         friendly_name: Sonos AirPlay
         command_on: "/usr/bin/mpc -h server-music.local enable 53"
         command_off: "/usr/bin/mpc -h server-music.local disable 53"
         command_state: "/usr/bin/mpc -h server-music.local outputs | grep 53"
-        value_template: '{{ value == "Output 53 (Bedroom) is enabled" }}'
+        value_template: '{{ value == "Output 53 (Living Room Sono) is enabled" }}'
       
 
   - platform: mqtt
@@ -934,7 +958,7 @@ switch:
     lights:
       - light.flux
 #      - light.outside_front
-      - light.kitchen_sink
+#      - light.kitchen_sink
 #      - light.yeelight_rgb_7811dca21337
 #      - light.yeelight_rgb_34ce008ce68b
 #      - light.yeelight_rgb_34ce009133a2
@@ -1004,6 +1028,7 @@ input_select:
       - Cameras
       - Sprinklers
       - Sprinklers Advanced
+      - Air Conditioner
       - Washer
       - Dishwasher
       - Alarm Clock
@@ -1011,9 +1036,18 @@ input_select:
       - Shed
       - Weather
       - Motion
+      - Temperature
+      - Appliances
       - Rooms
       - All
 
+  tablet_panel_detail_appliances:
+    name: Active Tablet Detail Appliances Panel
+    options:
+      - Washing Machine
+      - Dishwasher
+      - Vacuum Cleaner
+      
   tablet_panel_detail_rooms:
     name: Active Tablet Detail Rooms Panel
     options:
@@ -1172,6 +1206,7 @@ input_boolean:
     name: Homekit Location
     icon: mdi:account
   
+#should be redundant with Lovelace
   tile_media:
   tile_room_bedroom:
   tile_room_study:
@@ -1186,7 +1221,8 @@ input_boolean:
   tile_tablet_date:
   tile_weather:
   tile_tablet_dummy:
-  
+
+# some of these could be dropped with Lovelace
   tile_tablet_button_large:
   tile_tablet_button_lights:
   tile_tablet_button_lights_advanced:
@@ -1194,6 +1230,7 @@ input_boolean:
   tile_tablet_button_cameras:
   tile_tablet_button_sprinklers:
   tile_tablet_button_sprinklers_advanced:
+  tile_tablet_button_ac:
   tile_tablet_button_washer:
   tile_tablet_button_dishwasher:
   tile_tablet_button_alarm_clock:
@@ -1201,9 +1238,14 @@ input_boolean:
   tile_tablet_button_shed:
   tile_tablet_button_weather:
   tile_tablet_button_motion:
+  tile_tablet_button_appliances:
+  tile_tablet_button_appliances_washing_machine:
+  tile_tablet_button_appliances_dishwasher:
+  tile_tablet_button_appliances_vacuum_cleaner:
+  tile_tablet_button_temperature:
   tile_tablet_button_rooms:
   
-  
+# should be redundant with Lovelace
   tile_tablet_panel_lights:
   tile_tablet_panel_lights_advanced:
   tile_tablet_panel_media:
@@ -1290,16 +1332,10 @@ sensor:
 #  - platform: google_travel_time
 #    name: travel_home
 #    api_key: !secret google_api_key
-#    origin: device_tracker.danielsiphone6splus
+#    origin: device_tracker.daniel_iphone
 #    destination: zone.home
 #    options:
 #      mode: driving
-
-#  - platform: daikin
-#    host: 10.10.3.163
-#    monitored_conditions:
-#      - inside_temperature
-#      - outside_temperature
 
   - platform: pi_hole
     host: 10.1.0.4
@@ -1311,58 +1347,111 @@ sensor:
   
   - platform: plex
     host: server.local
-  
-  - platform: speedtest
-    monitored_conditions:
-      - ping
-      - download
-      - upload
 
-  - platform: time_date
-    display_options:
-    - 'time'
-    - 'date'
+  - platform: plex_recently_added
+    token: BcF1HJ7SQp5xsn6VqhmJ
+#    host: server.local
+    host: 10.1.0.10
+    port: 32400
+#    ssl: true
+#    ssl_cert: false
+#    download_images: false
+    
+  - platform: min_max
+    name: Temperature Inside Average
+    round_digits: 1
+    type: mean
+    entity_ids:
+      - sensor.temperature_bedroom
+      - sensor.temperature_ensuite
+      - sensor.temperature_study
+      - sensor.temperature_living_room
+  
 
   - platform: openhardwaremonitor
     host: server.local
 
+
+  - platform: bom_forecast
+#    product_id: IDS10034
+#    name: Parafield
+#    forecast_days: 6
+#    rest_of_today: true
+    mode: separate
+#    friendly_state_format: '{summary}'
+    monitored_conditions:
+      - 'max'
+      - 'min'
+      - 'chance_of_rain'
+      - 'possible_rainfall'
+      - 'summary'
+      - 'detailed_summary'
+#    text_if_no_value: '-'
+
+
   - platform: darksky
     api_key: !secret darksky_api_key
+    forecast:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
     monitored_conditions:
-    - summary
-    - precip_intensity
-    - precip_probability
-    - temperature
-    - cloud_cover
-    - humidity
-    - temperature_high
-    - temperature_low
-    - hourly_summary
+      - summary
+      - precip_intensity
+      - precip_probability
+      - temperature
+      - cloud_cover
+      - humidity
+      - temperature_high
+      - temperature_low
+      - minutely_summary
+      - hourly_summary
+      - daily_summary
+# weather card_urls
+      - icon
+      - nearest_storm_distance
+      - nearest_storm_bearing
+      - apparent_temperature
+      - apparent_temperature_high
+      - apparent_temperature_low
+      - wind_speed
+      - wind_bearing
+      - precip_type
+      - precip_accumulation
+      - precip_intensity_max
+      - uv_index
+      - pressure
+      - visibility
+    scan_interval:
+      minutes: 5
 
-  - platform: wunderground
-    api_key: 0235d75e48901961
-    monitored_conditions:
-    - alerts
-    - precip_today_metric
-    - precip_1d_mm
-    - precip_1d
-    - precip_2d_mm
-    - precip_2d
-    - precip_3d_mm
-    - precip_3d
-    - relative_humidity
-    - temp_c
-    - temp_high_1d_c
-    - temp_low_1d_c
-    - temp_high_2d_c
-    - temp_low_2d_c
-    - wind_gust_kph
-    - wind_gust_1d_kph
-    - wind_kph
-    - wind_1d_kph
-    - weather
-    - weather_1d_metric
-    - weather_1n_metric
+#  - platform: wunderground
+#    api_key: !secret wunderground_api_key
+#    monitored_conditions:
+#    - alerts
+#    - precip_today_metric
+#    - precip_1d_mm
+#    - precip_1d
+#    - precip_2d_mm
+#    - precip_2d
+#    - precip_3d_mm
+#    - precip_3d
+#    - relative_humidity
+#    - temp_c
+#    - temp_high_1d_c
+#    - temp_low_1d_c
+#    - temp_high_2d_c
+#    - temp_low_2d_c
+#    - wind_gust_kph
+#    - wind_gust_1d_kph
+#    - wind_kph
+#    - wind_1d_kph
+#    - weather
+#    - weather_1d_metric
+#    - weather_1n_metric
 
   - platform: template
     sensors:
@@ -1370,7 +1459,6 @@ sensor:
         friendly_name: 'Alarm Clock Time'
         value_template: '{{ "%0.02d:%0.02d" | format(states("input_number.alarmclock_hour") | int, states("input_number.alarmclock_minutes") | int) }}'    
       
-
       washing_machine_power:
         friendly_name: Washing Machine Power Draw
         unit_of_measurement: 'watts'
@@ -1385,6 +1473,12 @@ sensor:
         friendly_name: Bedroom TV Power Draw
         unit_of_measurement: 'watts'
         value_template: "{{ states.switch.plug_bedroom_tv.attributes.load_power }}"
+
+      bom_temperature:
+        friendly_name: BOM Parafield Temperature
+        unit_of_measurement: '°C'
+        icon_template: mdi:thermometer
+        value_template: "{{ states.weather.bom_parafield.attributes.temperature }}"
 
   - platform: template
     sensors:
@@ -1419,7 +1513,12 @@ sensor:
     sensors:
       light_flux_color_temp:
         friendly_name: Light Flux Colour Temp
-        value_template: "{{ 1000000 / states.light.flux.attributes.color_temp | int }}"
+        value_template: >-
+          {%- if states.light.flux.state == "on" -%}
+            {{ 1000000 / states.light.flux.attributes.color_temp | int }}
+          {%- else -%}
+            {{ states.input_number.light_temp.state }}
+          {%- endif -%}
 
 
   - platform: bom
@@ -1431,12 +1530,12 @@ sensor:
 
   - platform: time_date
     display_options:
-    - 'time'
-    - 'date'
-    - 'date_time'
-    - 'time_date'
-    - 'time_utc'
-    - 'beat'
+      - 'time'
+      - 'date'
+      - 'date_time'
+      - 'time_date'
+      - 'time_utc'
+      - 'beat'
 
   - platform: sonarr
     api_key: !secret sonarr_api_key

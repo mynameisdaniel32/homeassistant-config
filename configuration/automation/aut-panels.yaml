@@ -408,3 +408,114 @@
   - service: homeassistant.turn_off
     entity_id: input_boolean.tile_tablet_button_rooms
 
+##### TEMPERATURE
+- alias: Tablet Panel Temperature On
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    to: "Temperature"
+  action:
+  - service: homeassistant.turn_on
+    entity_id: input_boolean.tile_tablet_button_temperature
+
+- alias: Tablet Panel Temperature Off
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    from: "Temperature"
+  action:
+  - service: homeassistant.turn_off
+    entity_id: input_boolean.tile_tablet_button_temperature
+
+##### AC
+- alias: Tablet Panel AC On
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    to: "Air Conditioner"
+  action:
+  - service: homeassistant.turn_on
+    entity_id: input_boolean.tile_tablet_button_ac
+
+- alias: Tablet Panel AC Off
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    from: "Air Conditioner"
+  action:
+  - service: homeassistant.turn_off
+    entity_id: input_boolean.tile_tablet_button_ac
+
+##### APPLIANCES
+- alias: Tablet Panel Appliances On
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    to: "Appliances"
+  action:
+  - service: homeassistant.turn_on
+    entity_id: input_boolean.tile_tablet_button_appliances
+
+- alias: Tablet Panel Appliances Off
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    from: "Appliances"
+  action:
+  - service: homeassistant.turn_off
+    entity_id: input_boolean.tile_tablet_button_appliances
+
+- alias: Tablet Panel Appliances Washing Machine On
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail_appliances
+    to: "Washing Machine"
+  action:
+  - service: homeassistant.turn_on
+    entity_id: input_boolean.tile_tablet_button_appliances_washing_machine
+
+- alias: Tablet Panel Appliances Washing Machine Off
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail_appliances
+    from: "Washing Machine"
+  action:
+  - service: homeassistant.turn_off
+    entity_id: input_boolean.tile_tablet_button_appliances_washing_machine
+
+- alias: Tablet Panel Appliances Dishwasher On
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail_appliances
+    to: "Dishwasher"
+  action:
+  - service: homeassistant.turn_on
+    entity_id: input_boolean.tile_tablet_button_appliances_dishwasher
+
+- alias: Tablet Panel Appliances Dishwasher Off
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail_appliances
+    from: "Dishwasher"
+  action:
+  - service: homeassistant.turn_off
+    entity_id: input_boolean.tile_tablet_button_appliances_dishwasher
+
+- alias: Tablet Panel Appliances Vacuum Cleaner On
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail_appliances
+    to: "Vacuum Cleaner"
+  action:
+  - service: homeassistant.turn_on
+    entity_id: input_boolean.tile_tablet_button_appliances_vacuum_cleaner
+
+- alias: Tablet Panel Appliances Vacuum Cleaner Off
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail_appliances
+    from: "Vacuum Cleaner"
+  action:
+  - service: homeassistant.turn_off
+    entity_id: input_boolean.tile_tablet_button_appliances_vacuum_cleaner
+

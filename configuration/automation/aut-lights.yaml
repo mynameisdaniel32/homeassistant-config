@@ -116,7 +116,7 @@
 
 - alias: Lights - Check if on
   trigger:
-    platform: time
+    platform: time_pattern
     minutes: '/5'
     seconds: 00
   condition:
@@ -128,7 +128,7 @@
       entity_id: group.lights
       state: 'on'
   action:
-  - service: notify.ios_danielsiphone6splus
+  - service: notify.ios_daniel_iphone
     data_template:
       title: "Lights"
       message: "Left on for {{ relative_time(states.group.lights.last_updated) }}!"
@@ -281,7 +281,7 @@
       entity_id: input_number.light_temp
     data_template:
 #      value: '{{ ( 1000000 / states.light.flux.attributes.color_temp ) | int}}'
-      value: '{{ states.sensor.light_flux_color_temp.state }}'
+      value: '{{ states.sensor.light_flux_color_temp.state | int }}'
 
 
 # LIGHT RGB COLOUR #######################################################################################
@@ -306,7 +306,7 @@
 # CHRISTMAS LIGHTS ######################################################################################
 - alias: Lights - Christmas 1
   trigger:
-    platform: time
+    platform: time_pattern
     seconds: '/2'
   condition:
     condition: state
@@ -327,7 +327,7 @@
 
 - alias: Lights - Christmas 2
   trigger:
-    platform: time
+    platform: time_pattern
     seconds: '/3'
   condition:
     condition: state
