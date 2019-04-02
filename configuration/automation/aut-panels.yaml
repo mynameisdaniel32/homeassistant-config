@@ -8,10 +8,6 @@
     entity_id: input_select.tablet_panel_detail
     to: "Lights"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_lights
-#    data:
-#      visible: True
   - service: homeassistant.turn_on
     entity_id: input_boolean.tile_tablet_button_lights
 
@@ -21,10 +17,6 @@
     entity_id: input_select.tablet_panel_detail
     from: "Lights"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_lights
-#    data:
-#      visible: False
   - service: homeassistant.turn_off
     entity_id: input_boolean.tile_tablet_button_lights
 
@@ -35,10 +27,6 @@
     entity_id: input_select.tablet_panel_detail
     to: "Lights Advanced"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_lights_advanced
-#    data:
-#      visible: True
   - service: homeassistant.turn_on
     entity_id: input_boolean.tile_tablet_button_lights_advanced
 
@@ -48,10 +36,6 @@
     entity_id: input_select.tablet_panel_detail
     from: "Lights Advanced"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_lights_advanced
-#    data:
-#      visible: False
   - service: homeassistant.turn_off
     entity_id: input_boolean.tile_tablet_button_lights_advanced
 
@@ -78,10 +62,6 @@
     entity_id: input_select.tablet_panel_detail
     to: "Media"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_media
-#    data:
- #     visible: True
   - service: homeassistant.turn_on
     entity_id: input_boolean.tile_tablet_button_media
 
@@ -91,10 +71,6 @@
     entity_id: input_select.tablet_panel_detail
     from: "Media"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_media
-#    data:
-#      visible: False
   - service: homeassistant.turn_off
     entity_id: input_boolean.tile_tablet_button_media
 
@@ -105,10 +81,6 @@
     entity_id: input_select.tablet_panel_detail
     to: "Cameras"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_cameras
-#    data:
-#      visible: True
   - service: homeassistant.turn_on
     entity_id: input_boolean.tile_tablet_button_cameras
 
@@ -118,10 +90,6 @@
     entity_id: input_select.tablet_panel_detail
     from: "Cameras"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_cameras
-#    data:
-#      visible: False
   - service: homeassistant.turn_off
     entity_id: input_boolean.tile_tablet_button_cameras
 
@@ -132,10 +100,6 @@
     entity_id: input_select.tablet_panel_detail
     to: "Sprinklers"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_sprinklers
-#    data:
-#      visible: True
   - service: homeassistant.turn_on
     entity_id: input_boolean.tile_tablet_button_sprinklers
 
@@ -145,10 +109,6 @@
     entity_id: input_select.tablet_panel_detail
     from: "Sprinklers"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_sprinklers
-#    data:
-#      visible: False
   - service: homeassistant.turn_off
     entity_id: input_boolean.tile_tablet_button_sprinklers
 
@@ -159,10 +119,6 @@
     entity_id: input_select.tablet_panel_detail
     to: "Sprinklers Advanced"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_sprinklers_advanced
-#    data:
-#      visible: True
   - service: homeassistant.turn_on
     entity_id: input_boolean.tile_tablet_button_sprinklers_advanced
 
@@ -172,10 +128,6 @@
     entity_id: input_select.tablet_panel_detail
     from: "Sprinklers Advanced"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_sprinklers_advanced
-#    data:
-#      visible: False
   - service: homeassistant.turn_off
     entity_id: input_boolean.tile_tablet_button_sprinklers_advanced
 
@@ -199,10 +151,6 @@
     entity_id: input_select.tablet_panel_detail
     to: "Washer"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_washer
-#    data:
-#      visible: True
   - service: homeassistant.turn_on
     entity_id: input_boolean.tile_tablet_button_washer
 
@@ -212,10 +160,6 @@
     entity_id: input_select.tablet_panel_detail
     from: "Washer"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_washer
-#    data:
-#      visible: False
   - service: homeassistant.turn_off
     entity_id: input_boolean.tile_tablet_button_washer
 
@@ -226,10 +170,6 @@
     entity_id: input_select.tablet_panel_detail
     to: "Dishwasher"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_dishwasher
-#    data:
-#      visible: True
   - service: homeassistant.turn_on
     entity_id: input_boolean.tile_tablet_button_dishwasher
 
@@ -239,10 +179,6 @@
     entity_id: input_select.tablet_panel_detail
     from: "Dishwasher"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_dishwasher
-#    data:
-#      visible: False
   - service: homeassistant.turn_off
     entity_id: input_boolean.tile_tablet_button_dishwasher
 
@@ -253,10 +189,6 @@
     entity_id: input_select.tablet_panel_detail
     to: "Alarm Clock"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_alarm_clock
-#    data:
-#      visible: True
   - service: homeassistant.turn_on
     entity_id: input_boolean.tile_tablet_button_alarm_clock
 
@@ -266,10 +198,6 @@
     entity_id: input_select.tablet_panel_detail
     from: "Alarm Clock"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_alarm_clock
-#    data:
-#      visible: False
   - service: homeassistant.turn_off
     entity_id: input_boolean.tile_tablet_button_alarm_clock
 
@@ -280,10 +208,6 @@
     entity_id: input_select.tablet_panel_detail
     to: "Vacuum Cleaner"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_vacuum_cleaner
-#    data:
-#      visible: True
   - service: homeassistant.turn_on
     entity_id: input_boolean.tile_tablet_button_vacuum_cleaner
 
@@ -293,10 +217,6 @@
     entity_id: input_select.tablet_panel_detail
     from: "Vacuum Cleaner"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_vacuum_cleaner
-#    data:
-#      visible: False
   - service: homeassistant.turn_off
     entity_id: input_boolean.tile_tablet_button_vacuum_cleaner
 
@@ -307,10 +227,6 @@
     entity_id: input_select.tablet_panel_detail
     to: "Shed"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_shed
-#    data:
-#      visible: True
   - service: homeassistant.turn_on
     entity_id: input_boolean.tile_tablet_button_shed
 
@@ -320,10 +236,6 @@
     entity_id: input_select.tablet_panel_detail
     from: "Shed"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_shed
-#    data:
-#      visible: False
   - service: homeassistant.turn_off
     entity_id: input_boolean.tile_tablet_button_shed
 
@@ -334,10 +246,6 @@
     entity_id: input_select.tablet_panel_detail
     to: "Weather"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_weather
-#    data:
-#      visible: True
   - service: homeassistant.turn_on
     entity_id: input_boolean.tile_tablet_button_weather
 
@@ -347,10 +255,6 @@
     entity_id: input_select.tablet_panel_detail
     from: "Weather"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_weather
-#    data:
-#      visible: False
   - service: homeassistant.turn_off
     entity_id: input_boolean.tile_tablet_button_weather
 
@@ -361,10 +265,6 @@
     entity_id: input_select.tablet_panel_detail
     to: "Motion"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_motion
-#    data:
-#      visible: True
   - service: homeassistant.turn_on
     entity_id: input_boolean.tile_tablet_button_motion
 
@@ -374,10 +274,6 @@
     entity_id: input_select.tablet_panel_detail
     from: "Motion"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_motion
-#    data:
-#      visible: False
   - service: homeassistant.turn_off
     entity_id: input_boolean.tile_tablet_button_motion
 
@@ -388,10 +284,6 @@
     entity_id: input_select.tablet_panel_detail
     to: "Rooms"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_rooms
-#    data:
-#      visible: True
   - service: homeassistant.turn_on
     entity_id: input_boolean.tile_tablet_button_rooms
 
@@ -401,10 +293,6 @@
     entity_id: input_select.tablet_panel_detail
     from: "Rooms"
   action:
-#  - service: group.set_visibility
-#    entity_id: group.tile_tablet_panel_rooms
-#    data:
-#      visible: False
   - service: homeassistant.turn_off
     entity_id: input_boolean.tile_tablet_button_rooms
 

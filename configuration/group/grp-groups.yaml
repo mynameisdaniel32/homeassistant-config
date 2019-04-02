@@ -31,72 +31,6 @@ homekit_entities:
     - climate.ac_bedroom
 
 
-#tile_home:
-#  name: Home
-#  entities: input_boolean.tile_home
-#
-#tile_media:
-#  name: Media
-#  entities:
-#  - input_boolean.tile_media
-##  - switch.living_room_audio_source
-#  - input_number.forked_daapd_volume_bedroom
-#  - input_number.forked_daapd_volume_living_room
-#  - input_number.forked_daapd_volume_shed
-#
-#
-#tile_weather:
-#  name: Weather
-#  entities:
-#  - input_boolean.tile_weather
-#
-#xiaomi:
-#  name: Xiaomi Zigbee
-#  control: hidden
-#  entities:
-#  - switch.plug_washing_machine
-#  - switch.plug_dishwasher
-#  - sensor.illumination_34ce00fa664a
-#  - binary_sensor.switch_door_bell
-#  - binary_sensor.switch_158d00016be070
-#  - binary_sensor.switch_158d0001e41a2c
-#  - binary_sensor.switch_158d0001b12757
-#  - binary_sensor.switch_158d0001b768a2
-#  - binary_sensor.switch_158d0001e01080
-#  - binary_sensor.wall_switch_left_158d0001710c46
-#  - binary_sensor.wall_switch_right_158d0001710c46
-#  - binary_sensor.wall_switch_both_158d0001710c46
-#  - binary_sensor.motion_wardrobe
-#  - binary_sensor.motion_kitchen
-#  - binary_sensor.motion_study
-#  - sensor.illumination_kitchen
-#  - binary_sensor.motion_bedroom
-#  - binary_sensor.motion_ensuite
-#  - binary_sensor.motion_laundry
-#  - sensor.illumination_laundry
-#  - binary_sensor.motion_front_door
-#  - sensor.illumination_front_door
-#  - binary_sensor.motion_158d0001e5441a
-#  - sensor.illumination_158d0001e5441a
-#  - binary_sensor.door_window_washing_machine
-#  - binary_sensor.door_window_shed_door
-#  - binary_sensor.door_window_158d0001d633f8
-#  - binary_sensor.door_window_158d0001c0335f
-#  - binary_sensor.motion_living_room
-#  - sensor.illumination_living_room
-#  - sensor.temperature_ensuite
-#  - sensor.humidity_ensuite
-#  - sensor.pressure_ensuite
-#  - sensor.temperature_living_room
-#  - sensor.humidity_living_room
-#  - sensor.pressure_living_room
-#  - sensor.temperature_study
-#  - sensor.humidity_study
-#  - sensor.pressure_study
-#  - sensor.temperature_bedroom
-#  - sensor.pressure_bedroom
-#  - sensor.humidity_bedroom
-#
 #pi_hole:
 #  name: Pi-Hole
 #  entities:
@@ -135,17 +69,6 @@ homekit_entities:
 #  - sensor.speedtest_upload
 #  - sensor.speedtest_ping
 #
-#status:
-#  name: Status
-#  entities:
-##  - sensor.location_daniel
-#  - sensor.daniels_iphone_6s_plus_battery_level
-#  - sensor.daniels_iphone_6s_plus_battery_state
-#  - light_controller.last_message
-##  - sensor.sprinkler_status
-##  - sensor.washing_machine_status
-##  - sensor.dishwasher_status
-#
 #travel:
 #  name: Travel
 #  entities:
@@ -153,39 +76,6 @@ homekit_entities:
 #  - sensor.travel_city
 #  - sensor.travel_work
 #
-#appliances:
-#  name: Appliances
-#  control: hidden
-#  entities:
-#  - sensor.washing_machine_status
-#  - switch.plug_washing_machine
-#  - sensor.washing_machine_power
-#  - binary_sensor.door_window_washing_machine
-#  - sensor.dishwasher_status
-#  - switch.plug_dishwasher
-#  - sensor.dishwasher_power
-#  - switch.plug_bedroom_tv
-#  - sensor.bedroom_tv_power
-#
-#controls:
-#  name: Controls
-#  control: hidden
-#  entities:
-##  - switch.flux
-#  - cover.roller_door
-#  - vacuum.xiaomi_vacuum_cleaner
-#
-#audio_controls:
-#  name: Audio Controls
-#  control: hidden
-#  entities:
-#  - switch.triplej
-#  - switch.airplay_living_room
-#  - switch.airplay_shed
-#  - switch.airplay_appletv
-#  - switch.living_room_audio_source
-#  - script.living_room_volume_up
-#  - script.living_room_volume_down
 #
 #weather:
 #  name: Weather
@@ -257,22 +147,6 @@ motion_sensors:
   - binary_sensor.motion_bedroom_2
   - binary_sensor.motion_158d0001e5441a
 
-#tile_motion_sensors:
-#  name: Motion Sensors
-#  entities:
-#  - input_boolean.tile_tablet_panel_motion
-#
-#alarm_clock:
-#  name: Alarm Clock
-#  control: hidden
-#  entities:
-#  - input_boolean.tile_alarm_clock
-##  - input_boolean.alarmclock_status
-##  - input_boolean.alarmclock_workday
-##  - sensor.alarmclock_time
-#  - input_number.alarmclock_hour
-#  - input_number.alarmclock_minutes
-#
 room_tracker_motion_bedroom_all:
   name: Bedroom All Motion
   entities:
@@ -286,11 +160,3 @@ room_tracker_motion_living_room_all:
   - binary_sensor.motion_living_room
   - binary_sensor.motion_lounge
   - binary_sensor.motion_kitchen
-
-#ac_bedroom:
-#  name: Air Conditioner
-#  entities:
-##  - switch.ac_bedroom
-#  - input_boolean.tile_bedroom_ac
-#  - climate.ac_bedroom
-#
