@@ -199,7 +199,7 @@
     entity_id: binary_sensor.motion_living_room
     to: 'off'
     for:
-      minutes: 30
+      minutes: 10
   condition:
     condition: state
     entity_id: input_boolean.light_check
@@ -356,7 +356,7 @@
       transition: 5
 
 # FRONT DOOR #############################################################################################
-- alias: Motion Detect - Front Door
+- alias: Motion Detect - Entrance
   trigger:
     platform: state
     entity_id: binary_sensor.motion_front_door
@@ -367,12 +367,12 @@
     state: 'on'
   action:
   - service: homeassistant.turn_on
-    entity_id: light.front_door
+    entity_id: light.entrance
     data_template:
       transition: 2
 #      brightness_pct: '{{states.input_number.dynamic_light_brightness.state}}'
 
-- alias: Motion Clear - Front Door
+- alias: Motion Clear - Entrance
   trigger:
     platform: state
     entity_id: binary_sensor.motion_front_door
@@ -385,7 +385,7 @@
     state: 'on'
   action:
     service: homeassistant.turn_off
-    entity_id: light.front_door
+    entity_id: light.entrance
     data:
       transition: 5
 
@@ -525,7 +525,7 @@
 - alias: Motion Detect - Front Door - Tablet
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_front_door
+    entity_id: group.tablet_trigger_front_door
     to: 'on'
   action:
   - service: mqtt.publish
@@ -536,7 +536,7 @@
 - alias: Motion Clear - Front Door - Tablet
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_front_door
+    entity_id: group.tablet_trigger_front_door
     from: 'on'
     to: 'off'
   action:
@@ -545,11 +545,35 @@
         topic: "tablet/1"
         payload: "off"
 
+# ENSUITE TABLET #############################################################################################
+- alias: Motion Detect - Ensuite - Tablet
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_ensuite
+    to: 'on'
+  action:
+  - service: mqtt.publish
+    data:
+      topic: "tablet/ensuite"
+      payload: "on"
+
+- alias: Motion Clear - Ensuite - Tablet
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_ensuite
+    from: 'on'
+    to: 'off'
+  action:
+    - service: mqtt.publish
+      data:
+        topic: "tablet/ensuite"
+        payload: "off"
+
 # OUTSIDE FRONT #############################################################################################
 - alias: Motion Detect - Outside Front
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_outside_front
+    entity_id: binary_sensor.motion_front_door_camera
     to: 'on'
   condition:
     condition: state
@@ -560,16 +584,17 @@
     entity_id: light.outside_front
     data_template:
       transition: 2
-      brightness_pct: '{{states.input_number.dynamic_light_brightness.state}}'
+#      brightness_pct: '{{states.input_number.dynamic_light_brightness.state}}'
+      brightness_pct: 100
       kelvin: '{{  states.input_number.light_temp.state | int}}'
 
 - alias: Motion Clear - Outside Front
   trigger:
     platform: state
-    entity_id: binary_sensor.motion_outside_front
+    entity_id: binary_sensor.motion_front_door_camera
     to: 'off'
     for:
-      minutes: 0
+      minutes: 2
   condition:
     condition: state
     entity_id: input_boolean.light_check
@@ -578,7 +603,7 @@
     service: homeassistant.turn_off
     entity_id: light.outside_front
     data:
-      transition: 5
+      transition: 2
 
 
 #######################################################################################################

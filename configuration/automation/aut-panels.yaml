@@ -1,6 +1,25 @@
 #######################################################################################################
 ###---------------------------------------- PANEL AUTOMATIONS --------------------------------------###
 #######################################################################################################
+##### Covers
+- alias: Tablet Panel Covers Detail On
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    to: "Covers"
+  action:
+  - service: homeassistant.turn_on
+    entity_id: input_boolean.tablet_button_covers
+
+- alias: Tablet Panel Covers Detail Off
+  trigger:
+    platform: state
+    entity_id: input_select.tablet_panel_detail
+    from: "Covers"
+  action:
+  - service: homeassistant.turn_off
+    entity_id: input_boolean.tablet_button_covers
+
 ##### LIGHTS
 - alias: Tablet Panel Lights Detail On
   trigger:
@@ -9,7 +28,7 @@
     to: "Lights"
   action:
   - service: homeassistant.turn_on
-    entity_id: input_boolean.tile_tablet_button_lights
+    entity_id: input_boolean.tablet_button_lights
 
 - alias: Tablet Panel Lights Detail Off
   trigger:
@@ -18,42 +37,7 @@
     from: "Lights"
   action:
   - service: homeassistant.turn_off
-    entity_id: input_boolean.tile_tablet_button_lights
-
-##### LIGHTS ADVANCED
-- alias: Tablet Panel Lights Advanced Detail On
-  trigger:
-    platform: state
-    entity_id: input_select.tablet_panel_detail
-    to: "Lights Advanced"
-  action:
-  - service: homeassistant.turn_on
-    entity_id: input_boolean.tile_tablet_button_lights_advanced
-
-- alias: Tablet Panel Lights Advanced Detail Off
-  trigger:
-    platform: state
-    entity_id: input_select.tablet_panel_detail
-    from: "Lights Advanced"
-  action:
-  - service: homeassistant.turn_off
-    entity_id: input_boolean.tile_tablet_button_lights_advanced
-
-- alias: Tablet Panel Lights Advanced Timeout
-  trigger:
-  - platform: state
-    entity_id: input_select.tablet_panel_detail
-    to: "Lights Advanced"
-    for:
-      seconds: 45
-  action:
-  - service: input_select.select_option
-    entity_id: input_select.tablet_panel_detail
-    data:
-      option: "Lights"
-  - service: homeassistant.turn_off
-    entity_id: input_boolean.tile_tablet_button_lights_advanced
-
+    entity_id: input_boolean.tablet_button_lights
 
 ##### MEDIA
 - alias: Tablet Panel Media Detail On
@@ -63,7 +47,7 @@
     to: "Media"
   action:
   - service: homeassistant.turn_on
-    entity_id: input_boolean.tile_tablet_button_media
+    entity_id: input_boolean.tablet_button_media
 
 - alias: Tablet Panel Media Detail Off
   trigger:
@@ -72,7 +56,7 @@
     from: "Media"
   action:
   - service: homeassistant.turn_off
-    entity_id: input_boolean.tile_tablet_button_media
+    entity_id: input_boolean.tablet_button_media
 
 ##### CAMERA
 - alias: Tablet Panel Camera Detail On
@@ -82,7 +66,7 @@
     to: "Cameras"
   action:
   - service: homeassistant.turn_on
-    entity_id: input_boolean.tile_tablet_button_cameras
+    entity_id: input_boolean.tablet_button_cameras
 
 - alias: Tablet Panel Camera Detail Off
   trigger:
@@ -91,7 +75,7 @@
     from: "Cameras"
   action:
   - service: homeassistant.turn_off
-    entity_id: input_boolean.tile_tablet_button_cameras
+    entity_id: input_boolean.tablet_button_cameras
 
 ##### SPRINKLERS
 - alias: Tablet Panel Sprinklers On
@@ -101,7 +85,7 @@
     to: "Sprinklers"
   action:
   - service: homeassistant.turn_on
-    entity_id: input_boolean.tile_tablet_button_sprinklers
+    entity_id: input_boolean.tablet_button_sprinklers
 
 - alias: Tablet Panel Sprinklers Off
   trigger:
@@ -110,77 +94,9 @@
     from: "Sprinklers"
   action:
   - service: homeassistant.turn_off
-    entity_id: input_boolean.tile_tablet_button_sprinklers
+    entity_id: input_boolean.tablet_button_sprinklers
 
-##### SPRINKLERS ADVANCED
-- alias: Tablet Panel Sprinklers Advanced On
-  trigger:
-    platform: state
-    entity_id: input_select.tablet_panel_detail
-    to: "Sprinklers Advanced"
-  action:
-  - service: homeassistant.turn_on
-    entity_id: input_boolean.tile_tablet_button_sprinklers_advanced
 
-- alias: Tablet Panel Sprinklers Advanced Off
-  trigger:
-  - platform: state
-    entity_id: input_select.tablet_panel_detail
-    from: "Sprinklers Advanced"
-  action:
-  - service: homeassistant.turn_off
-    entity_id: input_boolean.tile_tablet_button_sprinklers_advanced
-
-- alias: Tablet Panel Sprinklers Advanced Timeout
-  trigger:
-  - platform: state
-    entity_id: input_select.tablet_panel_detail
-    to: "Sprinklers Advanced"
-    for:
-      seconds: 45
-  action:
-  - service: input_select.select_option
-    entity_id: input_select.tablet_panel_detail
-    data:
-      option: "Sprinklers"
-
-##### WASHER
-- alias: Tablet Panel Washer On
-  trigger:
-    platform: state
-    entity_id: input_select.tablet_panel_detail
-    to: "Washer"
-  action:
-  - service: homeassistant.turn_on
-    entity_id: input_boolean.tile_tablet_button_washer
-
-- alias: Tablet Panel Washer Off
-  trigger:
-    platform: state
-    entity_id: input_select.tablet_panel_detail
-    from: "Washer"
-  action:
-  - service: homeassistant.turn_off
-    entity_id: input_boolean.tile_tablet_button_washer
-
-##### DISHWASHER
-- alias: Tablet Panel Dishwasher On
-  trigger:
-    platform: state
-    entity_id: input_select.tablet_panel_detail
-    to: "Dishwasher"
-  action:
-  - service: homeassistant.turn_on
-    entity_id: input_boolean.tile_tablet_button_dishwasher
-
-- alias: Tablet Panel Dishwasher Off
-  trigger:
-    platform: state
-    entity_id: input_select.tablet_panel_detail
-    from: "Dishwasher"
-  action:
-  - service: homeassistant.turn_off
-    entity_id: input_boolean.tile_tablet_button_dishwasher
 
 ##### ALARM CLOCK
 - alias: Tablet Panel Alarm Clock On
@@ -190,7 +106,7 @@
     to: "Alarm Clock"
   action:
   - service: homeassistant.turn_on
-    entity_id: input_boolean.tile_tablet_button_alarm_clock
+    entity_id: input_boolean.tablet_button_alarm_clock
 
 - alias: Tablet Panel Alarm Clock Off
   trigger:
@@ -199,45 +115,9 @@
     from: "Alarm Clock"
   action:
   - service: homeassistant.turn_off
-    entity_id: input_boolean.tile_tablet_button_alarm_clock
+    entity_id: input_boolean.tablet_button_alarm_clock
 
-##### VACUUM CLEANER
-- alias: Tablet Panel Vacuum Cleaner On
-  trigger:
-    platform: state
-    entity_id: input_select.tablet_panel_detail
-    to: "Vacuum Cleaner"
-  action:
-  - service: homeassistant.turn_on
-    entity_id: input_boolean.tile_tablet_button_vacuum_cleaner
 
-- alias: Tablet Panel Vacuum Cleaner Off
-  trigger:
-    platform: state
-    entity_id: input_select.tablet_panel_detail
-    from: "Vacuum Cleaner"
-  action:
-  - service: homeassistant.turn_off
-    entity_id: input_boolean.tile_tablet_button_vacuum_cleaner
-
-##### SHED
-- alias: Tablet Panel Shed On
-  trigger:
-    platform: state
-    entity_id: input_select.tablet_panel_detail
-    to: "Shed"
-  action:
-  - service: homeassistant.turn_on
-    entity_id: input_boolean.tile_tablet_button_shed
-
-- alias: Tablet Panel Shed Off
-  trigger:
-    platform: state
-    entity_id: input_select.tablet_panel_detail
-    from: "Shed"
-  action:
-  - service: homeassistant.turn_off
-    entity_id: input_boolean.tile_tablet_button_shed
 
 ##### WEATHER
 - alias: Tablet Panel Weather On
@@ -247,7 +127,7 @@
     to: "Weather"
   action:
   - service: homeassistant.turn_on
-    entity_id: input_boolean.tile_tablet_button_weather
+    entity_id: input_boolean.tablet_button_weather
 
 - alias: Tablet Panel Weather Off
   trigger:
@@ -256,7 +136,7 @@
     from: "Weather"
   action:
   - service: homeassistant.turn_off
-    entity_id: input_boolean.tile_tablet_button_weather
+    entity_id: input_boolean.tablet_button_weather
 
 ##### MOTION
 - alias: Tablet Panel Motion On
@@ -266,7 +146,7 @@
     to: "Motion"
   action:
   - service: homeassistant.turn_on
-    entity_id: input_boolean.tile_tablet_button_motion
+    entity_id: input_boolean.tablet_button_motion
 
 - alias: Tablet Panel Motion Off
   trigger:
@@ -275,26 +155,8 @@
     from: "Motion"
   action:
   - service: homeassistant.turn_off
-    entity_id: input_boolean.tile_tablet_button_motion
+    entity_id: input_boolean.tablet_button_motion
 
-##### ROOMS
-- alias: Tablet Panel Rooms On
-  trigger:
-    platform: state
-    entity_id: input_select.tablet_panel_detail
-    to: "Rooms"
-  action:
-  - service: homeassistant.turn_on
-    entity_id: input_boolean.tile_tablet_button_rooms
-
-- alias: Tablet Panel Rooms Off
-  trigger:
-    platform: state
-    entity_id: input_select.tablet_panel_detail
-    from: "Rooms"
-  action:
-  - service: homeassistant.turn_off
-    entity_id: input_boolean.tile_tablet_button_rooms
 
 ##### TEMPERATURE
 - alias: Tablet Panel Temperature On
@@ -304,7 +166,7 @@
     to: "Temperature"
   action:
   - service: homeassistant.turn_on
-    entity_id: input_boolean.tile_tablet_button_temperature
+    entity_id: input_boolean.tablet_button_temperature
 
 - alias: Tablet Panel Temperature Off
   trigger:
@@ -313,7 +175,7 @@
     from: "Temperature"
   action:
   - service: homeassistant.turn_off
-    entity_id: input_boolean.tile_tablet_button_temperature
+    entity_id: input_boolean.tablet_button_temperature
 
 ##### AC
 - alias: Tablet Panel AC On
@@ -323,7 +185,7 @@
     to: "Air Conditioner"
   action:
   - service: homeassistant.turn_on
-    entity_id: input_boolean.tile_tablet_button_ac
+    entity_id: input_boolean.tablet_button_ac
 
 - alias: Tablet Panel AC Off
   trigger:
@@ -332,7 +194,7 @@
     from: "Air Conditioner"
   action:
   - service: homeassistant.turn_off
-    entity_id: input_boolean.tile_tablet_button_ac
+    entity_id: input_boolean.tablet_button_ac
 
 ##### APPLIANCES
 - alias: Tablet Panel Appliances On
@@ -342,7 +204,7 @@
     to: "Appliances"
   action:
   - service: homeassistant.turn_on
-    entity_id: input_boolean.tile_tablet_button_appliances
+    entity_id: input_boolean.tablet_button_appliances
 
 - alias: Tablet Panel Appliances Off
   trigger:
@@ -351,7 +213,7 @@
     from: "Appliances"
   action:
   - service: homeassistant.turn_off
-    entity_id: input_boolean.tile_tablet_button_appliances
+    entity_id: input_boolean.tablet_button_appliances
 
 - alias: Tablet Panel Appliances Washing Machine On
   trigger:
@@ -360,7 +222,7 @@
     to: "Washing Machine"
   action:
   - service: homeassistant.turn_on
-    entity_id: input_boolean.tile_tablet_button_appliances_washing_machine
+    entity_id: input_boolean.tablet_button_appliances_washing_machine
 
 - alias: Tablet Panel Appliances Washing Machine Off
   trigger:
@@ -369,7 +231,7 @@
     from: "Washing Machine"
   action:
   - service: homeassistant.turn_off
-    entity_id: input_boolean.tile_tablet_button_appliances_washing_machine
+    entity_id: input_boolean.tablet_button_appliances_washing_machine
 
 - alias: Tablet Panel Appliances Dishwasher On
   trigger:
@@ -378,7 +240,7 @@
     to: "Dishwasher"
   action:
   - service: homeassistant.turn_on
-    entity_id: input_boolean.tile_tablet_button_appliances_dishwasher
+    entity_id: input_boolean.tablet_button_appliances_dishwasher
 
 - alias: Tablet Panel Appliances Dishwasher Off
   trigger:
@@ -387,7 +249,7 @@
     from: "Dishwasher"
   action:
   - service: homeassistant.turn_off
-    entity_id: input_boolean.tile_tablet_button_appliances_dishwasher
+    entity_id: input_boolean.tablet_button_appliances_dishwasher
 
 - alias: Tablet Panel Appliances Vacuum Cleaner On
   trigger:
@@ -396,7 +258,7 @@
     to: "Vacuum Cleaner"
   action:
   - service: homeassistant.turn_on
-    entity_id: input_boolean.tile_tablet_button_appliances_vacuum_cleaner
+    entity_id: input_boolean.tablet_button_appliances_vacuum_cleaner
 
 - alias: Tablet Panel Appliances Vacuum Cleaner Off
   trigger:
@@ -405,5 +267,5 @@
     from: "Vacuum Cleaner"
   action:
   - service: homeassistant.turn_off
-    entity_id: input_boolean.tile_tablet_button_appliances_vacuum_cleaner
+    entity_id: input_boolean.tablet_button_appliances_vacuum_cleaner
 

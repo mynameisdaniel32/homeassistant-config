@@ -38,22 +38,6 @@
 
 
 # LIGHT CONTROL #######################################################################################
-- alias: Lights - Arrival 
-  trigger:
-    platform: state
-    entity_id: sensor.location_daniel
-    to: 'Home'
-  condition:
-    condition: state
-    entity_id: input_boolean.light_check
-    state: 'on'
-  action:
-    service: homeassistant.turn_on
-    entity_id:
-      - group.welcome_lights
-      - light.living_room
-    data:
-      transition: 5
 
 - alias: Lights - Sunset
   trigger:
@@ -113,30 +97,6 @@
     entity_id: group.welcome_lights
     data:
       transition: 5
-
-- alias: Lights - Check if on
-  trigger:
-    platform: time_pattern
-    minutes: '/5'
-    seconds: 00
-  condition:
-    condition: and
-    conditions:
-    - condition: template
-      value_template: "{{ states.sensor.location_daniel.state != 'Home' }}"
-    - condition: state
-      entity_id: group.lights
-      state: 'on'
-  action:
-  - service: notify.ios_daniel_iphone
-    data_template:
-      title: "Lights"
-      message: "Left on for {{ relative_time(states.group.lights.last_updated) }}!"
-      data:
-        push:
-          badge: 100
-          thread-id: "lights"
-          category: "lights_alert"
 
 
 # LIGHT BRIGHTNESS #######################################################################################
@@ -256,8 +216,11 @@
 # LIFX SET COLOUR TEMP #######################################################################################
 - alias: Lights Set LIFX Colour Temp
   trigger:
-  - platform: state
-    entity_id: input_number.light_temp
+    - platform: state
+      entity_id: input_number.light_temp
+    - platform: state
+      entity_id: light.flux
+      to: 'on'
   action:
 #  - service: light.turn_on
 #    data:
@@ -273,8 +236,8 @@
 # LIGHT COLOUR TEMP #######################################################################################
 - alias: Lights Set Light Colour Temp
   trigger:
-    platform: state
-    entity_id: sensor.light_flux_color_temp
+    - platform: state
+      entity_id: sensor.light_flux_color_temp
   action:
     service: input_number.set_value
     data:

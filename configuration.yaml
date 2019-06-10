@@ -23,6 +23,7 @@ zone:
 
 logger:
   default: warn
+#  default: debug
   logs:
     homeassistant.components.command_line.switch: fatal
     haffmpeg.tools: error
@@ -50,12 +51,12 @@ discovery:
 frontend:
   javascript_version: latest
   themes: !include configuration/themes.yaml
-  extra_html_url:
-    - /local/custom_ui/state-card-tiles.html
-    - /local/custom_ui/custom-weather-card.html
-  extra_html_url_es5:
-    - /local/custom_ui/state-card-tiles_es5.html
-    - /local/custom_ui/custom-weather-card.html
+#  extra_html_url:
+#    - /local/custom_ui/state-card-tiles.html
+#    - /local/custom_ui/custom-weather-card.html
+#  extra_html_url_es5:
+#    - /local/custom_ui/state-card-tiles_es5.html
+#    - /local/custom_ui/custom-weather-card.html
 
 history:
 
@@ -96,6 +97,8 @@ lovelace:
 
 map:
 
+mobile_app:
+
 mqtt:
   broker: 10.1.0.8
   port: 1883
@@ -123,9 +126,13 @@ recorder:
 
 shopping_list:
 
+ssdp:
+
 sun:
 
 system_health:
+
+zeroconf:
 
 ######################################################################################################
 ###------------------------------------------ COMPONENTS ------------------------------------------###
@@ -138,7 +145,11 @@ custom_updater:
     - python_scripts
   card_urls: 
     - https://raw.githubusercontent.com/kalkih/mini-media-player/master/tracker.json
+    - https://raw.githubusercontent.com/kalkih/mini-graph-card/master/tracker.json
     - https://raw.githubusercontent.com/iammexx/home-assistant-config/master/ui/darksky/version.json
+
+#hacs:
+#  token: !secret github_access_token
 
 ifttt:
   key: !secret ifttt_key
@@ -179,7 +190,7 @@ alexa:
       - light.kitchen
       - light.living_room
       - light.lounge
-      - light.front_door
+      - light.entrance
       - light.laundry
       - light.back_door
       - light.carport
@@ -253,7 +264,7 @@ homekit:
       - light.kitchen
       - light.living_room
       - light.lounge
-      - light.front_door
+      - light.entrance
       - light.laundry
       - light.back_door
       - light.pool_room
@@ -262,9 +273,8 @@ homekit:
       - light.verandah
       - switch.sprinkler_control
       - input_boolean.homekit_location
-      - media_player.living_room
-      - media_player.bedroom
-      - switch.heater_living_room_power
+      - media_player.living_room_tv
+      - media_player.bedroom_tv
       - switch.vacuum
       - switch.triplej
       - switch.airplay_shed
@@ -274,6 +284,10 @@ homekit:
       - cover.roller_door
       - fan.verandah
       - climate.ac_bedroom
+      - fan.ac_bedroom
+      - fan.ensuite
+      - climate.heater_living_room
+      - cover.blind_bedroom
   entity_config:
     media_player.living_room:
       feature_list:
@@ -281,20 +295,7 @@ homekit:
     media_player.bedroom:
       feature_list:
         - feature: on_off
-    switch.heater_living_room_power:
-      name: Living Room Heater
-    switch.vacuum:
-      name: Vacuum Cleaner
-    switch.triplej:
-      name: Triple J
-    switch.airplay_shed:
-      name: Shed AirPlay
-    switch.airplay_living_room:
-      name: Living Room AirPlay
-    switch.airplay_bedroom:
-      name: Bedroom AirPlay
     switch.sprinkler_control:
-      name: Sprinklers
       type: sprinkler
 
 xiaomi_aqara:
@@ -308,12 +309,25 @@ xiaomi_aqara:
 ###------------------------------------------ DEVICES ---------------------------------------------###
 ######################################################################################################
 
-#climate:
+climate:
 #  - platform: daikin
 #    name: ac_bedroom
 #    host: 10.10.3.163
 
+  - platform: generic_thermostat
+    name: Heater Living Room
+    heater: switch.heater_living_room_power
+    target_sensor: sensor.temperature_living_room
+    min_temp: 16
+    max_temp: 26
+
 camera:
+  - platform: uvc
+    nvr: 10.1.0.154
+    key: !secret uvc_key
+    password: !secret uvc_camera_password
+
+
   - platform: ffmpeg
     input: -rtsp_transport tcp -i rtsp://10.10.2.149/unicast
     name: Carport
@@ -324,10 +338,8 @@ camera:
     name: Front Yard
     extra_arguments: -pred 1 -q:v 2
 
-#  - platform: generic
-#    still_image_url: http://www.bom.gov.au/radar/IDR643.gif?{{ now().strftime("%Y%m%d%H%M") }}00
-#    name: bom_rain_radar
-#    limit_refetch_to_url_change: true
+  - platform: bom
+    location: Adelaide
 
 cover:
   - platform: mqtt
@@ -342,6 +354,62 @@ cover:
     availability_topic: "node/cover/008/availability"
     payload_available: "online"
     payload_not_available: "offline"
+
+#  - platform: timedcover
+#    covers:
+#      blind_bedroom_timed:
+#        friendly_name: 'Bedroom Blind'
+#        open_cover:
+#          service: switch.turn_on
+#          entity_id: switch.blind_bedroom
+#        close_cover:
+#          service: switch.turn_off
+#          entity_id: switch.blind_bedroom
+#        stop_cover:
+#          service: switch.turn_on
+#          entity_id: switch.blind_bedroom_stop
+#        opening_time: 15
+#        closing_time: 15
+
+  - platform: template
+    covers:
+      blind_bedroom:
+        friendly_name: 'Bedroom Blind'
+        position_template: "{{ states('input_number.blind_bedroom_position') }}"
+        open_cover:
+          service: switch.turn_on
+          entity_id: switch.blind_bedroom
+        close_cover:
+          service: switch.turn_off
+          entity_id: switch.blind_bedroom
+        stop_cover:
+          service: switch.turn_on
+          entity_id: switch.blind_bedroom_stop
+        set_cover_position:
+          service: script.set_cover_position
+          data_template:
+            position_set: '{{ position }}'
+            position_previous: 'input_number.blind_bedroom_position'
+            entity_id: 'cover.blind_bedroom'
+            opening_time: 35.6
+            closing_time: 35.6
+
+#  - platform: timedcover
+#    covers:
+#      bedroom:
+#        friendly_name: 'Bedroom Blind'
+#        open_cover:
+#          service: switch.turn_on
+#          entity_id: switch.study_right_cover_on
+#        close_cover:
+#          service: switch.turn_off
+#          entity_id: switch.study_right_cover_on 
+#        stop_cover:
+#          service: switch.turn_on
+#          entity_id: switch.study_right_cover_stop             
+#        opening_time: 45
+#        closing_time: 45
+#        tilt_optimistic: false #didn't manage to get rid of tilt which does not work.
 
 fan:
   - platform: xiaomi_miio
@@ -364,6 +432,77 @@ fan:
       - medium
       - high
 
+  - platform: mqtt
+    name: "Ensuite"
+    command_topic: "cmnd/sonoff/ensuite/POWER2"
+    state_topic: "stat/sonoff/ensuite/POWER2"
+    speeds:
+      - 'off'
+      - high
+
+
+
+  - platform: template
+    fans:
+      ac_bedroom:
+        friendly_name: "Bedroom Fan"
+        value_template: >-
+          {% if is_state('climate.ac_bedroom', 'off') %}
+            off
+          {% else %}
+            on
+          {% endif %}
+        speed_template: "{{ state_attr('climate.ac_bedroom', 'fan_mode') }}"
+#        oscillating_template: >-
+#          {% if is_state_attr('climate.ac_bedroom', 'swing_mode', 'Off') %}
+#            False
+#          {% else %}
+#            True
+#          {% endif %}
+        turn_on:
+          service: climate.set_operation_mode
+          data_template:
+            entity_id: climate.ac_bedroom
+            operation_mode: >-
+              {% if is_state('climate.ac_bedroom', 'off') %}
+                fan_only
+              {% elif is_state('climate.ac_bedroom', 'fan_only') %}
+                fan_only
+              {% elif is_state('climate.ac_bedroom', 'auto') %}
+                auto
+              {% elif is_state('climate.ac_bedroom', 'cool') %}
+                cool
+              {% elif is_state('climate.ac_bedroom', 'heat') %}
+                heat
+              {% elif is_state('climate.ac_bedroom', 'dry') %}
+                dry
+              {% else %}
+                auto
+              {% endif %}
+        turn_off:
+          service: climate.set_operation_mode
+          data:
+            entity_id: climate.ac_bedroom
+            operation_mode: 'off'
+        set_speed:
+          service: climate.set_fan_mode
+          data_template:
+            entity_id: climate.ac_bedroom
+            fan_mode: "{{ speed }}"
+#        set_oscillating:
+#          service: climate.set_swing_mode
+#          data:
+#            entity_id: climate.ac_bedroom
+#            swing_mode: 'Vertical'
+        speeds:
+          - 'Silence'
+          - '1'
+          - '2'
+          - '3'
+          - '4'
+          - '5'
+          - 'Auto'
+
 light:
 #  - platform: lifx
 
@@ -374,6 +513,7 @@ light:
     payload_on: 'ON'
     payload_off: 'OFF'
     state_topic: stat/sonoff/carport-lights/POWER1
+
 
   - platform: mqtt
     name: Flux
@@ -397,10 +537,23 @@ light:
   - platform: group
     name: Kitchen
     entities:
-      - light.kitchen_main
+      - light.kitchen_0
       - light.kitchen_1
       - light.kitchen_2
       - light.kitchen_3
+
+  - platform: group
+    name: Lounge
+    entities:
+      - light.lounge_1
+      - light.lounge_2
+      - light.lounge_3
+      - light.lounge_4
+
+  - platform: group
+    name: Living Room
+    entities:
+      - light.living_room_1
 
   - platform: group
     name: Pool Room
@@ -497,7 +650,6 @@ media_player:
 
   - platform: plex
     entity_namespace: 'plex'
-    use_custom_entity_ids: true
   
   - platform: universal
     name: Living Room TV
@@ -714,6 +866,25 @@ switch:
         command_on: 'JgBmAAo7ChoJGgkaCRoJGgk8CTwJGgo7CRoKGQkaCTwKGggABewKPAkaCRkKGgkaCTwJGgkZCjwJGgk8CTwKOwkbCTwJAAWnCTwKGQkbCRkKGQkbCTsKPAkZCjwJGgkaCRoJPAoZCQANBQAA='
         command_off: 'JgBmAAo7ChoJGgkaCRoJGgk8CTwJGgo7CRoKGQkaCTwKGggABewKPAkaCRkKGgkaCTwJGgkZCjwJGgk8CTwKOwkbCTwJAAWnCTwKGQkbCRkKGQkbCTsKPAkZCjwJGgkaCRoJPAoZCQANBQAA='
 
+  - platform: broadlink
+    host: 10.10.2.101
+    mac: 'fc:ec:da:10:ba:f6'
+    switches:
+      blind_bedroom:
+        friendly_name: "Bedroom Blind"
+        #on = up
+        command_on: "sgGEAxgMDBgMFxkLGAwMGBgMFwwNFxgMGAsZCxgMDBgMFwwYDBgMFxgMDBgYDAwXDBgMGBgLDRcMGAwXGQABAZ8xGQsYDAwXDRcMFw0XDRcMGAwYGAsYDBgLDRcMGBgMFwwMGBgMFwwNFxgMGAsZCxgLDRcNFwwYDBgMFxgMDBgYCwwYDBgMFxgMDBcNFwwYGAABAaAwGQsYDAwXDRcNFwwYDBcNFwwYGAwYCxgMDBgMGBcMGAwMGBgLGQsNFxgMGAsYDBgMDBgMFwwYDBgMFxgMDRcYDAwXDBgMGBgMDBcMGAwYGAABAp8xGAsYDAwYDBgMFwwYDBgMGAsYGAwYDBgLDBgMGBgLGAwMGBgMFwwMGBgMGAsYDBgMDBcNFwwYDBcNFxgMDBgXDAwYDBcNFxgMDBgMFw0XGAABAaAwGAwYDAwXDRcMGAwXDRcMGAwYFwwYDBgLDRcNFxgMGAsMGBgMGAsNFxgMGAsYDBgMDBgMFwwYDBgMFxgMDBgXDAwYDBgMFxgMDBgMFw0XGAABAaAwGAwYDAwXDRcMGAwYDBcMGAwYGAsYDBgMDBcMGBgMGAsNFxgMGAwMFxgMGAsYDBgMDBcMGAwYDBcNFxgMDBcYDAwYDBcNFxgMGAsYDBgMDAABDZ8xGAwYDAwXDRcMFw0XDRcMFw0YFwwYDBgMDBcMGBgMFwwMGBgLGAwMGBgLGAwYDBgMDBcMFw0XDBgMGBgLDRcYDAwYDBgMFxgMGAsZCxgMDQABDaAwGAwYDAsYDBgMFw0XDRcMGAwXGAwYCxkLDBgMGBgLGAwMGBgLGQsMGBgLGQsYDBgLDRcNFwwYDBcNFxgMDBcZCwwYDBcNFxgMGAsZCxgMDAABDaAwGAwYDAwXDRcMGAwYDBcNFwwYGAsZCxgMDBgMGBcMGAwMGBcMGAwMFxkLGAwYDBgLDRcMGAwYDBcNFxgMDBcZCwwYDBcNFxgMGAwXDBgMDAABDaAxGAsYDAwYDBcNFwwYDBgMFw0XGAwYCxkLDBgMGBgLGQsMGBgLGQsMGBgMFwwYDBgMDBcNFwwYDBcNGBcMDBgYDAwXDRcMFxkMFwwYDBgMDAABDZ8xGAwYDAwXDRcMGAwYDBcMGAwXGQsYDBgLDRcNFxgMGAsNFxgMGAwMFxgMGAwYDBcMDBgMGAwXDRcMFxkLDRcYDAwYDBcNFxgMGAsYDBgMDAAF3AAAAAA"
+        #off = down
+        command_off: "sgGEAxkLDBcNFxgLGQsNFxgLGQsNFhkLGQoZCxkLDRcMFw0XDRYNFxkLDRYZCw0XDRYZCxkLDRYNFxkKGQABAKAwGQsYCw0XDRcMFw0XDRYNFw0XGQoZCxkKDhYNFxkKGQsNFxgLGQsNFhkLGQsYCxkLDRYOFg0XDRYOFhkLDRYZCw0XDRYZCxgLDRcNFxgLGQABAKAwGAsZCw0WDRcNFw0WDRcNFg0XGQsZChkLDRcMFxkLGQoNFxkLGAsNFxgLGQsZChkLDRcNFg0XDRYNFxkLDRYZCw0XDRYZCxkLDBcNFxgMGAABAKAwGQsZCg0XDRYNFw0XDRYNFw0XGQoZCxkKDRcNFxgLGQsNFxgLGQsNFhkLGQsYCxkLDRcMFw0XDRYNFxkLDBcZCw0WDhYZCxgLDRcNFxgLGQABAKAwGQsYCw0XDRcNFg0XDRYOFg0XGQsYCxkLDRYNFxkKGQsNFxgLGQsNFxgLGQsZCxgLDRcNFwwXDRcNFhkLDRcZCg0XDRcYCxkLDRcNFhkLGQABAKAwGQsZCg0XDRcNFg0XDRcNFg0XGQsYCxkLDRYNFxkKGQsNFxkKGQsNFxgLGQsZChkLDRcNFg4WDRcNFhkLDRcYCw0XDRYZCxkLGAsZCw0WDgABDJ8wGQsZCw0WDRcNFg4WDRcNFwwXGQsZCxkKDRcNFxgLGQsNFxgLGQsNFxgLGQsZCxkKDRcNFwwXDRcNFxkKDRcZCw0WDhYZCxkLGAsZCw0XDQABDKAwGQsZCwwXDRcNFw0WDRcNFw0WGQsZCxgLDhYNFxkKGQsNFxkLGAsNFxkLGAsZCxgLDhYNFw0WDhYNFxkLDBcZCw0XDRYZCxkLGAsZCw0XDAABDaAwGgoZCw0WDhYNFw0XDRYNFw0XGQoZCxkLDBcNFxkKGQsNFxkLGQoNFxkLGAsZCxkLDRYNFw0XDRYNFxkLDBcZCw0XDRcZChkLGQsYCw0XDQABDKAwGQsZCwwXDRcNFg0XDRcNFg0XGQsZChkLDRcNFhkLGQsNFhkLGQsNFhkLGQsZChkLDRYOFg0XDRYOFhkLDRYZCw0XDRYZCxkLGQoZCw0XDQABDKAwGQsYCw0XDRcNFg0XDRcNFg0XGQsYCxkLDRcMFxkLGQoNFxkLGQsMFxkLGQoZCxkLDRYNFw0XDRYNFxkLDRYZCw0XDRYZCxkLGAsZCw0XDAAF3AAAAAA"
+      blind_bedroom_stop:
+        friendly_name: "Bedroom Blind Stop"
+        #on = stop
+        command_on: "sgD4AYgyFwwYDAwXDRcMGAwXDBgMFw0XGAwYCxgMDBgMFxgMGAwLGBgMGAsNFxgMGAsYDBgMDBcNFwwYDBcMGBgMDBcYDAwYFwwMGBgLDRcYDAwXGAABAZ8xGAwYDAwXDBgMFw0XDBgMGAwXGAwYDBgLDBgMGBgLGAwMGBgLGQsMFxkLGAwYDBgLDRcMGAwXDRcMGBgLDRcYDAwYGAsMGBgMDBcZCwwYGAABAaAwGQsYDAwXDRcMGAwYDBcMGAwYGAsYDBgMDBcMGBgMGAsMGBgLGQsMGBgMGAsYDBgMDBcNFwwYDBcMGBgMDBcYDAwYGAsNFxgMDBcYDAwYGAABAZ8xGAwYDAwXDRcMGAwXDRcNFwwYGAsYDBgLDRcNFxgMGAsNFxgMGAwMFxgMGAsZCxgMDBgMGAsYDBgMFxkLDBgYCwwYGQsMGBgLDBgYCw0XGAABAp8xFwwYDAwXDBgMGAwYCxgNFwwYGAsYDBgMDBcMGBgMGAsMGBgLGQsNFxgMGAsYDBgMDBcNFwwYDBcNFxgMDBcYDAwYGAwMFxgMDBcZCw0XGAABAp8xGQsYDAwYDBcMGAwYDBgMGAwXGAwYDBcMDBgMFxkLGAwMGBgLGAwMGBgLGQsYDBgMDBcMGAwXDRcMGBgMDBcZCwwYGAsNFxkLDBcZCw0XGAAF3A"
+        #off = program
+        command_off: "sgD4AYgwGQsZCwwYDBcNFwwXDRcMFw0XGAwYDBgLDRcMGBgLGAwMFxgMGAsNFxgMGAsYDBgLDRcMGAwXDBgMFxkLDBgYCxgMGAwLGA0XGAsZCg0XDQABDJ8xGAwXDAwXDRcNFwwXDRcMGAwXGAwYCxgMDRcMGBcMGAwMFxgMGAsNFxgLGQsYDBgLDRcMGAwXDRcMFxkLDBgYCxkLGAsNFw0XGAsZCwwXDQABDJ8xGAsZCwwYDBcMGAwYDBcMGAwYFwwYDBgLDRcMGBgLGAwMGBcMGAwMFxgMGAsZCxgLDRcNFwwYDBcNFxgLDRcYDBgLGAwMFw0XGAwYCw0XDAABDZ8wGAwYCw0XDRcMFw0XDBgMFw0XGAsYDBgMDBcNFxgLGQsMGBgLGQsMGBgLGAwYCxkLDBcNFwwYDBgMFxgMDBcZCxgMGAsNFw0XGAsYDAwXDQABDZ8xGAsYDAwYDBcMGAwXDRcMGAwXGQsYDBgLDRcMFxkLGAwMGBgLGAwMFxkLGAsZCxgMDBgMFwwYDBcNFxgMDBcYDBgLGQsNFwwYGAsYDAwXDQABC58xGAwYDAsYDBcNFwwYDBcMGAwXGQsYDBgLDRcMFxgMGAsMGBgLGAwMFxkLGAsZCxgMDBcMFw0XDBgMFxkLDBcYDBgLGAwMFw0XGAwYCwwYDAAF3A"
+        
+        
+        
   - platform: command_line
     switches:
       triplej:
@@ -844,6 +1015,12 @@ switch:
     payload_on: "motor_right"
     optimistic: false
 
+
+  - platform: mqtt
+    command_topic: "cmnd/sonoff/ensuite/POWER1"
+    state_topic: "stat/sonoff/ensuite/POWER1"
+    name: Ensuite Heat Lamps
+    
 #### SPRINKLERS
   - platform: template
     switches:
@@ -1022,12 +1199,11 @@ input_select:
   tablet_panel_detail:
     name: Active Tablet Detail Panel
     options:
+      - Covers
       - Lights
-      - Lights Advanced
       - Media
       - Cameras
       - Sprinklers
-      - Sprinklers Advanced
       - Air Conditioner
       - Washer
       - Dishwasher
@@ -1039,7 +1215,6 @@ input_select:
       - Temperature
       - Appliances
       - Rooms
-      - All
 
   tablet_panel_detail_appliances:
     name: Active Tablet Detail Appliances Panel
@@ -1168,6 +1343,82 @@ input_number:
     unit_of_measurement: '%'
     icon: mdi:volume-high
 
+  irrigation_temp_hot:
+    name: Irrigation Trigger Temp Hot
+    unit_of_measurement: °C
+    min: 20
+    max: 50
+    step: 1
+    
+  irrigation_temp_warm:
+    name: Irrigation Trigger Temp Warm
+    unit_of_measurement: °C
+    min: 10
+    max: 30
+    step: 1
+    
+  irrigation_scalar_hot:
+    name: Irrigation Scalar Hot
+    min: 1
+    max: 5
+    step: 0.1
+    
+  irrigation_scalar_warm:
+    name: Irrigation Scalar Warm
+    min: 1
+    max: 5
+    step: 0.1
+    
+  irrigation_week_base:
+    name: Irrigation Base Water
+    min: 1
+    max: 50
+    step: 1
+    unit_of_measurement: mm
+    
+  irrigation_tracker:
+    name: Irrigation Tracker
+    min: -40
+    max: 40
+    unit_of_measurement: mm
+    
+  irrigation_rate:
+    name: Irrigation Rate
+    unit_of_measurement: mm/hour
+    min: 1
+    max: 50
+    step: 1
+    
+  rain_today_midnight:
+    name: Rain Today Midnight
+    unit_of_measurement: mm
+    min: 0
+    max: 50
+    step: 1
+    
+  rain_today_sunrise:
+    name: Rain Today sunrise
+    unit_of_measurement: mm
+    min: 0
+    max: 50
+    step: 1
+    
+#  irrigation_duration_today:
+#    name: Irrigation Today
+#    unit_of_measurement: min
+#    min: 0
+#    max: 200
+#    step: 1
+
+  blind_bedroom_position:
+    name: Bedroom Blind Position
+    unit_of_measurement: '%'
+    min: 0
+    max: 100
+    step: 1
+    
+
+
 input_boolean:
   alarmclock_status:
     name: Alarm
@@ -1192,11 +1443,6 @@ input_boolean:
     name: Homekit Control
     initial: off
 
-  motion_control:
-    name: Motion Control
-    icon: mdi:run
-    initial: on
-
   sprinkler_control:
     name: Sprinkler Control
     icon: mdi:flower
@@ -1206,68 +1452,23 @@ input_boolean:
     name: Homekit Location
     icon: mdi:account
   
-#should be redundant with Lovelace
-  tile_media:
-  tile_room_bedroom:
-  tile_room_study:
-  tile_room_living_room:
-  tile_main_lights:
-  tile_alarm_clock:
-  tile_home:
-  tile_bedroom_ac:
-  tile_tablet_buttons:
-  tile_tablet_detail:
-  tile_tablet_status:
-  tile_tablet_date:
-  tile_weather:
-  tile_tablet_dummy:
-
 # some of these could be dropped with Lovelace
-  tile_tablet_button_large:
-  tile_tablet_button_lights:
-  tile_tablet_button_lights_advanced:
-  tile_tablet_button_media:
-  tile_tablet_button_cameras:
-  tile_tablet_button_sprinklers:
-  tile_tablet_button_sprinklers_advanced:
-  tile_tablet_button_ac:
-  tile_tablet_button_washer:
-  tile_tablet_button_dishwasher:
-  tile_tablet_button_alarm_clock:
-  tile_tablet_button_vacuum_cleaner:
-  tile_tablet_button_shed:
-  tile_tablet_button_weather:
-  tile_tablet_button_motion:
-  tile_tablet_button_appliances:
-  tile_tablet_button_appliances_washing_machine:
-  tile_tablet_button_appliances_dishwasher:
-  tile_tablet_button_appliances_vacuum_cleaner:
-  tile_tablet_button_temperature:
-  tile_tablet_button_rooms:
+  tablet_button_covers:
+  tablet_button_lights:
+  tablet_button_media:
+  tablet_button_cameras:
+  tablet_button_sprinklers:
+  tablet_button_ac:
+  tablet_button_alarm_clock:
+  tablet_button_weather:
+  tablet_button_motion:
+  tablet_button_appliances:
+  tablet_button_appliances_washing_machine:
+  tablet_button_appliances_dishwasher:
+  tablet_button_appliances_vacuum_cleaner:
+  tablet_button_temperature:
   
-# should be redundant with Lovelace
-  tile_tablet_panel_lights:
-  tile_tablet_panel_lights_advanced:
-  tile_tablet_panel_media:
-  tile_tablet_panel_cameras:
-  tile_tablet_panel_sprinklers:
-  tile_tablet_panel_sprinklers_advanced:
-  tile_tablet_panel_washer:
-  tile_tablet_panel_dishwasher:
-  tile_tablet_panel_alarm_clock:
-  tile_tablet_panel_vacuum_cleaner:
-  tile_tablet_panel_shed:
-  tile_tablet_panel_weather:
-  tile_tablet_panel_motion:
-  tile_tablet_panel_rooms:
   
-  tile_tablet_panel_rooms_bedroom:
-  tile_tablet_panel_rooms_study:
-  
-  room_tracker_bedroom:
-  room_tracker_living_room:
-  room_tracker_study:
-  room_tracker_laundry:
   
 
 ######################################################################################################
@@ -1307,7 +1508,17 @@ binary_sensor:
           {% else %}
             False
           {% endif %} 
-             
+
+
+  - platform: template
+    sensors:
+      homekit:
+        value_template: "{{ is_state('input_boolean.homekit_control', 'on') }}"
+
+  - platform: mqtt
+    name: motion_front_door_camera
+    state_topic: camera/motion/front_door
+    device_class: motion
 
 ######################################################################################################
 ###-------------------------------------------- SENSORS -------------------------------------------###
@@ -1336,6 +1547,12 @@ sensor:
 #    destination: zone.home
 #    options:
 #      mode: driving
+
+
+  - platform: statistics
+    entity_id: sensor.humidity_ensuite
+    max_age:
+      minutes: 30
 
   - platform: pi_hole
     host: 10.1.0.4
@@ -1371,6 +1588,12 @@ sensor:
   - platform: openhardwaremonitor
     host: server.local
 
+  - platform: bom
+    zone_id: !secret bom_zone_id
+    wmo_id: !secret bom_wmo_id
+    monitored_conditions:
+    - rain_trace
+    - wind_spd_kmh
 
   - platform: bom_forecast
 #    product_id: IDS10034
@@ -1428,31 +1651,6 @@ sensor:
     scan_interval:
       minutes: 5
 
-#  - platform: wunderground
-#    api_key: !secret wunderground_api_key
-#    monitored_conditions:
-#    - alerts
-#    - precip_today_metric
-#    - precip_1d_mm
-#    - precip_1d
-#    - precip_2d_mm
-#    - precip_2d
-#    - precip_3d_mm
-#    - precip_3d
-#    - relative_humidity
-#    - temp_c
-#    - temp_high_1d_c
-#    - temp_low_1d_c
-#    - temp_high_2d_c
-#    - temp_low_2d_c
-#    - wind_gust_kph
-#    - wind_gust_1d_kph
-#    - wind_kph
-#    - wind_1d_kph
-#    - weather
-#    - weather_1d_metric
-#    - weather_1n_metric
-
   - platform: template
     sensors:
       alarmclock_time:
@@ -1507,6 +1705,23 @@ sensor:
             {{ (states.input_number.sprinkler_timer_1.state | int) }}:00
           {%- endif -%}
         entity_id: sensor.time
+
+#####################
+      irrigation_tracker:
+        friendly_name: Irrigation Tracker
+        value_template:  "{{ states.input_number.irrigation_tracker.state | float | round(1) }}"
+        entity_id: input_number.irrigation_tracker
+        unit_of_measurement: mm
+
+
+  - platform: history_stats
+    name: Irrigation Duration Today
+    entity_id: switch.sprinkler_zone_1
+    state: 'on'
+    type: time
+    start: '{{ now().replace(hour=0).replace(minute=0).replace(second=0) }}'
+    end: '{{ now() }}'
+
 #####################
 
   - platform: template
@@ -1520,13 +1735,6 @@ sensor:
             {{ states.input_number.light_temp.state }}
           {%- endif -%}
 
-
-  - platform: bom
-    zone_id: !secret bom_zone_id
-    wmo_id: !secret bom_wmo_id
-    monitored_conditions:
-    - rain_trace
-    - wind_spd_kmh
 
   - platform: time_date
     display_options:
@@ -1588,6 +1796,7 @@ sensor:
         entity_id: group.irrigation
         friendly_name: 'Sprinklers'
         icon_template: mdi:water
+
 
   - platform: mqtt
     name: /plant_1_moisture
@@ -1661,8 +1870,9 @@ sensor:
 #        value_template: '{{ states.sensor.forked_daapd_outputs.attributes[1].volume }}'
 #        friendly_name: TV Living Source
 
-
   - platform: version
+
+  - platform: uptime
 
 #  - platform: unifigateway
 #    host: 10.1.0.154

@@ -1,3 +1,26 @@
+var LitElement = LitElement || Object.getPrototypeOf(customElements.get("home-assistant-main"));
+
+var html = LitElement.prototype.html;
+var css = LitElement.prototype.css;
+
+((ButtonBase) => {
+  customElements.define(
+    'mwc-button',
+    class extends ButtonBase {
+      static get styles() {
+        return css`
+          ${ButtonBase.styles}
+          .mdc-button {
+            height: auto;
+            padding: 8px;
+            color: inherit !important;
+          }
+        `
+      }
+    },
+  );
+})(customElements.get('mwc-button') || customElements.get('paper-button'))
+
 class TilesCard extends HTMLElement {
 
   constructor() {

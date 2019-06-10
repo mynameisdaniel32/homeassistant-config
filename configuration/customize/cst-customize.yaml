@@ -135,7 +135,6 @@ vacuum.xiaomi_vacuum_cleaner:
   friendly_name: Vacuum Cleaner
 switch.vacuum:
   icon: mdi:robot-vacuum
-  google_assistant: true
 switch.sprinkler_zone_1:
   friendly_name: Back Lawn Top Sprinklers
 switch.sprinkler_zone_2:
@@ -152,11 +151,18 @@ switch.sprinkler_zone_4:
 #  icon: mdi:water
 #switch.sprinkler_zone_8:
 #  icon: mdi:water
-group.irrigation:
-  google_assistant: true
 fan.verandah:
   friendly_name: Verandah Fan
-  google_assistant: true
+fan.ensuite:
+  friendly_name: Ensuite Fan
+
+binary_sensor.motion_front_door_camera:
+  friendly_name: Front Door Camera Motion
+
+media_player.bedroom_tv:
+  device_class: tv
+media_player.living_room_tv:
+  device_class: tv
 
 ######################################################################################################
 ###-------------------------------------------- XIAOMI --------------------------------------------###
@@ -165,57 +171,39 @@ fan.verandah:
 binary_sensor.door_window_washing_machine:
   icon: mdi:washing-machine
 
+binary_sensor.door_window_shed_door:
+  device_class: door
 ######################################################################################################
 ###-------------------------------------------- GROUPS --------------------------------------------###
 ######################################################################################################
-group.all_automations:
-  hidden: false
-group.all_switches:
-  hidden: false
-group.all_scripts:
-  hidden: false
-group.all_devices:
-  hidden: false
-group.all_lights:
-  hidden: false
-group.all_remotes:
-  hidden: false
+#group.all_automations:
+#  hidden: false
+#group.all_switches:
+#  hidden: false
+#group.all_scripts:
+#  hidden: false
+#group.all_devices:
+#  hidden: false
+#group.all_lights:
+#  hidden: false
+#group.all_remotes:
+#  hidden: false
 
 ######################################################################################################
 ###-------------------------------------------- LIGHTS --------------------------------------------###
 ######################################################################################################
-light.bedroom:
-  google_assistant: true
-light.wardrobe:
-  google_assistant: true
-light.study:
-  google_assistant: true
-light.living_room:
-  google_assistant: true
-light.lounge:
-  google_assistant: true
-light.front_door:
-  google_assistant: true
-light.laundry:
-  google_assistant: true
-light.back_door:
-  google_assistant: true
 light.pool_room:
   friendly_name: Pool Room Lights
-  google_assistant: true
 light.gateway_light_34ce00fa664a:
   friendly_name: Gateway Light
-light.carport:
-  google_assistant: true
 light.outside_front:
   friendly_name: Outside Front Lights
-  google_assistant: true
 light.verandah:
   friendly_name: Verandah Lights
-  google_assistant: true
 light.kitchen:
   friendly_name: Kitchen Lights
-  google_assistant: true
+light.lounge:
+  friendly_name: Lounge Lights
 
 
 

@@ -14,25 +14,6 @@
     data:
       entity_id: input_select.tablet_panel_detail
       option: Lights
-  - service: group.set_visibility
-    entity_id:
-    - group.tile_tablet_panel_lights_advanced
-    - group.tile_tablet_panel_media
-    - group.tile_tablet_panel_cameras
-    - group.tile_tablet_panel_sprinklers
-    - group.tile_tablet_panel_sprinklers_advanced
-    - group.tile_tablet_panel_washer
-    - group.tile_tablet_panel_dishwasher
-    - group.tile_tablet_panel_alarm_clock
-    - group.tile_tablet_panel_vacuum_cleaner
-    - group.tile_tablet_panel_shed
-    - group.tile_tablet_panel_weather
-    - group.tile_tablet_panel_motion
-    - group.tile_tablet_panel_rooms
-    - group.tile_tablet_panel_rooms_bedroom
-    - group.tile_tablet_panel_rooms_study
-    data:
-      visible: False
 
 # Reset all input values if they've been forgotten by a database error/loss
 - alias: Home Assistant Value Reset
@@ -85,7 +66,6 @@
       entity_id: input_number.sprinkler_timer_4
       value: 0
 
-
 - alias: Homekit Start
   trigger:
   - platform: state
@@ -118,7 +98,6 @@
     entity_id:
     - input_boolean.homekit_control
 
-
 - alias: Home Assistant Release Check
   trigger:
   - platform: state
@@ -132,6 +111,8 @@
         value_template:  "{{ states('sensor.home_assistant_release') != states('sensor.current_version') }}"
       - condition: template
         value_template: "{% if not is_state('sensor.home_assistant_release', 'unavailable') %}true{% endif %}"
+      - condition: template
+        value_template: "{% if not is_state('sensor.home_assistant_release', 'unknown') %}true{% endif %}"
   action:
   - service: persistent_notification.create
     data:
@@ -206,8 +187,6 @@
     - service: homeassistant.turn_on
       entity_id: automation.motion_clear_carport
 
-
-
 - alias: Button - Bedroom
   trigger:
     platform: event
@@ -252,11 +231,10 @@
       - automation.lights_dynamic_brightness_2030
       - automation.lights_dynamic_brightness_2300
       - automation.lights_dynamic_brightness_2330
-
   - service: media_extractor.play_media
     entity_id: media_player.bedroom_chromecast
     data:
-      media_content_id: "https://www.youtube.com/watch?v=XrDUTpeGW0A"
+      media_content_id: "https://www.youtube.com/watch?v=bbLDfueL7eU"
       media_content_type: video/youtube
   - service: input_number.set_value
     data:
@@ -268,7 +246,24 @@
 #######################################################################################################
 ###--------------------------------------- OTHER AUTOMATIONS ---------------------------------------###
 #######################################################################################################
-- alias: Turn off Stuff When I Leave Home
+- alias: Location - Daniel - Arrival 
+  trigger:
+    platform: state
+    entity_id: sensor.location_daniel
+    to: 'Home'
+  condition:
+    condition: state
+    entity_id: input_boolean.light_check
+    state: 'on'
+  action:
+    service: homeassistant.turn_on
+    entity_id:
+      - group.welcome_lights
+      - light.living_room
+    data:
+      transition: 5
+
+- alias: Location - Daniel - Leave
   trigger:
     platform: state
     entity_id: sensor.location_daniel
@@ -298,7 +293,8 @@
       {% endif %}
     entity_id: media_player.living_room_tv
 
-- alias: Set stuff when Deanna arrives
+
+- alias: Location - Deanna - Arrival
   trigger:
     platform: state
     entity_id: person.deanna
@@ -314,7 +310,7 @@
       entity_id: input_number.dynamic_light_brightness
       value: 75
 
-- alias: Set stuff when Deanna leaves
+- alias: Location - Deanna - Leave
   trigger:
     platform: state
     entity_id: person.deanna
@@ -380,8 +376,13 @@
       - switch.airplay_living_room
       - switch.airplay_bedroom
       - switch.triplej
+  - service: input_number.set_value
+    data:
+      entity_id: input_number.forked_daapd_volume_bedroom
+      value: 25
 
-- alias: Turn off Bedroom TV with Chromecast
+
+- alias: TV - Bedroom Turn off
   trigger:
     platform: state
     entity_id:
@@ -394,7 +395,7 @@
     entity_id:
     - switch.bedroom_tv_power
 
-- alias: Sleep Timer - Bedroom TV
+- alias: TV - Bedroom Sleep Timer
   trigger:
   - platform: event
     event_type: timer.finished
@@ -408,20 +409,6 @@
     entity_id:
     - media_player.bedroom
 
-
-- alias: Nofify Sonarr Queue
-  trigger:
-  - platform: state
-    entity_id: sensor.sonarr_queue
-  condition:
-    condition: numeric_state
-    entity_id: sensor.sonarr_queue
-    above: 2
-  action:
-    service: persistent_notification.create
-    data:
-      title: Sonarr Queue
-      message: Sonarr Queue has exceeded 2
 
 ############ CHRISTMAS MODE ############
 
@@ -523,7 +510,7 @@
 #    entity_id: 
 #    - switch.living_room_audio_source
 ##### TV
-- alias: Living Room TV - Turn off motion detection when TV starts playing
+- alias: TV - Living room disable motion detection
   trigger:
     platform: state
     entity_id: media_player.living_room_apple_tv
@@ -534,7 +521,7 @@
         - automation.motion_detect_lounge
         - automation.motion_detect_living_room
 
-- alias: Living Room TV - Turn on motion detection when TV stops playing
+- alias: TV - Living room enable motion detection
   trigger:
     platform: state
     entity_id: media_player.living_room_apple_tv
@@ -567,7 +554,7 @@
 
 
 ##### AUDIO
-- alias: Audio switch to 3.5mm when Living Room AirPlay turns on
+- alias: Airplay - Living room source switch on
   trigger:
     platform: state
     entity_id: switch.airplay_living_room
@@ -582,7 +569,7 @@
         entity_id: input_number.forked_daapd_volume_living_room
         value: '100'
 
-- alias: Audio Reset Shed AirPlay Volume to Max
+- alias: Airplay - Shed Volume
   trigger:
     platform: state
     entity_id: switch.airplay_shed
@@ -594,7 +581,7 @@
         entity_id: input_number.forked_daapd_volume_shed
         value: '100'
 
-- alias: Audio switch to optical when Living Room AirPlay turns off
+- alias: Airplay - Living room source switch off
   trigger:
     platform: state
     entity_id: switch.airplay_living_room
@@ -605,7 +592,7 @@
     entity_id: 
     - switch.living_room_audio_source
 
-- alias: Forked Daapd Set Volume Bedroom
+- alias: Forked Daapd - Set Volume Bedroom
   trigger:
     platform: state
     entity_id: input_number.forked_daapd_volume_bedroom
@@ -614,7 +601,7 @@
 #    - service: homeassistant.update_entity
 #      entity_id: sensor.forked_daapd_volume_bedroom
 
-- alias: Forked Daapd Get Volume Bedroom
+- alias: Forked Daapd - Get Volume Bedroom
   trigger:
     platform: state
     entity_id: sensor.forked_daapd_volume_bedroom
@@ -624,14 +611,14 @@
         entity_id: input_number.forked_daapd_volume_bedroom
         value: '{{ states.sensor.forked_daapd_volume_bedroom.state }}'
 
-- alias: Forked Daapd Set Volume Living Room
+- alias: Forked Daapd - Set Volume Living Room
   trigger:
     platform: state
     entity_id: input_number.forked_daapd_volume_living_room
   action:
     - service: shell_command.forked_daapd_volume_living_room
 
-- alias: Forked Daapd Get Volume Living Room
+- alias: Forked Daapd - Get Volume Living Room
   trigger:
     platform: state
     entity_id: sensor.forked_daapd_volume_living_room
@@ -645,14 +632,14 @@
         entity_id: input_number.forked_daapd_volume_living_room
         value: '100'
 
-- alias: Forked Daapd Set Volume Shed
+- alias: Forked Daapd - Set Volume Shed
   trigger:
     platform: state
     entity_id: input_number.forked_daapd_volume_shed
   action:
     - service: shell_command.forked_daapd_volume_shed
 
-- alias: Forked Daapd Get Volume Shed
+- alias: Forked Daapd - Get Volume Shed
   trigger:
     platform: state
     entity_id: sensor.forked_daapd_volume_shed
@@ -662,7 +649,7 @@
         entity_id: input_number.forked_daapd_volume_shed
         value: '{{ states.sensor.forked_daapd_volume_shed.state }}'
 
-- alias: Shed Door Turn on Shed AirPlay
+- alias: Airplay - Shed On
   trigger:
     platform: state
     entity_id:
@@ -674,7 +661,7 @@
     entity_id:
       - switch.airplay_shed
 
-- alias: Shed Door Turn off Shed AirPlay
+- alias: Airplay - Shed Off
   trigger:
     platform: state
     entity_id:
@@ -685,149 +672,3 @@
     service: homeassistant.turn_off
     entity_id:
       - switch.airplay_shed
-
-
-
-#######################################################################################################
-###--------------------------------------- COVER AUTOMATIONS ---------------------------------------###
-#######################################################################################################
-
-- alias: iOS Roller Door Close
-  trigger:
-    platform: event
-    event_type: ios.notification_action_fired
-    event_data:
-      actionName: ROLLER_DOOR_CLOSE
-  action:
-    service: cover.close_cover
-    entity_id:
-      - cover.roller_door
-
-- alias: iOS Roller Door Open
-  trigger:
-    platform: event
-    event_type: ios.notification_action_fired
-    event_data:
-      actionName: ROLLER_DOOR_OPEN
-  action:
-    service: cover.open_cover
-    entity_id:
-      - cover.roller_door
-
-- alias: Notify if roller door opens while I'm away
-  trigger:
-    platform: state
-    entity_id: cover.roller_door
-    from: 'closed'
-    to: 'open'
-  condition:
-    condition: state
-    entity_id: sensor.location_daniel
-    state: 'Away'
-  action:
-    service: notify.ios_daniel_iphone
-    data:
-      title: "Roller Door"
-      message: "Opened!"
-      data:
-        attachment:
-          content-type: jpeg
-        push:
-          badge: 5
-          thread-id: "roller-door"
-          category: camera
-        entity_id: camera.carport
-
-
-- alias: Notify if roller door is open when I leave home
-  trigger:
-    platform: state
-    entity_id: sensor.location_daniel
-    from: 'Home'
-    to: 'Away'
-  condition:
-    condition: state
-    entity_id: cover.roller_door
-    state: 'open'
-  action:
-    service: notify.ios_daniel_iphone
-    data:
-      title: "Roller Door"
-      message: "Left Open!"
-      data:
-        push:
-          badge: 5
-          thread-id: "roller-door"
-          category: "roller_door_alert"
-
-- alias: Notify if roller door is left open
-  trigger:
-    - platform: state
-      entity_id: cover.roller_door
-      to: 'open'
-      for:
-        minutes: 1
-    - platform: state
-      entity_id: cover.roller_door
-      to: 'open'
-      for:
-        minutes: 15
-    - platform: state
-      entity_id: cover.roller_door
-      to: 'open'
-      for:
-        hours: 1
-    - platform: state
-      entity_id: cover.roller_door
-      to: 'open'
-      for:
-        hours: 2
-    - platform: state
-      entity_id: cover.roller_door
-      to: 'open'
-      for:
-        hours: 3
-    - platform: state
-      entity_id: cover.roller_door
-      to: 'open'
-      for:
-        hours: 4
-    - platform: state
-      entity_id: cover.roller_door
-      to: 'open'
-      for:
-        hours: 5
-    - platform: state
-      entity_id: cover.roller_door
-      to: 'open'
-      for:
-        hours: 6
-  action:
-    service: notify.ios_daniel_iphone
-    data_template:
-      title: "Roller Door"
-      message: "Left open for {{ relative_time(states.cover.roller_door.last_updated) }}!"
-      data:
-        push:
-          badge: 1
-          thread-id: "roller-door"
-          category: "roller_door_alert"
-
-- alias: Notify prompt to open roller door when I arrive home
-  trigger:
-    platform: state
-    entity_id: sensor.location_daniel
-    to: 'Home'
-  condition:
-    condition: state
-    entity_id: cover.roller_door
-    state: 'closed'
-  action:
-    service: notify.ios_daniel_iphone
-    data:
-      title: "Roller Door"
-      message: "Open?"
-      data:
-        push:
-          thread-id: "roller-door"
-          category: "roller_door_prompt"

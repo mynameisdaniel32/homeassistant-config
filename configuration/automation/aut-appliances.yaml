@@ -1,7 +1,7 @@
 #######################################################################################################
 ###----------------------------------------- VACUUM CLEANER ----------------------------------------###
 #######################################################################################################
-- alias: Run Vacuum Cleaner
+- alias: Vacuum Cleaner - Start
   trigger:
     platform: state
     entity_id: sensor.location_daniel
@@ -13,12 +13,12 @@
     - condition: time
       before: '17:00:00'
     - condition: template
-      value_template: '{{ as_timestamp(now()) - as_timestamp(states.automation.run_vacuum_cleaner.attributes.last_triggered) | int > 129600 }}'
+      value_template: '{{ as_timestamp(now()) - as_timestamp(states.automation.vacuum_cleaner_start.attributes.last_triggered) | int > 129600 }}'
   action:
   - service: vacuum.start
     entity_id: vacuum.xiaomi_vacuum_cleaner
     
-- alias: Stop Vacuum Cleaner
+- alias: Vacuum Cleaner - Stop
   trigger:
     platform: state
     entity_id: sensor.location_daniel
@@ -32,7 +32,7 @@
 ###---------------------------------------- WASHING MACHINE ----------------------------------------###
 #######################################################################################################
 
-- alias: Set washing machine active when power detected
+- alias: Washing Machine - Running
   trigger:
     - platform: numeric_state
       entity_id: sensor.washing_machine_power
@@ -56,7 +56,7 @@
         option: Running
 
 
-- alias: Set washing machine finished when power drops
+- alias: Washing Machine - Finishing
   trigger:
     - platform: numeric_state
       entity_id: sensor.washing_machine_power
@@ -74,13 +74,13 @@
         option: Finishing
 
 
-- alias: Set washing machine clean after timeout
+- alias: Washing Machine - Clean
   trigger:
     - platform: state
       entity_id: sensor.washing_machine_status
       to: Finishing
       for:
-        seconds: 30
+        seconds: 45
   condition:
     condition: and
     conditions:
@@ -93,7 +93,7 @@
         entity_id: input_select.washing_machine_status
         option: Clean
 
-- alias: Turn washing machine off when door opens
+- alias: Washing Machine - Turn Off
   trigger:
     - platform: state
       entity_id: binary_sensor.door_window_washing_machine
@@ -112,7 +112,7 @@
       data:
         entity_id: switch.plug_washing_machine
 
-- alias: Set washing machine dirty when door opens
+- alias: Washing Machine - Idle
   trigger:
     - platform: state
       entity_id: binary_sensor.door_window_washing_machine
@@ -123,8 +123,7 @@
         entity_id: input_select.washing_machine_status
         option: Idle 
 
-
-- alias: Turn washing machine on when door opens
+- alias: Washing Machine - Turn On
   trigger:
     - platform: state
       entity_id: binary_sensor.door_window_washing_machine
@@ -143,89 +142,11 @@
       data:
         entity_id: switch.plug_washing_machine
 
-- alias: Washing Machine Finished Notification
-  trigger:
-    platform: state
-    entity_id: sensor.washing_machine_status
-    to: Clean
-  action:
-  - service: notify.ios_daniel_iphone
-    data:
-      title: "Washing Machine"
-      message: "Finished!"
-      data:
-        push:
-          badge: 7
-          thread-id: "washing-machine"
-          category: "washing_machine_alert"
-
-- alias: Washing Machine Recurring Notification
-  trigger:
-    - platform: state
-      entity_id: sensor.washing_machine_status
-      to: Clean
-      for:
-        minutes: 15
-    - platform: state
-      entity_id: sensor.washing_machine_status
-      to: Clean
-      for:
-        minutes: 30
-    - platform: state
-      entity_id: sensor.washing_machine_status
-      to: Clean
-      for:
-        minutes: 60
-    - platform: state
-      entity_id: sensor.washing_machine_status
-      to: Clean
-      for:
-        minutes: 90
-    - platform: state
-      entity_id: sensor.washing_machine_status
-      to: Clean
-      for:
-        minutes: 120
-    - platform: state
-      entity_id: sensor.washing_machine_status
-      to: Clean
-      for:
-        minutes: 150
-    - platform: state
-      entity_id: sensor.washing_machine_status
-      to: Clean
-      for:
-        minutes: 180
-    - platform: state
-      entity_id: sensor.washing_machine_status
-      to: Clean
-      for:
-        minutes: 210
-    - platform: state
-      entity_id: sensor.washing_machine_status
-      to: Clean
-      for:
-        minutes: 240
-  condition:
-    condition: state
-    entity_id: sensor.location_daniel
-    state: 'Home'
-  action:
-    service: notify.ios_daniel_iphone
-    data_template:
-      title: "Washing Machine"
-      message: "Finished {{ relative_time(states.sensor.washing_machine_status.last_updated) }} ago!"
-      data:
-        push:
-          badge: 7
-          thread-id: "washing-machine"
-          category: "washing_machine_alert"
-
 #######################################################################################################
 ###------------------------------------------- DISHWASHER ------------------------------------------###
 #######################################################################################################
 
-- alias: Set dishwasher active when power detected
+- alias: Dishwasher - Running
   trigger:
     - platform: numeric_state
       entity_id: sensor.dishwasher_power
@@ -248,7 +169,7 @@
         entity_id: input_select.dishwasher_status
         option: Running
 
-- alias: Set dishwasher finished when power drops
+- alias: Dishwasher - Finishing
   trigger:
     - platform: numeric_state
       entity_id: sensor.dishwasher_power
@@ -265,7 +186,7 @@
         entity_id: input_select.dishwasher_status
         option: Finishing
 
-- alias: Set dishwasher clean after timeout
+- alias: Dishwasher - Clean
   trigger:
     - platform: state
       entity_id: sensor.dishwasher_status
@@ -284,7 +205,7 @@
         entity_id: input_select.dishwasher_status
         option: Clean
 
-- alias: Set dishwasher dirty when door opens and turn it off
+- alias: Dishwasher - Idle
   trigger:
     - platform: state
       entity_id: binary_sensor.door_window_sensor_xxx
@@ -305,7 +226,7 @@
         entity_id: switch.plug_dishwasher
 
 
-- alias: Turn dishwasher on when door opens
+- alias: Diwshwasher - Turn on
   trigger:
     - platform: state
       entity_id: binary_sensor.door_window_sensor_xxx
@@ -324,16 +245,22 @@
       data:
         entity_id: switch.plug_dishwasher
 
-- alias: Dishwasher Notification
+
+- alias: Fan Ensuite - On
   trigger:
-    platform: state
-    entity_id: sensor.dishwasher_status
-    to: Clean
+    platform: numeric_state
+    entity_id: sensor.humidity_ensuite
+    above: 75
   action:
-  - service: notify.ios_daniel_iphone
-    data:
-      message: "Dishwasher Finished!"
-      data:
-        push:
-          badge: 7
-          category: "dishwasher_alert"
+    service: homeassistant.turn_on
+    entity_id: fan.ensuite
+
+- alias: Fan Ensuite - Off
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.humidity_ensuite
+    below: 75
+  action:
+    service: homeassistant.turn_off
+    entity_id: fan.ensuite
+

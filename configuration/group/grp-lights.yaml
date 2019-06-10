@@ -1,69 +1,93 @@
 lights:
   name: Lights
   entities:
-  - light.bedroom
-  - light.wardrobe
-  - light.ensuite
-  - light.study
-  - light.kitchen
-  - light.living_room
-  - light.lounge
-  - light.front_door
-  - light.laundry
-  - light.back_door
-  - light.carport
-  - light.pool_room
-  - light.bathroom
-  - light.toilet
-  - light.bedroom_2
-  - light.bedroom_3
-  - light.outside_front
-  - light.verandah
-  - light.gateway_light_34ce00fa664a
+    - light.back_door
+    - light.bathroom
+    - light.bedroom
+    - light.bedroom_2
+    - light.bedroom_3
+    - light.carport
+    - light.ensuite
+    - light.entrance
+    - light.kitchen
+    - light.laundry
+    - light.living_room
+    - light.lounge
+    - light.outside_front
+    - light.pool_room
+    - light.study
+    - light.toilet
+    - light.verandah
+    - light.verandah_2
+    - light.wardrobe
 
 
-main_lights:
-  name: Lights
+
+inside_lights:
+  name: Inside Lights
   entities:
-  - input_boolean.tile_main_lights
-  - input_number.dynamic_light_brightness
-  - input_number.light_temp
-  - light.flux
-#  - light.bedroom
-#  - light.wardrobe
-#  - light.ensuite
-#  - light.study
-#  - light.kitchen
-#  - light.living_room
-#  - light.lounge
-#  - light.front_door
-#  - light.laundry
-#  - light.back_door
-#  - light.carport
+    - light.bedroom
+    - light.wardrobe
+    - light.ensuite
+    - light.study
+    - light.kitchen
+    - light.living_room
+    - light.lounge
+    - light.entrance
+    - light.laundry
+    - light.back_door
+    - light.pool_room
+    - light.bathroom
+    - light.toilet
+    - light.bedroom_2
+    - light.bedroom_3
+    - light.gateway_light_34ce00fa664a
+
+
+#main_lights:
+#  name: Lights
+#  entities:
+#  - input_boolean.tile_main_lights
+#  - input_number.dynamic_light_brightness
+#  - input_number.light_temp
+#  - light.flux
+##  - light.bedroom
+##  - light.wardrobe
+##  - light.ensuite
+##  - light.study
+##  - light.kitchen
+##  - light.living_room
+##  - light.lounge
+##  - light.front_door
+##  - light.laundry
+##  - light.back_door
+##  - light.carport
 
 welcome_lights:
   name: Welcome Lights
   entities:
-  - light.front_door
-  - light.back_door
-  - light.carport
-  - light.laundry
-  - light.outside_front
+    - light.entrance
+    - light.back_door
+    - light.carport
+    - light.laundry
+    - light.outside_front
 
 welcome_control_lights:
   name: Welcome Control Lights
   entities:
-  - light.bedroom
-  - light.ensuite
-  - light.kitchen
-  - light.lounge
-  - light.study
-  - light.wardrobe
-  - light.pool_room
+    - light.bedroom
+    - light.ensuite
+    - light.kitchen
+    - light.lounge
+    - light.study
+    - light.wardrobe
+    - light.pool_room
 
 lights_outside:
   name: Outside Lights
   entities:
-  - light.front_door
-  - light.back_door
-  - light.carport
+    - light.outside_front
+    - light.back_door
+    - light.carport
+    - light.verandah
+    - light.verandah_2

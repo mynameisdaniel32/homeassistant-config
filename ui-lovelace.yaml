@@ -1,30 +1,76 @@
 resources:
-  - url: /local/tracker-card.js?v=1.0.0
+  - url: /local/custom-lovelace/tracker-card/tracker-card.js?v=1.0.0
     type: js
-#  - url: /local/button-card.js?v=0.0.2
-#    type: module
-#  - url: /local/forked-daapd-card.js?v=0.0.1e
+  - url: /local/custom-lovelace/button-card/button-card.js
+    type: module
+#  - url: /local/custom-lovelace/forked-daapd-card.js?v=0.0.1e
 #    type: module
   - url: /local/custom_ui/weather-card.js
     type: js
-  - url: /local/tiles-card.js?v=0.1c
+    
+  - url: /local/custom-lovelace/monster-card/monster-card.js
     type: js
-  - url: /local/tiles-card-legacy.js?v=0.1
+  - url: /local/custom-lovelace/group-card/group-card.js
     type: js
-  - url: /local/monster-card.js?v=0.2.3
+  - url: /local/custom-lovelace/vertical-stack-in-card/vertical-stack-in-card.js
     type: js
-  - url: /local/group-card.js?v=0.0.2
-    type: js
-  - url: /local/vertical-stack-in-card.js?v=v0.1.1
-    type: js
-  - url: /local/custom-lovelace/compact-custom-header/compact-custom-header.js?v=1.0.0b7
+  - url: /local/custom-lovelace/compact-custom-header/compact-custom-header.js
     type: module
-  - url: /local/custom-lovelace/upcoming-media-card/upcoming-media-card.js?v=0.3.4
+  - url: /local/custom-lovelace/upcoming-media-card/upcoming-media-card.js
     type: js
-  - url: /local/mini-media-player-bundle.js?v=1.0.2
+  - url: /local/custom-lovelace/auto-entities/auto-entities.js
+    type: js
+  - url: /local/custom-lovelace/slider-entity-row/slider-entity-row.js
+    type: js
+  - url: /local/custom-lovelace/dummy-entity-row/dummy-entity-row.js
+    type: js
+  - url: /local/custom-lovelace/state-switch/state-switch.js
+    type: js
+  - url: /local/custom-lovelace/fold-entity-row/fold-entity-row.js
+    type: js
+  - url: /local/custom-lovelace/popup-card/popup-card.js
+    type: js
+  - url: /local/custom-lovelace/layout-card/layout-card.js
+    type: js
+  - url: /local/custom-lovelace/card-tools/card-tools.js
+    type: js
+  - url: /local/custom-lovelace/mini-media-player/mini-media-player-bundle.js
     type: module
-  - url: /local/dark-sky-weather-card.js?v=0.10.2
+  - url: /local/custom-lovelace/dark-sky-weather-card.js
     type: module
+    
+  # https://github.com/kalkih/mini-graph-card
+  - url: /local/custom-lovelace/mini-graph-card/mini-graph-card-bundle.js
+    type: module
+    
+  # https://github.com/custom-cards/config-template-card
+  - url: /local/custom-lovelace/config-template-card/config-template-card.js
+    type: module
+
+  # https://github.com/custom-cards/config-template-card
+  - url: /local/custom-lovelace/card-modder/card-modder.js
+    type: js
+
+  # https://github.com/thomasloven/lovelace-card-loader
+  - url: /local/custom-lovelace/card-loader/card-loader.js
+    type: js
+
+  # https://github.com/custom-cards/bar-card
+  - url: /local/custom-lovelace/bar-card/bar-card.js
+    type: js
+
+
+### COMMUNITY
+#  - url: /local/community/vertical-stack-in-card/vertical-stack-in-card.js
+#    type: js
+#  - url: /local/community/group-card/group-card.js 
+#    type: js
+#  - url: /local/community/bar-card/bar-card.js 
+#    type: js
+
+
+button_card_templates:
+  !include 'configuration/ui/lovelace/button_card_templates.yaml'
 
 
 title: !secret address
@@ -34,16 +80,23 @@ views:
   - !include 'configuration/ui/lovelace/appliances.yaml'
   - !include 'configuration/ui/lovelace/sprinklers.yaml'
   - !include 'configuration/ui/lovelace/sensors.yaml'
-  - !include 'configuration/ui/lovelace/room_bedroom.yaml'
-  - !include 'configuration/ui/lovelace/tablet.yaml'
-  - !include 'configuration/ui/lovelace/tablet2.yaml'
+#  - !include 'configuration/ui/lovelace/room_bedroom.yaml'
+#  - !include 'configuration/ui/lovelace/tablet.yaml'
+#  - !include 'configuration/ui/lovelace/tablet2.yaml'
+#  - !include 'configuration/ui/lovelace/tablet3.yaml'
+  - !include 'configuration/ui/lovelace/tablet_home.yaml'
+  - !include 'configuration/ui/lovelace/tablet_lights.yaml'
+  - !include 'configuration/ui/lovelace/tablet_ac.yaml'
+  - !include 'configuration/ui/lovelace/tablet_media.yaml'
+  - !include 'configuration/ui/lovelace/tablet_cameras.yaml'
+  - !include 'configuration/ui/lovelace/tablet_irrigation.yaml'
+  - !include 'configuration/ui/lovelace/tablet_server.yaml'
+  - !include 'configuration/ui/lovelace/tablet_ensuite.yaml'
 
-  - title: Test
+  - title: Development
     #theme: dark
     cards:
-    - type: vertical-stack
-      cards:
-      - !include 'configuration/ui/lovelace/cards/tile-lights.yaml'
+#    - !include 'configuration/ui/lovelace/cards/tile-lights.yaml'
       
     - type: custom:tracker-card
       trackers:
@@ -103,3 +156,36 @@ views:
       entity_wind_speed: sensor.dark_sky_wind_speed
       entity_humidity: sensor.dark_sky_humidity
       entity_daily_summary: sensor.dark_sky_daily_summary
+
+    - type: entities
+      entities:
+      - light.bedroom
+      - light.wardrobe
+      - light.ensuite
+      - light.study
+      - light.kitchen
+      - light.living_room
+      - light.lounge
+      - light.entrance
+      - light.laundry
+      - light.back_door
+      - light.pool_room
+      - light.carport
+      - light.outside_front
+      - light.verandah
+      - switch.sprinkler_control
+      - input_boolean.homekit_location
+      - media_player.living_room_tv
+      - media_player.bedroom_tv
+      - switch.vacuum
+      - switch.triplej
+      - switch.airplay_shed
+      - switch.airplay_living_room
+      - switch.airplay_bedroom
+      - switch.lights
+      - cover.roller_door
+      - fan.verandah
+      - climate.ac_bedroom
+      - fan.ac_bedroom
+      - climate.heater_living_room
+      - cover.blind_bedroom

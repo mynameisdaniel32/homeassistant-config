@@ -2,7 +2,7 @@
 ###------------------------------------- IRRIGATION AUTOMATIONS ------------------------------------###
 #######################################################################################################
 
-- alias: Sprinkler Zone 1 On
+- alias: Sprinklers - Zone 1 On
   trigger:
   - platform: state
     entity_id: timer.sprinkler_zone_1
@@ -11,7 +11,7 @@
   - service: homeassistant.turn_on
     entity_id: switch.sprinkler_zone_1
 
-- alias: Sprinkler Zone 1 Off
+- alias: Sprinklers - Zone 1 Off
   trigger:
   - platform: event
     event_type: timer.finished
@@ -26,7 +26,7 @@
   - service: timer.finish
     entity_id: timer.sprinkler_zone_1
 
-- alias: Sprinkler Zone 2 On
+- alias: Sprinklers - Zone 2 On
   trigger:
   - platform: state
     entity_id: timer.sprinkler_zone_2
@@ -35,7 +35,7 @@
   - service: homeassistant.turn_on
     entity_id: switch.sprinkler_zone_2
 
-- alias: Sprinkler Zone 2 Off
+- alias: Sprinklers - Zone 2 Off
   trigger:
   - platform: event
     event_type: timer.finished
@@ -45,7 +45,7 @@
   - service: homeassistant.turn_off
     entity_id: switch.sprinkler_zone_2
 
-- alias: Sprinkler Zone 3 On
+- alias: Sprinklers - Zone 3 On
   trigger:
   - platform: state
     entity_id: timer.sprinkler_zone_3
@@ -54,7 +54,7 @@
   - service: homeassistant.turn_on
     entity_id: switch.sprinkler_zone_3
 
-- alias: Sprinkler Zone 3 Off
+- alias: Sprinklers - Zone 3 Off
   trigger:
   - platform: event
     event_type: timer.finished
@@ -64,7 +64,7 @@
   - service: homeassistant.turn_off
     entity_id: switch.sprinkler_zone_3
 
-- alias: Sprinkler Zone 4 On
+- alias: Sprinklers - Zone 4 On
   trigger:
   - platform: state
     entity_id: timer.sprinkler_zone_4
@@ -73,7 +73,7 @@
   - service: homeassistant.turn_on
     entity_id: switch.sprinkler_zone_4
 
-- alias: Sprinkler Zone 4 Off
+- alias: Sprinklers - Zone 4 Off
   trigger:
   - platform: event
     event_type: timer.finished
@@ -83,62 +83,8 @@
   - service: homeassistant.turn_off
     entity_id: switch.sprinkler_zone_4
 
-- alias: Notify Sprinkler Warning
-  trigger:
-    - platform: state
-      entity_id: group.irrigation
-      to: 'on'
-      for:
-        minutes: 30
-    - platform: state
-      entity_id: group.irrigation
-      to: 'on'
-      for:
-        hours: 1
-    - platform: state
-      entity_id: group.irrigation
-      to: 'on'
-      for:
-        hours: 2
-  action:
-    service: notify.ios_daniel_iphone
-    data:
-      title: "Sprinklers"
-      message: "Running for {{ relative_time(states.group.irrigation.last_updated) }}!"
-      data:
-        push:
-          badge: 1
-          thread-id: "sprinklers"
-          category: "sprinkler_alert"
 
-- alias: Notify Sprinkler Started
-  trigger:
-    - platform: state
-      entity_id: group.irrigation
-      to: 'on'
-  action:
-    service: notify.ios_daniel_iphone
-    data:
-      title: "Sprinklers"
-      message: "Turned on!"
-      data:
-        push:
-          thread-id: "sprinklers"
-          category: "sprinkler_alert"
-        
-
-- alias: Turn off sprinklers
-  trigger:
-    platform: event
-    event_type: ios.notification_action_fired
-    event_data:
-      actionName: SPRINKLERS_OFF
-  action:
-    service: homeassistant.turn_off
-    entity_id:
-      - group.irrigation
-
-- alias: Turn on sprinklers
+- alias: Sprinklers - Turn on
   trigger: 
     platform: sun
     event: sunrise
@@ -146,15 +92,15 @@
     condition: and
     conditions:
       - condition: template
-        value_template: '{{states.sensor.pws_temp_high_1d_c.state > states.input_number.sprinkler_temp.state}}'
-      - condition: numeric_state
-        entity_id: sensor.pws_precip_1d_mm
-        below: 2
+        value_template: '{{( states.input_number.irrigation_tracker.state | float) < 0 }}'
+#      - condition: numeric_state
+#        entity_id: sensor.pws_precip_1d_mm
+#        below: 2
   action:
     service: homeassistant.turn_on
     entity_id: input_boolean.sprinkler_control
 
-- alias: Sprinkler Control On
+- alias: Sprinklers - Control On
   trigger:
     platform: state
     entity_id: input_boolean.sprinkler_control
@@ -162,7 +108,7 @@
   action:
     service: script.sprinklers
 
-- alias: Sprinkler Control Off
+- alias: Sprinklers - Control Off
   trigger:
     platform: state
     entity_id: input_boolean.sprinkler_control
@@ -178,3 +124,81 @@
     - timer.sprinkler_zone_2
     - timer.sprinkler_zone_3
     - timer.sprinkler_zone_4
+
+
+- alias: Irrigation - Calculate Stuff
+  trigger: 
+    platform: time
+    at: '23:59:00'
+  action:
+    - service: input_number.set_value
+      data_template:
+        entity_id: input_number.irrigation_tracker
+        value: >
+            {% if (states.sensor.dark_sky_daytime_high_apparent_temperature_0d.state | float) >= (states.input_number.irrigation_temp_hot.state | float) %}
+              {{ (states.input_number.irrigation_tracker.state | float)
+                - (states.input_number.irrigation_scalar_hot.state | float) * (states.input_number.irrigation_week_base.state | float) / 7 
+                + (states.sensor.bom_rain_today.state | float)
+                + (states.input_number.irrigation_rate.state | float) * (states.sensor.irrigation_duration_today.state | float)
+              }}
+            {% elif (states.sensor.dark_sky_daytime_high_apparent_temperature_0d.state | float) >= (states.input_number.irrigation_temp_warm.state | float) %}
+              {{ (states.input_number.irrigation_tracker.state | float)
+                - (states.input_number.irrigation_scalar_warm.state | float) * (states.input_number.irrigation_week_base.state | float) / 7 
+                + (states.sensor.bom_rain_today.state | float)
+                + (states.input_number.irrigation_rate.state | float) * (states.sensor.irrigation_duration_today.state | float)
+              }}
+            {% else %}
+              {{ (states.input_number.irrigation_tracker.state | float)
+                - (states.input_number.irrigation_week_base.state | float) / 7
+                + (states.sensor.bom_rain_today.state | float)
+                + (states.input_number.irrigation_rate.state | float) * (states.sensor.irrigation_duration_today.state | float)
+              }}
+            {% endif %}
+    - service: input_number.set_value
+      data_template:
+        entity_id: input_number.rain_today_midnight
+        value: "{{ states.sensor.bom_rain_today.state | float }}"
+
+
+# rain today from BOM doesn't reset at midnight, need to account for rain between midnight and just before the sprinklers might turn on
+- alias: Irrigation - Calculate tracker midnight to sunrise
+  trigger: 
+    platform: sun
+    event: sunrise
+    offset: "-00:00:01"
+  action:
+    - service: input_number.set_value
+      data_template:
+        entity_id: input_number.irrigation_tracker
+        value: >
+              {{ (states.input_number.irrigation_tracker.state | float)
+                + (states.sensor.bom_rain_today.state | float)
+                - (states.input_number.rain_today_midnight.state | float)
+              }}
+    - service: input_number.set_value
+      data_template:
+        entity_id: input_number.rain_today_sunrise
+        value: "{{ states.sensor.bom_rain_today.state | float }}"
+
+## because BOM update 'Rain Today' just after 9am each day
+- alias: Irrigation - Calculate tracker sunrise to 9am
+  trigger: 
+    platform: time
+    at: '09:00:00'
+  action:
+    - service: input_number.set_value
+      data_template:
+        entity_id: input_number.irrigation_tracker
+        value: >
+              {{ (states.input_number.irrigation_tracker.state | float)
+                + (states.sensor.bom_rain_today.state | float)
+                - (states.input_number.rain_today_sunrise.state | float)
+              }}
+    - service: input_number.set_value
+      data:
+        entity_id: input_number.rain_today_sunrise
+        value: 0
+    - service: input_number.set_value
+      data:
+        entity_id: input_number.rain_today_midnight
+        value: 0

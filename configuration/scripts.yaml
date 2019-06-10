@@ -121,3 +121,119 @@ door_bell:
         gw_mac: 34ce00fa664a
         ringtone_id: 10
         ringtone_vol: 100
+
+
+#https://community.home-assistant.io/t/using-slider-for-blackout-window-blinds/74977/5
+#set_blind_position:
+#  sequence:
+#    - service: cover.close_cover
+#      data_template:
+#        entity_id: "{{ entity_id }}"
+#    - delay: 55
+#    - service: cover.open_cover
+#      data_template:
+#        entity_id: "{{ entity_id }}"
+#    - delay: "{{ (position | float / 100 * 55) | round }}"
+#    - service: cover.stop_cover
+#      data_template:
+#        entity_id: "{{ entity_id }}"
+#
+
+#set_blind_bedroom_position:
+#  sequence:
+#    - service_template: >
+#        {% if position | float == 0 %}
+#          cover.close_cover
+#        {% elif position | float == 100 %}
+#          cover.open_cover
+#        {% elif position == states('input_number.blind_bedroom_position') | float %}
+#          script.dummy
+#        {% elif position > states('input_number.blind_bedroom_position') | float %}
+#          cover.open_cover
+#        {% elif position < states('input_number.blind_bedroom_position') | float %}
+#          cover.close_cover
+#        {% endif %}
+#      entity_id: cover.blind_bedroom
+##      data_template:
+##        entity_id: "{{ entity_id }}"
+#
+#      
+#    - delay: >
+#        {% if position == 0 %}
+#          {{ states('input_number.blind_bedroom_position') | float / 100 * 45 | round }}
+#        {% elif position == 100 %}
+#          {{ ( 100 - states('input_number.blind_bedroom_position') | float ) / 100 * 45 | round }}
+#        {% elif position >= states('input_number.blind_bedroom_position') | float %}
+#          {{ ( position - states('input_number.blind_bedroom_position') | float ) / 100 * 45 | round }}
+#        {% elif position <= states('input_number.blind_bedroom_position') | float %}
+#          {{ ( states('input_number.blind_bedroom_position') | float - position ) / 100 * 45 | round }}
+#        {% endif %}
+#        
+#    - service_template: >
+#        {% if position == 0 %}
+#          cover.close_cover
+#        {% elif position == 100 %}
+#          cover.open_cover
+#        {% elif position > states('input_number.blind_bedroom_position') | float %}
+#          cover.stop_cover
+#        {% elif position < states('input_number.blind_bedroom_position') | float %}
+#          cover.stop_cover
+#        {% endif %}
+#      entity_id: cover.blind_bedroom
+##      data_template:
+##        entity_id: "{{ entity_id }}"
+#        
+#    - service: input_number.set_value
+#      data_template:
+#        entity_id: input_number.blind_bedroom_position
+#        value: "{{ position | float }}"
+
+
+set_cover_position:
+  sequence:
+      
+    - service_template: >
+        {% if position_set | float  == 0 %}
+          cover.close_cover
+        {% elif position_set | float == 100 %}
+          cover.open_cover
+        {% elif position_set | float == states(position_previous) | float %}
+          script.dummy
+        {% elif position_set | float > states(position_previous) | float %}
+          cover.open_cover
+        {% elif position_set | float < states(position_previous) | float %}
+          cover.close_cover
+        {% endif %}
+      data_template:
+        entity_id: "{{ entity_id }}"
+      
+    - delay:
+        seconds: >
+          {% if position_set | float == 0 %}
+            {{ ( states(position_previous) | float / 100 * closing_time | round ) | int }}
+          {% elif position_set | float == 100 %}
+            {{ ( ( 100 - states(position_previous) | float ) / 100 * opening_time | round ) | int }}
+          {% elif position_set | float > states(position_previous) | float %}
+            {{ (( position_set | float - states(position_previous) | float ) / 100 * opening_time | round ) | int }}
+          {% elif position_set | float < states(position_previous) | float %}
+            {{ (( states(position_previous) | float - position_set | float ) / 100 * closing_time | round ) | int }}
+          {% endif %}
+        
+    - service_template: >
+        {% if position_set | float == 0 %}
+          cover.close_cover
+        {% elif position_set | float == 100 %}
+          cover.open_cover
+        {% elif position_set | float > states(position_previous) | float %}
+          cover.stop_cover
+        {% elif position_set | float < states(position_previous) | float %}
+          cover.stop_cover
+        {% endif %}
+      data_template:
+        entity_id: "{{ entity_id }}"
+        
+    - service: input_number.set_value
+      data_template:
+        entity_id: "{{ position_previous }}"
+        value: "{{ position_set }}"
+      

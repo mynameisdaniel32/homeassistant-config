@@ -1,0 +1,388 @@
+### Washing Machine
+- alias: Notification - Washing Machine Finished
+  trigger:
+    platform: state
+    entity_id: sensor.washing_machine_status
+    to: Clean
+  action:
+  - service: notify.ios_daniel_iphone
+    data:
+      title: "Washing Machine"
+      message: "Finished!"
+      data:
+        push:
+          badge: 7
+          thread-id: "washing-machine"
+          category: "washing_machine_alert"
+
+- alias: Notification - Washing Machine Recurring
+  trigger:
+    - platform: state
+      entity_id: sensor.washing_machine_status
+      to: Clean
+      for:
+        minutes: 15
+    - platform: state
+      entity_id: sensor.washing_machine_status
+      to: Clean
+      for:
+        minutes: 30
+    - platform: state
+      entity_id: sensor.washing_machine_status
+      to: Clean
+      for:
+        minutes: 60
+    - platform: state
+      entity_id: sensor.washing_machine_status
+      to: Clean
+      for:
+        minutes: 90
+    - platform: state
+      entity_id: sensor.washing_machine_status
+      to: Clean
+      for:
+        minutes: 120
+    - platform: state
+      entity_id: sensor.washing_machine_status
+      to: Clean
+      for:
+        minutes: 150
+    - platform: state
+      entity_id: sensor.washing_machine_status
+      to: Clean
+      for:
+        minutes: 180
+    - platform: state
+      entity_id: sensor.washing_machine_status
+      to: Clean
+      for:
+        minutes: 210
+    - platform: state
+      entity_id: sensor.washing_machine_status
+      to: Clean
+      for:
+        minutes: 240
+  condition:
+    condition: state
+    entity_id: sensor.location_daniel
+    state: 'Home'
+  action:
+    service: notify.ios_daniel_iphone
+    data_template:
+      title: "Washing Machine"
+      message: "Finished {{ relative_time(states.sensor.washing_machine_status.last_updated) }} ago!"
+      data:
+        push:
+          badge: 7
+          thread-id: "washing-machine"
+          category: "washing_machine_alert"
+
+
+### DISHWASHER
+- alias: Notification - Dishwasher Finished
+  trigger:
+    platform: state
+    entity_id: sensor.dishwasher_status
+    to: Clean
+  action:
+  - service: notify.ios_daniel_iphone
+    data:
+      message: "Dishwasher Finished!"
+      data:
+        push:
+          badge: 7
+          category: "dishwasher_alert"
+
+### VACUUM CLEANER
+- alias: Notification - Vacuum Start
+  trigger:
+    platform: state
+    entity_id: vacuum.xiaomi_vacuum_cleaner
+    from: docked
+    to: cleaning
+  action:
+    - service: notify.ios_daniel_iphone
+      data:
+        message: "Vacuum Started!"
+        data:
+          push:
+            category: "vacuum_alert"
+
+- alias: Notification - Vacuum Finished
+  trigger:
+    platform: state
+    entity_id: vacuum.xiaomi_vacuum_cleaner
+    to: docked
+  action:
+    - service: notify.ios_daniel_iphone
+      data:
+        message: "Vacuum Finished!"
+        data:
+          push:
+            category: "vacuum_alert"
+
+- alias: Notification - Vacuum Warning
+  trigger:
+    platform: state
+    entity_id: vacuum.xiaomi_vacuum_cleaner
+    to: docked
+  condition:
+    condition: or
+    conditions:
+      - condition: template
+        value_template: "{{ (state_attr('vacuum.xiaomi_vacuum_cleaner', 'main_brush_left') | int) < 0 }}"
+      - condition: template
+        value_template: "{{ (state_attr('vacuum.xiaomi_vacuum_cleaner', 'side_brush_left') | int) < 0 }}"
+      - condition: template
+        value_template: "{{ (state_attr('vacuum.xiaomi_vacuum_cleaner', 'filter_left') | int) < 0 }}"
+      - condition: template
+        value_template: "{{ (state_attr('vacuum.xiaomi_vacuum_cleaner', 'sensor_dirty_left') | int) < 0 }}"
+  action:
+    - service: persistent_notification.create
+      data:
+        title: Vacuum Cleaner
+        message: Service required.
+
+
+
+### SPRINKLERS
+- alias: Notification - Sprinklers Warning
+  trigger:
+    - platform: state
+      entity_id: group.irrigation
+      to: 'on'
+      for:
+        minutes: 30
+    - platform: state
+      entity_id: group.irrigation
+      to: 'on'
+      for:
+        hours: 1
+    - platform: state
+      entity_id: group.irrigation
+      to: 'on'
+      for:
+        hours: 2
+  action:
+    service: notify.ios_daniel_iphone
+    data:
+      title: "Sprinklers"
+      message: "Running for {{ relative_time(states.group.irrigation.last_updated) }}!"
+      data:
+        push:
+          badge: 1
+          thread-id: "sprinklers"
+          category: "sprinkler_alert"
+
+- alias: Notification - Sprinklers Started
+  trigger:
+    - platform: state
+      entity_id: group.irrigation
+      to: 'on'
+  action:
+    service: notify.ios_daniel_iphone
+    data:
+      title: "Sprinklers"
+      message: "Turned on!"
+      data:
+        push:
+          thread-id: "sprinklers"
+          category: "sprinkler_alert"
+        
+### ROLLER DOOR
+
+- alias: Notification - Roller door - Opened
+  trigger:
+    platform: state
+    entity_id: cover.roller_door
+    from: 'closed'
+    to: 'open'
+  condition:
+    condition: state
+    entity_id: sensor.location_daniel
+    state: 'Away'
+  action:
+    service: notify.ios_daniel_iphone
+    data:
+      title: "Roller Door"
+      message: "Opened!"
+      data:
+        attachment:
+          content-type: jpeg
+        push:
+          badge: 5
+          thread-id: "roller-door"
+          category: camera
+        entity_id: camera.carport
+
+- alias: Notification - Roller Door - Left Open
+  trigger:
+    platform: state
+    entity_id: sensor.location_daniel
+    from: 'Home'
+    to: 'Away'
+  condition:
+    condition: state
+    entity_id: cover.roller_door
+    state: 'open'
+  action:
+    service: notify.ios_daniel_iphone
+    data:
+      title: "Roller Door"
+      message: "Left Open!"
+      data:
+        push:
+          badge: 5
+          thread-id: "roller-door"
+          category: "roller_door_alert"
+
+- alias: Notification - Roller Door - Left open
+  trigger:
+    - platform: state
+      entity_id: cover.roller_door
+      to: 'open'
+      for:
+        minutes: 1
+    - platform: state
+      entity_id: cover.roller_door
+      to: 'open'
+      for:
+        minutes: 15
+    - platform: state
+      entity_id: cover.roller_door
+      to: 'open'
+      for:
+        hours: 1
+    - platform: state
+      entity_id: cover.roller_door
+      to: 'open'
+      for:
+        hours: 2
+    - platform: state
+      entity_id: cover.roller_door
+      to: 'open'
+      for:
+        hours: 3
+    - platform: state
+      entity_id: cover.roller_door
+      to: 'open'
+      for:
+        hours: 4
+    - platform: state
+      entity_id: cover.roller_door
+      to: 'open'
+      for:
+        hours: 5
+    - platform: state
+      entity_id: cover.roller_door
+      to: 'open'
+      for:
+        hours: 6
+  action:
+    service: notify.ios_daniel_iphone
+    data_template:
+      title: "Roller Door"
+      message: "Left open for {{ relative_time(states.cover.roller_door.last_updated) }}!"
+      data:
+        push:
+          badge: 1
+          thread-id: "roller-door"
+          category: "roller_door_alert"
+
+- alias: Notification - Roller Door - Prompt to open
+  trigger:
+    platform: state
+    entity_id: sensor.location_daniel
+    to: 'Home'
+  condition:
+    condition: state
+    entity_id: cover.roller_door
+    state: 'closed'
+  action:
+    service: notify.ios_daniel_iphone
+    data:
+      title: "Roller Door"
+      message: "Open?"
+      data:
+        push:
+          thread-id: "roller-door"
+          category: "roller_door_prompt"
+
+### LIGHTS
+- alias: Notification - Lights on while away
+  trigger:
+    platform: time_pattern
+    minutes: '/5'
+    seconds: 00
+  condition:
+    condition: and
+    conditions:
+    - condition: template
+      value_template: "{{ states.sensor.location_daniel.state != 'Home' }}"
+    - condition: template
+      value_template: "{{ states.person.deanna.state != 'home' }}"
+    - condition: state
+      entity_id: group.inside_lights
+      state: 'on'
+  action:
+  - service: notify.ios_daniel_iphone
+    data_template:
+      title: "Lights"
+      message: "Left on for {{ relative_time(states.group.lights.last_updated) }}!"
+      data:
+        push:
+          badge: 100
+          thread-id: "lights"
+          category: "lights_alert"
+
+
+### Persisitent Notifications
+
+- alias: Notification - Sonarr Queue
+  trigger:
+  - platform: state
+    entity_id: sensor.sonarr_queue
+  condition:
+    condition: numeric_state
+    entity_id: sensor.sonarr_queue
+    above: 2
+  action:
+    service: persistent_notification.create
+    data:
+      title: Sonarr Queue
+      message: Sonarr Queue has exceeded 2
+
+################### IOS ACTIONS ###################
+
+- alias: iOS Action - Sprinklers - Turn off
+  trigger:
+    platform: event
+    event_type: ios.notification_action_fired
+    event_data:
+      actionName: SPRINKLERS_OFF
+  action:
+    service: homeassistant.turn_off
+    entity_id:
+      - group.irrigation
+
+- alias: iOS Action - Roller Door - Close
+  trigger:
+    platform: event
+    event_type: ios.notification_action_fired
+    event_data:
+      actionName: ROLLER_DOOR_CLOSE
+  action:
+    service: cover.close_cover
+    entity_id:
+      - cover.roller_door
+
+- alias: iOS Action - Roller Door - Open
+  trigger:
+    platform: event
+    event_type: ios.notification_action_fired
+    event_data:
+      actionName: ROLLER_DOOR_OPEN
+  action:
+    service: cover.open_cover
+    entity_id:
+      - cover.roller_door
